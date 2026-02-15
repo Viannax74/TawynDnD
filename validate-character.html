@@ -1,1 +1,20 @@
-[Contenu généré ci-dessus]
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Validate Character</title>
+</head>
+<body>
+    <script>
+        const schemaVersion = "3.0-20260215-1558";
+
+        function validateCharacter(character) {
+            if (character.schemaVersion !== schemaVersion) {
+                console.log(`Error: Character schema version is invalid. Expected: ${schemaVersion}, Found: ${character.schemaVersion}`);
+                return false;
+            }
+            console.log(`Success: Character schema version is valid.`);
+            return true;
+        }
+    </script>
+</body>
+</html>
