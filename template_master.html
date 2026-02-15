@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TawynD&D - Character Sheet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 10px;
+            line-height: 1.4;
+        }
+
+        /* Header */
+        .header {
+            background: #2d2d2d;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid #444;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #ffcc00;
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: 10px;
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            border: 2px solid #555;
+            background: #333;
+            color: #e0e0e0;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .mode-btn:hover {
+            background: #444;
+        }
+
+        .mode-btn.active {
+            background: #ffcc00;
+            color: #1a1a1a;
+            border-color: #ffcc00;
+        }
+
+        /* Main Grid Layout - Dense 3 columns */
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* Sections */
+        .section {
+            background: #2d2d2d;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #444;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffcc00;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #555;
+            padding-bottom: 5px;
+        }
+
+        /* Character Info */
+        .char-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        .info-label {
+            color: #aaa;
+        }
+
+        .info-value {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .stat-box {
+            background: #1a1a1a;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #555;
+        }
+
+        .stat-name {
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+
+        .stat-modifier {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Roll Button */
+        .roll-btn {
+            padding: 8px 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 5px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .roll-btn:hover {
+            background: #45a049;
+        }
+
+        /* Skills */
+        .skills-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px;
+            background: #1a1a1a;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .skill-name {
+            color: #e0e0e0;
+        }
+
+        .skill-bonus {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        /* Inventory */
+        .inventory-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .inventory-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px;
+            background: #1a1a1a;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .item-name {
+            flex: 1;
+            color: #e0e0e0;
+        }
+
+        .item-quantity {
+            color: #ffcc00;
+            font-weight: bold;
+            margin: 0 8px;
+        }
+
+        .item-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .item-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .item-btn.plus {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .item-btn.plus:hover {
+            background: #45a049;
+        }
+
+        .item-btn.minus {
+            background: #f44336;
+            color: white;
+        }
+
+        .item-btn.minus:hover {
+            background: #da190b;
+        }
+
+        /* Combat Mode Styles */
+        body.combat-mode .section {
+            border-color: #8B0000;
+        }
+
+        body.combat-mode .header {
+            border-color: #8B0000;
+            background: #2d1a1a;
+        }
+
+        body.combat-mode .section-title {
+            color: #ff6b6b;
+        }
+
+        body.combat-mode .stat-value {
+            color: #ff6b6b;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #2d2d2d;
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid #ffcc00;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            color: #ffcc00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            background: #1a1a1a;
+            border: 2px solid #555;
+            color: #fff;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .modal-btn.confirm {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .modal-btn.confirm:hover {
+            background: #45a049;
+        }
+
+        .modal-btn.cancel {
+            background: #555;
+            color: white;
+        }
+
+        .modal-btn.cancel:hover {
+            background: #666;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* HP Bar */
+        .hp-bar-container {
+            background: #1a1a1a;
+            border-radius: 5px;
+            height: 30px;
+            margin-top: 10px;
+            overflow: hidden;
+            border: 2px solid #555;
+        }
+
+        .hp-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* Notes/Description */
+        .notes-area {
+            width: 100%;
+            min-height: 80px;
+            background: #1a1a1a;
+            border: 2px solid #555;
+            border-radius: 5px;
+            padding: 8px;
+            color: #e0e0e0;
+            font-size: 12px;
+            resize: vertical;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Mode Toggle -->
+    <div class="header">
+        <h1>TawynD&D Character Sheet</h1>
+        <div class="mode-toggle">
+            <button class="mode-btn active" onclick="setMode('social')">Social</button>
+            <button class="mode-btn" onclick="setMode('combat')">Combat</button>
+        </div>
+    </div>
+
+    <!-- Main Grid Layout -->
+    <div class="main-grid">
+        <!-- Column 1: Character Info & Stats -->
+        <div class="section">
+            <div class="section-title">Character Info</div>
+            <div class="char-info">
+                <div class="info-row">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value" id="char-name">Tawyn</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Class:</span>
+                    <span class="info-value" id="char-class">Ranger</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Level:</span>
+                    <span class="info-value" id="char-level">1</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Race:</span>
+                    <span class="info-value" id="char-race">Wood Elf</span>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 15px;">Ability Scores</div>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-name">STR</div>
+                    <div class="stat-value">10</div>
+                    <div class="stat-modifier">+0</div>
+                    <button class="roll-btn" onclick="inputRoll(0)">Roll</button>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-name">DEX</div>
+                    <div class="stat-value">16</div>
+                    <div class="stat-modifier">+3</div>
+                    <button class="roll-btn" onclick="inputRoll(3)">Roll</button>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-name">CON</div>
+                    <div class="stat-value">14</div>
+                    <div class="stat-modifier">+2</div>
+                    <button class="roll-btn" onclick="inputRoll(2)">Roll</button>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-name">INT</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-modifier">+1</div>
+                    <button class="roll-btn" onclick="inputRoll(1)">Roll</button>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-name">WIS</div>
+                    <div class="stat-value">15</div>
+                    <div class="stat-modifier">+2</div>
+                    <button class="roll-btn" onclick="inputRoll(2)">Roll</button>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-name">CHA</div>
+                    <div class="stat-value">8</div>
+                    <div class="stat-modifier">-1</div>
+                    <button class="roll-btn" onclick="inputRoll(-1)">Roll</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 2: Skills & Combat Stats -->
+        <div class="section">
+            <div class="section-title">Combat Stats</div>
+            <div class="char-info">
+                <div class="info-row">
+                    <span class="info-label">HP:</span>
+                    <span class="info-value"><span id="current-hp">10</span> / <span id="max-hp">10</span></span>
+                </div>
+                <div class="hp-bar-container">
+                    <div class="hp-bar" id="hp-bar" style="width: 100%;">100%</div>
+                </div>
+                <div class="info-row" style="margin-top: 10px;">
+                    <span class="info-label">AC:</span>
+                    <span class="info-value" id="ac">15</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Initiative:</span>
+                    <span class="info-value" id="initiative">+3</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Speed:</span>
+                    <span class="info-value" id="speed">35 ft</span>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 15px;">Skills</div>
+            <div class="skills-list">
+                <div class="skill-item">
+                    <span class="skill-name">Perception</span>
+                    <button class="roll-btn" style="width: auto; padding: 4px 8px; margin: 0;" onclick="inputRoll(4)">+4</button>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">Stealth</span>
+                    <button class="roll-btn" style="width: auto; padding: 4px 8px; margin: 0;" onclick="inputRoll(5)">+5</button>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">Survival</span>
+                    <button class="roll-btn" style="width: auto; padding: 4px 8px; margin: 0;" onclick="inputRoll(4)">+4</button>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">Athletics</span>
+                    <button class="roll-btn" style="width: auto; padding: 4px 8px; margin: 0;" onclick="inputRoll(2)">+2</button>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">Investigation</span>
+                    <button class="roll-btn" style="width: auto; padding: 4px 8px; margin: 0;" onclick="inputRoll(1)">+1</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 3: Inventory -->
+        <div class="section">
+            <div class="section-title">Inventory</div>
+            <div class="inventory-list" id="inventory-list">
+                <!-- Inventory items will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Dice Input -->
+    <div class="modal" id="roll-modal">
+        <div class="modal-content">
+            <div class="modal-title">Enter Your Dice Roll</div>
+            <input type="number" class="modal-input" id="roll-input" placeholder="Enter d20 result" min="1" max="20">
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="confirmRoll()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Static Character Data (const)
+        const CHARACTER = {
+            name: 'Tawyn',
+            class: 'Ranger',
+            level: 1,
+            race: 'Wood Elf',
+            stats: {
+                str: 10,
+                dex: 16,
+                con: 14,
+                int: 12,
+                wis: 15,
+                cha: 8
+            },
+            maxHp: 10,
+            ac: 15,
+            speed: '35 ft',
+            skills: {
+                perception: 4,
+                stealth: 5,
+                survival: 4,
+                athletics: 2,
+                investigation: 1
+            }
+        };
+
+        // Dynamic State (let, saved to localStorage)
+        let state = {
+            currentHp: 10,
+            inventory: [
+                { name: 'Longbow', quantity: 1 },
+                { name: 'Arrows', quantity: 20 },
+                { name: 'Rope (50ft)', quantity: 1 },
+                { name: 'Rations', quantity: 5 },
+                { name: 'Healing Potion', quantity: 2 }
+            ],
+            mode: 'social'
+        };
+
+        // Current roll bonus (for modal callback)
+        let currentRollBonus = 0;
+
+        // Initialize Application
+        function init() {
+            loadState();
+            renderInventory();
+            updateHP();
+            setMode(state.mode);
+        }
+
+        // Load state from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('tawyndnd_state');
+            if (saved) {
+                try {
+                    state = JSON.parse(saved);
+                } catch (e) {
+                    console.error('Error loading state:', e);
+                }
+            }
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            localStorage.setItem('tawyndnd_state', JSON.stringify(state));
+        }
+
+        // Set Mode (Social/Combat)
+        function setMode(mode) {
+            state.mode = mode;
+            saveState();
+
+            // Update body class
+            if (mode === 'combat') {
+                document.body.classList.add('combat-mode');
+            } else {
+                document.body.classList.remove('combat-mode');
+            }
+
+            // Update button states
+            const buttons = document.querySelectorAll('.mode-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase() === mode) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Input Roll (CRITICAL FEATURE - NO RNG)
+        function inputRoll(bonus) {
+            currentRollBonus = bonus;
+            const modal = document.getElementById('roll-modal');
+            const input = document.getElementById('roll-input');
+            modal.classList.add('show');
+            input.value = '';
+            input.focus();
+        }
+
+        // Close Modal
+        function closeModal() {
+            const modal = document.getElementById('roll-modal');
+            modal.classList.remove('show');
+        }
+
+        // Confirm Roll
+        function confirmRoll() {
+            const input = document.getElementById('roll-input');
+            const diceValue = parseInt(input.value);
+
+            if (isNaN(diceValue) || diceValue < 1 || diceValue > 20) {
+                showToast('Please enter a valid d20 roll (1-20)');
+                return;
+            }
+
+            const total = diceValue + currentRollBonus;
+            const bonusStr = currentRollBonus >= 0 ? `+${currentRollBonus}` : `${currentRollBonus}`;
+            showToast(`Roll: ${diceValue} ${bonusStr} = ${total}`);
+            closeModal();
+        }
+
+        // Show Toast Notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Update HP Bar
+        function updateHP() {
+            const currentHp = state.currentHp;
+            const maxHp = CHARACTER.maxHp;
+            const percentage = (currentHp / maxHp) * 100;
+
+            document.getElementById('current-hp').textContent = currentHp;
+            document.getElementById('max-hp').textContent = maxHp;
+
+            const hpBar = document.getElementById('hp-bar');
+            hpBar.style.width = percentage + '%';
+            hpBar.textContent = Math.round(percentage) + '%';
+
+            // Change color based on HP
+            if (percentage > 50) {
+                hpBar.style.background = 'linear-gradient(90deg, #4CAF50, #8BC34A)';
+            } else if (percentage > 25) {
+                hpBar.style.background = 'linear-gradient(90deg, #FFC107, #FF9800)';
+            } else {
+                hpBar.style.background = 'linear-gradient(90deg, #f44336, #e91e63)';
+            }
+        }
+
+        // Render Inventory
+        function renderInventory() {
+            const container = document.getElementById('inventory-list');
+            container.innerHTML = '';
+
+            state.inventory.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'inventory-item';
+
+                itemDiv.innerHTML = `
+                    <span class="item-name">${item.name}</span>
+                    <span class="item-quantity">×${item.quantity}</span>
+                    <div class="item-controls">
+                        <button class="item-btn minus" onclick="changeQuantity(${index}, -1)">−</button>
+                        <button class="item-btn plus" onclick="changeQuantity(${index}, 1)">+</button>
+                    </div>
+                `;
+
+                container.appendChild(itemDiv);
+            });
+        }
+
+        // Change Inventory Quantity
+        function changeQuantity(index, delta) {
+            state.inventory[index].quantity += delta;
+
+            // Remove item if quantity reaches 0
+            if (state.inventory[index].quantity <= 0) {
+                state.inventory.splice(index, 1);
+            }
+
+            saveState();
+            renderInventory();
+        }
+
+        // Handle Enter key in modal
+        document.getElementById('roll-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                confirmRoll();
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
