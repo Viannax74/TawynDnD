@@ -33,7 +33,7 @@ Ce dépôt sert de base technique et documentaire pour l'évolution vers une **M
 - Création d'un schéma d'objet `C` universel supportant toutes les classes.
 - Mise en place de la structure "Checkable" pour les ressources (slots, points de sorcellerie, ki).
 
-### Phase 2 : Richesse des Données Sorts (À venir)
+### Phase 2 : Richesse des Données Sorts
 - Implémentation du format AideDD complet pour les sorts :
     - École (Abjuration, Évocation, etc.)
     - Temps d'incantation (Action, Action Bonus, Réaction, Rituel)
