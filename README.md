@@ -48,9 +48,10 @@ Ce dépôt sert de base technique et documentaire pour l'évolution vers une **M
 - Gestion avancée du poids et des objets magiques avec "attunement".
 - Liens vers les ressources externes (AideDD, D&D Beyond) pour consultation rapide.
 
-### Phase 5 : Automatisation IA
-- Scripting de mise à jour automatique des PV et ressources via prompt.
-- Génération de backstory et de conseils RP basés sur les stats.
+### Phase 5 : Export & Import des personnages
+- Exportation du personnage au format JSON (incluant const C et état volatil).
+- Importation d'un personnage depuis un fichier JSON externe.
+- Option de backup localStorage automatique.
 
 ---
 
@@ -60,6 +61,7 @@ Ce dépôt sert de base technique et documentaire pour l'évolution vers une **M
 Ouvrez le fichier HTML et modifiez la structure `const C`. Assurez-vous de respecter les types de données :
 ```javascript
 const C = {
+  schemaVersion: "3.0",
   name: "Nom",
   level: 6,
   class_fr: "Guerrier",
