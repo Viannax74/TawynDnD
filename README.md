@@ -28,12 +28,12 @@ Ce dépôt sert de base technique et documentaire pour l'évolution vers une **M
 
 ## 🗺️ Roadmap "TawynDnD Ultimate"
 
-### Phase 1 : Standardisation (En cours)
+### Phase 1 : Standardisation (Terminée ✅)
 - Unification du CSS pour un thème sombre "Glass" cohérent.
 - Création d'un schéma d'objet `C` universel supportant toutes les classes.
 - Mise en place de la structure "Checkable" pour les ressources (slots, points de sorcellerie, ki).
 
-### Phase 2 : Richesse des Données Sorts
+### Phase 2 : Richesse des Données Sorts (À venir)
 - Implémentation du format AideDD complet pour les sorts :
     - École (Abjuration, Évocation, etc.)
     - Temps d'incantation (Action, Action Bonus, Réaction, Rituel)
