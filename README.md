@@ -1,64 +1,77 @@
-# TawynDnD ⚔️
+# TawynDnD ⚔️ — Ultimate Digital Character Sheet
 
-**TawynDnD** est un système de fiches de personnage digitales interactives pour **Dungeons & Dragons 5ème Édition 2014 core et extensions officielles**, conçu pour être utilisé directement dans un navigateur sans installation complexe.
+**TawynDnD** est un système de fiches de personnage interactives pour **Dungeons & Dragons 5ème Édition (2014 & 2024)**, conçu pour offrir une expérience "Glassmorphism" moderne, optimisée pour le jeu sur smartphone (spécifiquement Galaxy S23 Ultra) et la saisie manuelle des résultats de dés physiques.
 
-Ce dépôt sert de base pour l'évolution de mes outils de jeu D&D, alliant esthétique moderne et fonctionnalités pratiques pour les joueurs.
-
-## ✨ Fonctionnalités clés
-
-- **Design "Glassmorphism" :** Une interface sombre et élégante optimisée pour la lisibilité en session de jeu sur smartphone, galaxy s ultra 23.
-- **Interactivité Totale :** 
-  - Suivi des points de vie (PV), points de vie temporaires et dés de vie.
-  - Gestion des emplacements de sorts et des capacités limitées (repos courts/longs).
-  - Inventaire interactif avec gestion des quantités.
-- **Ne jamais coder des Lancers de Dés Intégrés mais afficher des champs pour que le joueur entre les résultats de ses dés phyiques:** Cliquez sur une compétence, une attaque ou un sort pour générer un unchamp éditable our metter le résultat du jet de dé avec affichage des résultats pour le jet, les dégâts, la sauvegarde....
-- **Modes Contextuels :** Basculez entre les modes type **Social**, **Exploration** et **Combat** pour adapter l'affichage aux besoins du moment, cela évoluera pour une version plus simple.
-- **Sauvegarde Automatique :** L'état de la fiche (PV restants, ressources utilisées) est conservé localement dans votre navigateur (`localStorage`).
-
-## 🗺️ Roadmap : TawynDnD Ultimate
-
-### Phase 1 : Architecture de Données & Schéma "IA-Ready"
-- [ ] Définition des catégories d'actions (`actions`, `bonus_actions`, `reactions`, `special_features`).
-- [ ] Standard i18n : Préparation de la structure pour la traduction technique.
-- [ ] Moteur d'Économie : Structure pour stocker l'état "utilisé/disponible" de chaque ressource.
-
-### Phase 2 : Le Moteur de Saisie "Physique" & Logs
-- [ ] Composant Input : Champ de saisie numérique calculant le total en temps réel.
-- [ ] Système de Log (Mémoire de 10+ entrées) : Historique circulaire des actions de session.
-- [ ] Onglet Journal : Vue dédiée pour consulter l'historique.
-
-### Phase 3 : La "Master Sheet" (Interface Principale)
-- [ ] Layout Papier-Digital : Segmentation prioritaire (Stats -> Saves -> Skills -> Actions).
-- [ ] Groupement par Type : Actions [A], Actions Bonus [AB], Réactions [R].
-- [ ] Badges Interactifs : Marquage visuel des ressources consommées.
-
-### Phase 4 : Grimoire Étendu & Inventaire en Cartes
-- [ ] Import AideDD : Moteur de recherche filtrant le JSON complet des sorts.
-- [ ] Système de Cartes (Expandable) : Descriptions détaillées pour l'équipement et les sorts.
-- [ ] Cross-Tagging : Injection des sorts d'objets magiques dans le grimoire.
-
-### Phase 5 : Optimisation Mobile & Finalisation IA
-- [ ] S23 Ultra Polish : Ajustement des zones tactiles et de la densité visuelle.
-- [ ] Documentation IA : Guide d'immutabilité du moteur pour les mises à jour de données par IA.
-
-## 📁 Fiches disponibles
-
-Actuellement, le dépôt contient les personnages et templates suivants :
-- **Moros Gravewalker** (Occultiste / Lame maudite) :
-  - `tawyndnd-moros-v3.html` (Version la plus récente, moteur optimisé)
-  - `tawyndnd-moros-v2-best.html` (Version la plus riche, contenu très bon)
-- **Steiner** :
-  - `tawyndnd-steiner-v2.4.html` (autre personnage, autre unvivers, contenu très bon pour guerrier, sans sorts mais autre capacités)
-
-## 🚀 Comment l'utiliser ?
-
-1.  **Utilisation simple :** Téléchargez ou clonez le dépôt et ouvrez n'importe quel fichier `.html` dans votre navigateur préféré.
-2.  **Création d'un nouveau personnage :**
-    - Dupliquez l'un des fichiers HTML (par exemple `tawyndnd-moros-v3.html`).
-    - Ouvrez le fichier avec un éditeur de texte.
-    - Modifiez l'objet `const C` au début de la balise `<script>` avec les statistiques de votre personnage.
-    - Modifiez la liste `const SPELLS` pour y ajouter vos sorts.
-3.  Variable identité et contenu du personnage peut-être modifiable par n'importe quelle ia, sans casser le moteur
+Ce dépôt sert de base technique et documentaire pour l'évolution vers une **Master Sheet** universelle, capable d'accueillir n'importe quelle classe avec une fidélité maximale aux règles officielles.
 
 ---
-*Ce projet est en constante évolution pour offrir la meilleure expérience de jeu numérique possible.*
+
+## 🎯 Vision & Principes Directeurs
+
+1.  **Physical First :** Contrairement aux simulateurs RNG, TawynDnD privilégie l'immersion. Le moteur affiche des champs de saisie pour que le joueur entre ses résultats de dés réels, tout en calculant automatiquement les bonus et les effets.
+2.  **Master Sheet Format :** Une vue centralisée regroupant tout (Stats, Combat, Sorts, Bio, Inventaire) sur une seule page fluide, sans temps de chargement.
+3.  **Interaction par "Cochage" :** Utilisation de cases à cocher interactives pour les emplacements de sorts (slots), les capacités limitées (Second Souffle, Malédiction) et les munitions.
+4.  **IA-Ready :** L'architecture sépare strictement les **Données du Personnage** (`const C`) du **Moteur de Rendu**. Cela permet à n'importe quelle IA de modifier le contenu du personnage sans casser les fonctionnalités.
+5.  **Précision Technique (AideDD) :** Intégration des termes techniques français officiels (Écoles de magie, Composantes, Temps d'incantation) pour une clarté totale.
+
+---
+
+## 📁 Écosystème Actuel
+
+-   **Moros Gravewalker** (Occultiste Lame Maudite) :
+    -   `tawyndnd-moros-v3.html` : Dernière version stable, moteur optimisé avec gestion des sorts et invocations.
+    -   `tawyndnd-moros-v2-best.html` : Version riche avec contenu lore détaillé.
+-   **Steiner** (Guerrier Maître de Guerre) :
+    -   `tawyndnd-steiner-v2.4.html` : Modèle de fiche martiale avec gestion des manœuvres, dés de supériorité et tactiques de combat.
+
+---
+
+## 🗺️ Roadmap "TawynDnD Ultimate"
+
+### Phase 1 : Standardisation (En cours)
+- Unification du CSS pour un thème sombre "Glass" cohérent.
+- Création d'un schéma d'objet `C` universel supportant toutes les classes.
+- Mise en place de la structure "Checkable" pour les ressources (slots, points de sorcellerie, ki).
+
+### Phase 2 : Richesse des Données Sorts
+- Implémentation du format AideDD complet pour les sorts :
+    - École (Abjuration, Évocation, etc.)
+    - Temps d'incantation (Action, Action Bonus, Réaction, Rituel)
+    - Portée et Composantes (V, S, M)
+- Filtres de recherche par niveau, école et type d'action.
+
+### Phase 3 : Localisation & i18n
+- Séparation des textes dans des fichiers de langue dédiés.
+- Support natif Français/Anglais pour les noms de sorts et capacités.
+
+### Phase 4 : Inventaire & Magie Dynamique
+- Gestion avancée du poids et des objets magiques avec "attunement".
+- Liens vers les ressources externes (AideDD, D&D Beyond) pour consultation rapide.
+
+### Phase 5 : Automatisation IA
+- Scripting de mise à jour automatique des PV et ressources via prompt.
+- Génération de backstory et de conseils RP basés sur les stats.
+
+---
+
+## 🛠️ Guide de Développement
+
+### Modifier un personnage
+Ouvrez le fichier HTML et modifiez la structure `const C`. Assurez-vous de respecter les types de données :
+```javascript
+const C = {
+  name: "Nom",
+  level: 6,
+  class_fr: "Guerrier",
+  // Les sorts utilisent le format complet AideDD
+  spells: [
+    { name_fr: "Bouclier", level: 1, school: "Abjuration", time: "1 réaction" }
+  ]
+};
+```
+
+### Contribuer
+Les modifications doivent être testées sur mobile (S23 Ultra) pour garantir la réactivité. Utilisez exclusivement des variables CSS (`--accent`, `--bg-primary`) pour permettre un changement de thème rapide par classe.
+
+---
+*Fait par et pour des joueurs passionnés.*
