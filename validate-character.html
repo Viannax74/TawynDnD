@@ -1,1 +1,199 @@
-[Contenu généré ci-dessus]
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validator — TawynDnD Ultimate</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text: #f1f5f9;
+            --success: #22c55e;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --accent: #38bdf8;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 { margin-top: 0; font-size: 1.5rem; color: var(--accent); }
+        p { font-size: 0.9rem; opacity: 0.8; }
+
+        textarea {
+            width: 100%;
+            height: 300px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: #10b981;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 12px;
+            box-sizing: border-box;
+            margin-bottom: 16px;
+            resize: vertical;
+        }
+
+        button {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        button:active { transform: scale(0.98); }
+
+        #results {
+            margin-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 16px;
+        }
+
+        .log {
+            padding: 8px;
+            margin-bottom: 4px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .log-success { color: var(--success); background: rgba(34, 197, 94, 0.1); }
+        .log-error { color: var(--error); background: rgba(239, 68, 68, 0.1); }
+        .log-warning { color: var(--warning); background: rgba(245, 158, 11, 0.1); }
+
+        .summary {
+            font-weight: bold;
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>⚔️ TawynDnD Character Validator</h1>
+    <p>Collez votre objet <code>const C</code> ou son contenu JSON ci-dessous pour valider la conformité avec la <strong>Spec v3.0</strong>.</p>
+    
+    <textarea id="jsonInput" placeholder='Exemple: { "schemaVersion": "3.0", "name": "Moros", ... }'></textarea>
+    
+    <button onclick="validate()">Analyser la fiche</button>
+
+    <div id="results"></div>
+</div>
+
+<script>
+    function validate() {
+        const input = document.getElementById('jsonInput').value.trim();
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';
+        
+        let data;
+        let logs = [];
+
+        try {
+            // Nettoyage sommaire si l'utilisateur a copié "const C = { ... };"
+            let jsonString = input.replace(/^(const|let|var)\s+C\s*=\s*/, '').replace(/;$/, '');
+            // Transformation des clés non-guillemetées en JSON valide (basique)
+            if (!jsonString.startsWith('{')) throw new Error("Format non reconnu. Doit être un objet JSON.");
+            
+            // On utilise eval avec précaution pour supporter les objets JS recopiés
+            data = new Function(`return ${jsonString}`)();
+        } catch (e) {
+            addLog('error', "Erreur de syntaxe : " + e.message);
+            updateSummary(false);
+            return;
+        }
+
+        // --- VALIDATION LOGIQUE ---
+        let isValid = true;
+
+        // 1. Version
+        if (data.schemaVersion === "3.0") {
+            addLog('success', "Version du schéma : 3.0 (OK)");
+        } else {
+            addLog('error', `schemaVersion manquante ou incorrecte (reçu: ${data.schemaVersion || 'rien'})`);
+            isValid = false;
+        }
+
+        // 2. Champs obligatoires
+        const required = ['name', 'class_fr', 'level', 'abilities'];
+        required.forEach(field => {
+            if (data[field]) {
+                addLog('success', `Champ obligatoire '${field}' présent.`);
+            } else {
+                addLog('error', `Champ obligatoire '${field}' MANQUANT.`);
+                isValid = false;
+            }
+        });
+
+        // 3. Abilities
+        if (data.abilities) {
+            const stats = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
+            stats.forEach(s => {
+                if (typeof data.abilities[s] === 'number') {
+                    addLog('success', `Abilities: ${s} est valide.`);
+                } else {
+                    addLog('error', `Abilities: ${s} doit être un nombre.`);
+                    isValid = false;
+                }
+            });
+        }
+
+        // 4. Sorts (Format AideDD)
+        if (Array.isArray(data.spells)) {
+            data.spells.forEach((spell, i) => {
+                if (!spell.name_fr || !spell.school || !spell.time) {
+                    addLog('warning', `Sort #${i} (${spell.name_fr || 'Inconnu'}) : Manque des propriétés AideDD (school, time, etc.)`);
+                }
+            });
+        }
+
+        updateSummary(isValid);
+    }
+
+    function addLog(type, message) {
+        const resultsDiv = document.getElementById('results');
+        const div = document.createElement('div');
+        div.className = `log log-${type}`;
+        div.innerText = (type === 'success' ? '✅ ' : type === 'error' ? '❌ ' : '⚠️ ') + message;
+        resultsDiv.appendChild(div);
+    }
+
+    function updateSummary(valid) {
+        const resultsDiv = document.getElementById('results');
+        const div = document.createElement('div');
+        div.className = 'summary';
+        div.style.background = valid ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+        div.style.color = valid ? 'var(--success)' : 'var(--error)';
+        div.innerText = valid ? "FÉLICITATIONS : La fiche est conforme à la spec v3.0 !" : "ERREUR : La fiche ne respecte pas les standards TawynDnD.";
+        resultsDiv.appendChild(div);
+    }
+</script>
+
+</body>
+</html>
