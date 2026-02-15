@@ -1,78 +1,73 @@
 # 📦 BACKLOG - TawynDnD
 
-**Idées d'évolution futures pour usage solo personnel.**  
-**Principes** : Physical First (pas de dice roller) | Solo First (pas de multi-joueur) | Fichier Local First
+Ce document référence toutes les idées d'évolution et les phases de développement.  
+👉 **Chaque item correspond à une Issue GitHub trackée dans le [Project Board](https://github.com/users/Viannax74/projects/2).**
 
 ---
 
-## 🎯 Idées Prioritaires
+## 🚀 Roadmap (Phases Actuelles)
 
-### 1. PWA (Progressive Web App)
-**Description** : Installer la fiche comme app native sur smartphone  
-**Bénéfice** : Icône sur écran d'accueil, mode offline garanti  
-**Effort** : 4h
+### [#2 - Phase 1 - Standardisation & cohérence technique](https://github.com/Viannax74/TawynDnD/issues/2)
+**Statut** : En cours (Branche alignment-fix)  
+**Description** : Unification CSS et schéma universel `const C`.
 
-### 2. Backup Automatique localStorage
-**Description** : Export JSON automatique toutes les 24h dans le navigateur  
-**Bénéfice** : Sécurité contre perte de données  
-**Effort** : 3h
+### [#3 - Phase 2 - Format AideDD complet pour les sorts](https://github.com/Viannax74/TawynDnD/issues/3)
+**Statut** : Planifié  
+**Description** : Écoles, composantes et filtres de recherche.
 
-### 3. Historique des Jets de Dés
-**Description** : Log des 20 derniers jets saisis manuellement (pas de calcul RNG)  
-**Bénéfice** : Suivi des jets critiques pour RP  
-**Effort** : 2h
+### [#4 - Phase 3 - Internationalisation (i18n)](https://github.com/Viannax74/TawynDnD/issues/4)
+**Statut** : Planifié  
+**Description** : Support bilingue FR/EN natif.
 
-### 4. Notes de Session
-**Description** : Textarea pour noter événements de partie (localStorage)  
-**Bénéfice** : Suivi de campagne sans fichier externe  
-**Effort** : 2h
+### [#5 - Phase 4 - Inventaire interactif](https://github.com/Viannax74/TawynDnD/issues/5)
+**Statut** : Planifié  
+**Description** : Gestion dynamique des objets et du poids.
 
-### 5. Bestiaire PHB (Référence)
-**Description** : Liste monstres officiels avec stats (consultation seule)  
-**Bénéfice** : Référence rapide en combat  
-**Effort** : 20h (data entry)
+### [#6 - Phase 5 - Export & Import des personnages](https://github.com/Viannax74/TawynDnD/issues/6)
+**Statut** : Planifié  
+**Description** : Sauvegarde/Partage via JSON et localStorage.
 
 ---
 
-## 🔧 Améliorations Techniques
+## 🎯 Idées Prioritaires (Backlog)
 
-### 6. Thème par Classe
-**Description** : Couleur accent automatique (Rouge=Guerrier, Bleu=Mage, etc.)  
-**Bénéfice** : Personnalisation visuelle rapide  
-**Effort** : 3h
+### [#8 - [PWA] Installation application native](https://github.com/Viannax74/TawynDnD/issues/8)
+**Priorité** : Moyenne  
+**Description** : Mode offline et icône écran d'accueil.
 
-### 7. Mode Sombre/Clair Toggle
-**Description** : Bouton pour basculer entre Glassmorphism sombre et clair  
-**Bénéfice** : Adaptation conditions d'éclairage  
-**Effort** : 3h
+### [#9 - [Backup] Sauvegarde automatique 24h](https://github.com/Viannax74/TawynDnD/issues/9)
+**Priorité** : Élevée  
+**Description** : Export JSON auto pour éviter toute perte.
 
-### 8. Calculateur de Poids Inventaire
-**Description** : Total auto du poids porté vs capacité de charge  
-**Bénéfice** : Respect règles d'encombrement  
-**Effort** : 2h
+### [#11 - [Historique] Log des 20 derniers jets](https://github.com/Viannax74/TawynDnD/issues/11)
+**Priorité** : Moyenne  
+**Description** : Suivi des résultats pour le roleplay.
 
-### 9. Export PDF Imprimable
-**Description** : Générer fiche PDF pour backup papier  
-**Bénéfice** : Sécurité physique  
-**Effort** : 6h (jsPDF)
+### [#12 - [Notes] Bloc-notes de session intégré](https://github.com/Viannax74/TawynDnD/issues/12)
+**Priorité** : Basse  
+**Description** : Textarea persistant pour notes rapides.
 
-### 10. Liens Rapides AideDD
-**Description** : Icônes cliquables vers règles officielles AideDD  
-**Bénéfice** : Consultation règles sans quitter la fiche  
-**Effort** : 1h
+### [#10 - [Bestiaire] Référence rapide PHB](https://github.com/Viannax74/TawynDnD/issues/10)
+**Priorité** : Basse  
+**Description** : Consultation des monstres sans édition.
+
+---
+
+## 🔧 Améliorations Futures (À créer en issues)
+
+- **Thème par Classe** : Couleur accent auto (Guerrier=Rouge, Mage=Bleu).
+- **Mode Sombre/Clair Toggle** : Switch visuel Glassmorphism.
+- **Export PDF Imprimable** : Génération via jsPDF pour version papier.
 
 ---
 
 ## ❌ Hors Scope (Jamais)
 
-- ❌ Dice Roller / Dés animés (viole Physical First)
-- ❌ Multi-joueur / Partage temps réel (projet solo)
-- ❌ Backend / Base de données (fichier local uniquement)
-- ❌ Comptes utilisateurs / Authentification
-- ❌ Intégration Discord/Slack
-- ❌ Mode campagne partagée
+- ❌ Dice Roller / Dés animés (viole le principe **Physical First**)
+- ❌ Multi-joueur / Partage temps réel (projet **Solo First**)
+- ❌ Backend / Base de données (projet **Local First**)
 
 ---
 
-**Dernière MAJ** : 2026-02-15  
+**Dernière MAJ** : 15 février 2026  
 **Maintainer** : @Viannax74
