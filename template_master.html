@@ -563,7 +563,8 @@
     <div class="modal" id="roll-modal">
         <div class="modal-content">
             <div class="modal-title">Enter Your Dice Roll</div>
-            <input type="number" class="modal-input" id="roll-input" placeholder="Enter d20 result" min="1" max="20">
+            <label for="roll-input" style="display: none;">Dice roll result</label>
+            <input type="number" class="modal-input" id="roll-input" placeholder="Enter dice result" min="1" aria-label="Enter your physical dice roll result">
             <div class="modal-buttons">
                 <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
                 <button class="modal-btn confirm" onclick="confirmRoll()">Confirm</button>
@@ -685,8 +686,8 @@
             const input = document.getElementById('roll-input');
             const diceValue = parseInt(input.value);
 
-            if (isNaN(diceValue) || diceValue < 1 || diceValue > 20) {
-                showToast('Please enter a valid d20 roll (1-20)');
+            if (isNaN(diceValue) || diceValue < 1) {
+                showToast('Please enter a valid dice roll (1 or higher)');
                 return;
             }
 
@@ -766,11 +767,14 @@
         }
 
         // Handle Enter key in modal
-        document.getElementById('roll-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                confirmRoll();
-            }
-        });
+        const rollInput = document.getElementById('roll-input');
+        if (rollInput) {
+            rollInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    confirmRoll();
+                }
+            });
+        }
 
         // Initialize on load
         window.addEventListener('DOMContentLoaded', init);
