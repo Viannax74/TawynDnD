@@ -15,6 +15,32 @@ Ce dépôt sert de base pour l'évolution de mes outils de jeu D&D, alliant esth
 - **Modes Contextuels :** Basculez entre les modes type **Social**, **Exploration** et **Combat** pour adapter l'affichage aux besoins du moment, cela évoluera pour une version plus simple.
 - **Sauvegarde Automatique :** L'état de la fiche (PV restants, ressources utilisées) est conservé localement dans votre navigateur (`localStorage`).
 
+## 🗺️ Roadmap : TawynDnD Ultimate
+
+### Phase 1 : Architecture de Données & Schéma "IA-Ready"
+- [ ] Définition des catégories d'actions (`actions`, `bonus_actions`, `reactions`, `special_features`).
+- [ ] Standard i18n : Préparation de la structure pour la traduction technique.
+- [ ] Moteur d'Économie : Structure pour stocker l'état "utilisé/disponible" de chaque ressource.
+
+### Phase 2 : Le Moteur de Saisie "Physique" & Logs
+- [ ] Composant Input : Champ de saisie numérique calculant le total en temps réel.
+- [ ] Système de Log (Mémoire de 10+ entrées) : Historique circulaire des actions de session.
+- [ ] Onglet Journal : Vue dédiée pour consulter l'historique.
+
+### Phase 3 : La "Master Sheet" (Interface Principale)
+- [ ] Layout Papier-Digital : Segmentation prioritaire (Stats -> Saves -> Skills -> Actions).
+- [ ] Groupement par Type : Actions [A], Actions Bonus [AB], Réactions [R].
+- [ ] Badges Interactifs : Marquage visuel des ressources consommées.
+
+### Phase 4 : Grimoire Étendu & Inventaire en Cartes
+- [ ] Import AideDD : Moteur de recherche filtrant le JSON complet des sorts.
+- [ ] Système de Cartes (Expandable) : Descriptions détaillées pour l'équipement et les sorts.
+- [ ] Cross-Tagging : Injection des sorts d'objets magiques dans le grimoire.
+
+### Phase 5 : Optimisation Mobile & Finalisation IA
+- [ ] S23 Ultra Polish : Ajustement des zones tactiles et de la densité visuelle.
+- [ ] Documentation IA : Guide d'immutabilité du moteur pour les mises à jour de données par IA.
+
 ## 📁 Fiches disponibles
 
 Actuellement, le dépôt contient les personnages et templates suivants :
