@@ -1,19 +1,282 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Validate Character</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TawynDnD — Validate Character v3.0</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0014 0%, #1a0a2e 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(26, 10, 46, 0.72);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 16px;
+            padding: 32px;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: #a855f7;
+            text-align: center;
+        }
+        .version {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+        }
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            background: rgba(10, 0, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 16px;
+            color: #f8fafc;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+        }
+        button {
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #a855f7, #c084fc);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(168, 85, 247, 0.4);
+        }
+        .output {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+        .warning {
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            color: #f97316;
+        }
+        .info {
+            margin-top: 24px;
+            padding: 16px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            color: #60a5fa;
+            font-size: 0.85rem;
+        }
+        ul { margin: 8px 0; padding-left: 20px; }
+        li { margin: 4px 0; }
+    </style>
 </head>
 <body>
-    <script>
-        const schemaVersion = "3.0-20260215-1558";
+    <div class="container">
+        <h1>⚔️ TawynDnD Character Validator</h1>
+        <div class="version">Schema Version: 3.0-20260215-1558</div>
+        
+        <textarea id="characterInput" placeholder='Paste your "const C" object here (JSON format)...
 
-        function validateCharacter(character) {
-            if (character.schemaVersion !== schemaVersion) {
-                console.log(`Error: Character schema version is invalid. Expected: ${schemaVersion}, Found: ${character.schemaVersion}`);
-                return false;
+Example:
+{
+  "schemaVersion": "3.0-20260215-1558",
+  "name": "Moros Gravewalker",
+  "level": 6,
+  "class_fr": "Occultiste",
+  "str": 8, "dex": 14, "con": 12,
+  "int": 10, "wis": 13, "cha": 16,
+  "ac": 15,
+  "hp_max": 48,
+  "speed": 30
+}'></textarea>
+        
+        <button onclick="validateCharacter()">🔍 Validate Character</button>
+        
+        <div id="output" class="output"></div>
+        
+        <div class="info">
+            <strong>📖 Usage Instructions:</strong>
+            <ul>
+                <li>Paste your character object in JSON format (with or without "const C =")</li>
+                <li>Click "Validate Character" to check schema compliance</li>
+                <li>All characters must include <code>schemaVersion: "3.0-20260215-1558"</code></li>
+                <li>See <a href="./DND_VOCABULARY.md" style="color: #a855f7;">DND_VOCABULARY.md</a> for full schema reference</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const REQUIRED_SCHEMA_VERSION = "3.0-20260215-1558";
+        
+        const REQUIRED_FIELDS = {
+            schemaVersion: "string",
+            name: "string",
+            level: "number",
+            class_fr: "string"
+        };
+        
+        const OPTIONAL_FIELDS = {
+            race_fr: "string",
+            str: "number", dex: "number", con: "number",
+            int: "number", wis: "number", cha: "number",
+            ac: "number",
+            hp_max: "number",
+            speed: "number",
+            spells: "array"
+        };
+        
+        const VALID_SPELL_SCHOOLS = [
+            "abjuration", "conjuration", "divination", "enchantment",
+            "evocation", "illusion", "necromancy", "transmutation"
+        ];
+
+        function validateCharacter() {
+            const input = document.getElementById('characterInput').value.trim();
+            const output = document.getElementById('output');
+            
+            if (!input) {
+                showOutput('error', '❌ Error: No input provided. Please paste a character object.');
+                return;
             }
-            console.log(`Success: Character schema version is valid.`);
-            return true;
+            
+            let character;
+            try {
+                // Try to parse as JSON (handle "const C = " prefix)
+                let cleanInput = input;
+                if (input.startsWith('const')) {
+                    cleanInput = input.replace(/^const\s+\w+\s*=\s*/, '').replace(/;?\s*$/, '');
+                }
+                character = JSON.parse(cleanInput);
+            } catch (e) {
+                showOutput('error', `❌ Error: Invalid JSON format\n\n${e.message}\n\nPlease ensure your input is valid JSON.`);
+                return;
+            }
+            
+            const errors = [];
+            const warnings = [];
+            const info = [];
+            
+            // 1. Check schema version (CRITICAL)
+            if (!character.schemaVersion) {
+                errors.push('Missing required field: schemaVersion');
+            } else if (character.schemaVersion !== REQUIRED_SCHEMA_VERSION) {
+                errors.push(`Invalid schemaVersion. Expected: "${REQUIRED_SCHEMA_VERSION}", Found: "${character.schemaVersion}"`);
+            } else {
+                info.push(`✅ Schema version is valid: ${REQUIRED_SCHEMA_VERSION}`);
+            }
+            
+            // 2. Check required fields
+            for (const [field, expectedType] of Object.entries(REQUIRED_FIELDS)) {
+                if (field === 'schemaVersion') continue; // Already checked
+                
+                if (!(field in character)) {
+                    errors.push(`Missing required field: ${field}`);
+                } else if (typeof character[field] !== expectedType) {
+                    errors.push(`Field "${field}" must be of type ${expectedType}, found ${typeof character[field]}`);
+                }
+            }
+            
+            // 3. Check optional fields (type validation)
+            for (const [field, expectedType] of Object.entries(OPTIONAL_FIELDS)) {
+                if (field in character) {
+                    if (expectedType === "array" && !Array.isArray(character[field])) {
+                        warnings.push(`Field "${field}" should be an array`);
+                    } else if (expectedType !== "array" && typeof character[field] !== expectedType) {
+                        warnings.push(`Field "${field}" should be of type ${expectedType}`);
+                    }
+                }
+            }
+            
+            // 4. Validate abilities (stats should be 1-30)
+            const abilities = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+            abilities.forEach(ability => {
+                if (ability in character) {
+                    const value = character[ability];
+                    if (value < 1 || value > 30) {
+                        warnings.push(`Ability "${ability}" value ${value} is outside normal range (1-30)`);
+                    }
+                }
+            });
+            
+            // 5. Validate spells if present
+            if (character.spells && Array.isArray(character.spells)) {
+                character.spells.forEach((spell, index) => {
+                    if (!spell.name_fr && !spell.name_en) {
+                        warnings.push(`Spell at index ${index}: Missing name (name_fr or name_en)`);
+                    }
+                    if (spell.level !== undefined && (spell.level < 0 || spell.level > 9)) {
+                        warnings.push(`Spell "${spell.name_fr || spell.name_en}": Invalid level ${spell.level} (must be 0-9)`);
+                    }
+                    if (spell.school && !VALID_SPELL_SCHOOLS.includes(spell.school.toLowerCase())) {
+                        warnings.push(`Spell "${spell.name_fr || spell.name_en}": Invalid school "${spell.school}"`);
+                    }
+                });
+                info.push(`✅ Found ${character.spells.length} spell(s) in character data`);
+            }
+            
+            // 6. Display results
+            if (errors.length === 0 && warnings.length === 0) {
+                showOutput('success', 
+                    `✅ SUCCESS: Character "${character.name}" is fully valid!\n\n` +
+                    `${info.join('\n')}\n\n` +
+                    `Character is ready for use in TawynDnD v3.0.`
+                );
+            } else if (errors.length === 0) {
+                showOutput('warning',
+                    `⚠️ WARNINGS: Character "${character.name}" is valid but has warnings:\n\n` +
+                    `${warnings.map(w => `• ${w}`).join('\n')}\n\n` +
+                    `${info.join('\n')}\n\n` +
+                    `Character will work but consider fixing these issues.`
+                );
+            } else {
+                showOutput('error',
+                    `❌ VALIDATION FAILED: Character "${character.name || 'Unknown'}" has errors:\n\n` +
+                    `ERRORS:\n${errors.map(e => `• ${e}`).join('\n')}\n\n` +
+                    (warnings.length > 0 ? `WARNINGS:\n${warnings.map(w => `• ${w}`).join('\n')}\n\n` : '') +
+                    `Please fix these issues before using this character.`
+                );
+            }
+        }
+        
+        function showOutput(type, message) {
+            const output = document.getElementById('output');
+            output.className = `output ${type}`;
+            output.textContent = message;
+            output.style.display = 'block';
+            output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     </script>
 </body>
