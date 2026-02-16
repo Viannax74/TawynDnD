@@ -169,7 +169,7 @@ validateCharacter(testChar); // Retourne true ou false
 ```
 
 ### Ajout d'un Nouveau Personnage
-1. Copier un fichier HTML existant (ex: `tawyndnd-moros-v3.html`)
+1. Copier un fichier HTML existant (ex: `characters/moros-v3.0-20260215-1558.html`)
 2. Modifier l'objet `const C` avec les nouvelles données
 3. Ajuster les variables CSS `:root` pour l'accent de classe
 4. Valider avec `validate-character.html`
