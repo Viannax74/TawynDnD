@@ -161,8 +161,8 @@ str:19,dex:12,con:16,int:8,wis:13,cha:10,
 ac:19,hp_max:76,speed:25,
 abilities:{str:{score:19,mod:4,label:"Force",abbr:"FOR"},dex:{score:12,mod:1,label:"Dextérité",abbr:"DEX"},con:{score:16,mod:3,label:"Constitution",abbr:"CON"},int:{score:8,mod:-1,label:"Intelligence",abbr:"INT"},wis:{score:13,mod:1,label:"Sagesse",abbr:"SAG"},cha:{score:10,mod:0,label:"Charisme",abbr:"CHA"}},
 abilities_order:["str","dex","con","int","wis","cha"],
-proficiency_bonus:3,passive_perception:14,armor_class:19,initiative:1,
-hit_points:{max:76},hit_dice:{total:8,type:"d10"},
+proficiency_bonus:3,passive_perception:14,initiative:1,
+hit_dice:{total:8,type:"d10"},
 saving_throws:{str:{prof:true,bonus:7},dex:{prof:false,bonus:1},con:{prof:true,bonus:6},int:{prof:false,bonus:-1},wis:{prof:false,bonus:1},cha:{prof:false,bonus:0}},
 skills:[
 {code:"acrobatics",name:"Acrobaties",ability:"dex",prof:false,bonus:1},{code:"arcana",name:"Arcanes",ability:"int",prof:false,bonus:-1},
@@ -299,7 +299,7 @@ all_abilities:[
 
 // ═══════ STATE ═══════
 const SK=`tawyndnd-${C.id}-v23`;
-const DS={hp_current:C.hit_points.max,hp_temp:0,death_saves:{successes:0,failures:0},martial_dice_d8_current:C.martial_dice_d8,second_wind_used:false,action_surge_used:false,hallebarde_reaction_used:false,serment_used:false,inspiration_bardic:false,inspiration_dm:false,equipment_quantities:{},hit_dice_used:0,combat_turn:0};
+const DS={hp_current:C.hp_max,hp_temp:0,death_saves:{successes:0,failures:0},martial_dice_d8_current:C.martial_dice_d8,second_wind_used:false,action_surge_used:false,hallebarde_reaction_used:false,serment_used:false,inspiration_bardic:false,inspiration_dm:false,equipment_quantities:{},hit_dice_used:0,combat_turn:0};
 function loadState(){try{const s=localStorage.getItem(SK);if(s)return{...DS,...JSON.parse(s)}}catch(e){}return{...DS}}
 function saveState(){try{localStorage.setItem(SK,JSON.stringify(state))}catch(e){}}
 let state=loadState(),activeTab="combat",editingHP=false,editingHPTemp=false,expandedCards=new Set(),secretOpen=false,abilityFilter="all";
@@ -318,7 +318,7 @@ attachEvents();
 }
 
 function renderHeader(){
-return`<div class="header"><div class="header-row"><div><div class="header-name">${C.name}</div><div class="header-sub">${C.class_fr} (${C.subclass_fr}) ${C.level} · ${C.race} · ${C.alignment}</div></div><div style="display:flex;gap:6px;align-items:center;"><div class="glass stat-pill"><div class="stat-pill-lbl">CA</div><div class="stat-pill-val">${C.armor_class}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">Init</div><div class="stat-pill-val">${fm(C.initiative)}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">Vit</div><div class="stat-pill-val">${C.speed}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">Perc</div><div class="stat-pill-val">${C.passive_perception}</div></div></div></div></div>`;
+return`<div class="header"><div class="header-row"><div><div class="header-name">${C.name}</div><div class="header-sub">${C.class_fr} (${C.subclass_fr}) ${C.level} · ${C.race} · ${C.alignment}</div></div><div style="display:flex;gap:6px;align-items:center;"><div class="glass stat-pill"><div class="stat-pill-lbl">CA</div><div class="stat-pill-val">${C.ac}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">Init</div><div class="stat-pill-val">${fm(C.initiative)}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">Vit</div><div class="stat-pill-val">${C.speed}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">Perc</div><div class="stat-pill-val">${C.passive_perception}</div></div></div></div></div>`;
 }
 
 function renderTabs(){
@@ -344,7 +344,7 @@ return`<div class="glass" style="padding:14px;margin-bottom:12px;"><div class="s
 
 // ═══════ COMBAT ═══════
 function renderCombat(){
-const pct=Math.max(0,state.hp_current/C.hit_points.max),color=hpColor(pct);
+const pct=Math.max(0,state.hp_current/C.hp_max),color=hpColor(pct);
 let h=`<div class="glass turn-counter"><button class="turn-btn" data-turn="-1">−</button><div><div class="turn-label">Tour</div><div class="turn-num">${state.combat_turn}</div></div><button class="turn-btn" data-turn="1">+</button><button class="turn-btn" data-turn="0" style="margin-left:8px;font-size:0.65rem;width:auto;padding:0 10px;" title="Reset">↺</button></div>`;
 
 h+=`<div class="glass" style="padding:12px;margin-bottom:10px;">`;
@@ -355,9 +355,9 @@ h+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:6px;"><spa
 h+=`<div style="margin-bottom:6px;"><button class="hp-temp-btn" data-hp-temp-delta="1" style="font-size:0.65rem;padding:4px 8px;width:auto;">+ PV Temp</button></div>`;
 }
 // PV normaux
-h+=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;"><div style="display:flex;gap:4px;align-items:center;"><button class="hp-btn" data-hp-delta="-5">−5</button><button class="hp-btn" data-hp-delta="-1">−</button>${editingHP?`<input type="number" class="hp-input" id="hp-edit" value="${state.hp_current}" min="0" max="${C.hit_points.max}">`:`<span class="hp-value" id="hp-display" style="color:${color}">${state.hp_current}</span>`}<span style="color:var(--text-3);font-size:1.2rem;font-weight:300;">/ ${C.hit_points.max}</span><button class="hp-btn" data-hp-delta="1">+</button><button class="hp-btn" data-hp-delta="5">+5</button></div><div style="display:flex;gap:4px;flex-wrap:wrap;"><button class="use-toggle ${state.second_wind_used?'used':'available'}" data-toggle="second_wind">${state.second_wind_used?'✗':'✓'} Second souffle</button><button class="use-toggle ${state.action_surge_used?'used':'available'}" data-toggle="action_surge">${state.action_surge_used?'✗':'✓'} Fougue</button></div></div>`;
+h+=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;"><div style="display:flex;gap:4px;align-items:center;"><button class="hp-btn" data-hp-delta="-5">−5</button><button class="hp-btn" data-hp-delta="-1">−</button>${editingHP?`<input type="number" class="hp-input" id="hp-edit" value="${state.hp_current}" min="0" max="${C.hp_max}">`:`<span class="hp-value" id="hp-display" style="color:${color}">${state.hp_current}</span>`}<span style="color:var(--text-3);font-size:1.2rem;font-weight:300;">/ ${C.hp_max}</span><button class="hp-btn" data-hp-delta="1">+</button><button class="hp-btn" data-hp-delta="5">+5</button></div><div style="display:flex;gap:4px;flex-wrap:wrap;"><button class="use-toggle ${state.second_wind_used?'used':'available'}" data-toggle="second_wind">${state.second_wind_used?'✗':'✓'} Second souffle</button><button class="use-toggle ${state.action_surge_used?'used':'available'}" data-toggle="action_surge">${state.action_surge_used?'✗':'✓'} Fougue</button></div></div>`;
 // Barres HP (temp au-dessus si présent)
-const tempPct=Math.min(100,(state.hp_temp/C.hit_points.max)*100);
+const tempPct=Math.min(100,(state.hp_temp/C.hp_max)*100);
 h+=`<div class="hp-bar-bg"><div class="hp-bar-fill" style="width:${pct*100}%;background:${color};"></div>${state.hp_temp>0?`<div class="hp-temp-bar" style="width:${tempPct}%;"></div>`:''}</div></div>`;
 
 h+=`<div class="combat-grid"><div>`;
@@ -512,7 +512,7 @@ state.hp_current=Math.max(0,state.hp_current-dmg);
 }
 }else{
 // Soins: ajouter aux HP normaux uniquement
-state.hp_current=Math.min(C.hit_points.max,state.hp_current+delta);
+state.hp_current=Math.min(C.hp_max,state.hp_current+delta);
 }
 saveState();render()
 }));
@@ -540,7 +540,7 @@ if(state[key]!==undefined){state[key]=!state[key];saveState();render()}
 }));
 
 const hpD=document.getElementById("hp-display");if(hpD)hpD.addEventListener("click",()=>{editingHP=true;render();setTimeout(()=>{const i=document.getElementById("hp-edit");if(i){i.focus();i.select()}},50)});
-const hpE=document.getElementById("hp-edit");if(hpE){const commit=()=>{state.hp_current=Math.max(0,Math.min(C.hit_points.max,parseInt(hpE.value)||0));editingHP=false;saveState();render()};hpE.addEventListener("blur",commit);hpE.addEventListener("keydown",e=>{if(e.key==="Enter")commit();if(e.key==="Escape"){editingHP=false;render()}})}
+const hpE=document.getElementById("hp-edit");if(hpE){const commit=()=>{state.hp_current=Math.max(0,Math.min(C.hp_max,parseInt(hpE.value)||0));editingHP=false;saveState();render()};hpE.addEventListener("blur",commit);hpE.addEventListener("keydown",e=>{if(e.key==="Enter")commit();if(e.key==="Escape"){editingHP=false;render()}})}
 document.querySelectorAll("[data-martial-d8]").forEach(d=>d.addEventListener("click",()=>{const i=parseInt(d.dataset.martialD8);state.martial_dice_d8_current=i<state.martial_dice_d8_current?i:i+1;saveState();render()}));
 document.querySelectorAll("[data-toggle]").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.toggle+"_used";if(state[k]!==undefined){state[k]=!state[k];saveState();render()}}));
 document.querySelectorAll("[data-death]").forEach(d=>d.addEventListener("click",()=>{const t=d.dataset.death==="success"?"successes":"failures";const i=parseInt(d.dataset.idx);state.death_saves[t]=i<state.death_saves[t]?i:i+1;saveState();render()}));
@@ -549,7 +549,7 @@ document.querySelectorAll("[data-expand]").forEach(c=>c.addEventListener("click"
 const secB=document.getElementById("secret-toggle");if(secB)secB.addEventListener("click",()=>{secretOpen=!secretOpen;render()});
 document.querySelectorAll("[data-inv]").forEach(b=>b.addEventListener("click",()=>{const n=b.dataset.inv,d=parseInt(b.dataset.invDelta),cur=getEQ(n);state.equipment_quantities[n]=Math.max(0,cur+d);saveState();render()}));
 const sR=document.getElementById("short-rest-btn");if(sR)sR.addEventListener("click",()=>{state.martial_dice_d8_current=C.martial_dice_d8;state.second_wind_used=false;state.action_surge_used=false;state.inspiration_bardic=false;state.death_saves={successes:0,failures:0};saveState();render()});
-const lR=document.getElementById("long-rest-btn");if(lR)lR.addEventListener("click",()=>{state.hp_current=C.hit_points.max;state.hp_temp=0;state.martial_dice_d8_current=C.martial_dice_d8;state.second_wind_used=false;state.action_surge_used=false;state.hallebarde_reaction_used=false;state.inspiration_bardic=false;state.death_saves={successes:0,failures:0};state.hit_dice_used=Math.max(0,state.hit_dice_used-Math.floor(C.hit_dice.total/2));state.combat_turn=0;saveState();render()});
+const lR=document.getElementById("long-rest-btn");if(lR)lR.addEventListener("click",()=>{state.hp_current=C.hp_max;state.hp_temp=0;state.martial_dice_d8_current=C.martial_dice_d8;state.second_wind_used=false;state.action_surge_used=false;state.hallebarde_reaction_used=false;state.inspiration_bardic=false;state.death_saves={successes:0,failures:0};state.hit_dice_used=Math.max(0,state.hit_dice_used-Math.floor(C.hit_dice.total/2));state.combat_turn=0;saveState();render()});
 }
 render();
 </script>
