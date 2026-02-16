@@ -1,1 +1,33 @@
----\nname: Feature request\nabout: Suggérer une nouvelle idée ou une amélioration pour TawynDnD.\ntitle: '[Feature]: ' \nlabels: enhancement, backlog\nassignees: Viannax74\n\n---\n\n**Objectif**\nDécrivez succinctement l'objectif de cette nouvelle fonctionnalité.\n\n**Description détaillée**\nExpliquez en quoi consiste l'amélioration et comment elle devrait fonctionner.\n\n**Bénéfice attendu**\nQuel est l'apport pour l'utilisateur solo ? En quoi cela respecte-t-il les principes **"Physical First"** (pas de dice roller automatique) et **"Local First"** ?\n\n**Livrables potentiels**\n- [ ] Élément UI\n- [ ] Mise à jour du schéma const C\n- [ ] Documentation\n\n**Effort estimé**\nIndiquez une estimation en heures (ex: 2h, 4h, 10h).\n\n**Priorité**\n- [ ] Basse\n- [ ] Moyenne\n- [ ] Élevée\n\n**Autres informations**\nAjoutez tout autre contexte, captures d'écran ou liens vers des règles AideDD ici.
+---
+name: Feature request
+about: Suggérer une nouvelle idée ou une amélioration pour TawynDnD.
+title: '[Feature]: ' 
+labels: enhancement, backlog
+assignees: Viannax74
+
+---
+
+**Objectif**
+Décrivez succinctement l'objectif de cette nouvelle fonctionnalité.
+
+**Description détaillée**
+Expliquez en quoi consiste l'amélioration et comment elle devrait fonctionner.
+
+**Bénéfice attendu**
+Quel est l'apport pour l'utilisateur solo ? En quoi cela respecte-t-il les principes **"Physical First"** (pas de dice roller automatique) et **"Local First"** ?
+
+**Livrables potentiels**
+- [ ] Élément UI
+- [ ] Mise à jour du schéma const C
+- [ ] Documentation
+
+**Effort estimé**
+Indiquez une estimation en heures (ex: 2h, 4h, 10h).
+
+**Priorité**
+- [ ] Basse
+- [ ] Moyenne
+- [ ] Élevée
+
+**Autres informations**
+Ajoutez tout autre contexte, captures d'écran ou liens vers des règles AideDD ici.
