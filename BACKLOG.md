@@ -14,7 +14,7 @@
 
 ### 🔵 Phase 1 — Standardisation & Cohérence Technique
 **Issue:** [#2 - Phase 1 - Standardisation & cohérence technique du repo](https://github.com/Viannax74/TawynDnD/issues/2)  
-**Status:** 🟢 En cours  
+**Status:** ✅ Terminée  
 **Priorité:** Élevée  
 **Description:** Unification du thème Glassmorphism, schéma `const C` universel, validation automatique.
 
