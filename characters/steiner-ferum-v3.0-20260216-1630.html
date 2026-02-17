@@ -338,14 +338,25 @@ const C = {
   subclass: "battle_master",
   subclass_fr: "Maître de guerre",
   background: "Soldat (Officier)",
-  race: "Nain des montagnes",
+  race_fr: "Nain des montagnes",
   alignment: "Loyal bon",
   avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Steiner&backgroundColor=2e1408",
+
+  str: 19,
+  dex: 12,
+  con: 16,
+  int: 8,
+  wis: 13,
+  cha: 10,
+
+  ac: 19,
+  hp_max: 76,
+  speed: 25,
   
   stats: {
     ac: 19,
     init: 1,
-    speed: "7.5 m",
+    speed: 25,
     prof: 3,
     dc: 15,
     hp_max: 76,
@@ -367,39 +378,39 @@ const C = {
   passive_perception: 14,
 
   saving_throws: {
-    str: { prof: true, bonus: 7 },
-    dex: { prof: false, bonus: 1 },
-    con: { prof: true, bonus: 6 },
-    int: { prof: false, bonus: -1 },
-    wis: { prof: false, bonus: 1 },
-    cha: { prof: false, bonus: 0 }
+    str_save: { prof: true, bonus: 7 },
+    dex_save: { prof: false, bonus: 1 },
+    con_save: { prof: true, bonus: 6 },
+    int_save: { prof: false, bonus: -1 },
+    wis_save: { prof: false, bonus: 1 },
+    cha_save: { prof: false, bonus: 0 }
   },
 
   skills: [
-    { name: "Acrobaties", ability: "dex", prof: false, bonus: 1 },
-    { name: "Arcanes", ability: "int", prof: false, bonus: -1 },
-    { name: "Athlétisme", ability: "str", prof: true, bonus: 7 },
-    { name: "Discrétion", ability: "dex", prof: false, bonus: 1 },
-    { name: "Dressage", ability: "wis", prof: false, bonus: 1 },
-    { name: "Escamotage", ability: "dex", prof: false, bonus: 1 },
-    { name: "Histoire", ability: "int", prof: false, bonus: -1 },
-    { name: "Intimidation", ability: "cha", prof: true, bonus: 3 },
-    { name: "Intuition", ability: "wis", prof: false, bonus: 1 },
-    { name: "Investigation", ability: "int", prof: false, bonus: -1 },
-    { name: "Médecine", ability: "wis", prof: false, bonus: 1 },
-    { name: "Nature", ability: "int", prof: false, bonus: -1 },
-    { name: "Perception", ability: "wis", prof: true, bonus: 4 },
-    { name: "Persuasion", ability: "cha", prof: false, bonus: 0 },
-    { name: "Religion", ability: "int", prof: false, bonus: -1 },
-    { name: "Représentation", ability: "cha", prof: false, bonus: 0 },
-    { name: "Survie", ability: "wis", prof: true, bonus: 4 },
-    { name: "Tromperie", ability: "cha", prof: false, bonus: 0 }
+    { name: "acrobatics", name_fr: "Acrobaties", ability: "dex", prof: false, bonus: 1 },
+    { name: "arcana", name_fr: "Arcanes", ability: "int", prof: false, bonus: -1 },
+    { name: "athletics", name_fr: "Athlétisme", ability: "str", prof: true, bonus: 7 },
+    { name: "stealth", name_fr: "Discrétion", ability: "dex", prof: false, bonus: 1 },
+    { name: "animal_handling", name_fr: "Dressage", ability: "wis", prof: false, bonus: 1 },
+    { name: "sleight_of_hand", name_fr: "Escamotage", ability: "dex", prof: false, bonus: 1 },
+    { name: "history", name_fr: "Histoire", ability: "int", prof: false, bonus: -1 },
+    { name: "intimidation", name_fr: "Intimidation", ability: "cha", prof: true, bonus: 3 },
+    { name: "insight", name_fr: "Intuition", ability: "wis", prof: false, bonus: 1 },
+    { name: "investigation", name_fr: "Investigation", ability: "int", prof: false, bonus: -1 },
+    { name: "medicine", name_fr: "Médecine", ability: "wis", prof: false, bonus: 1 },
+    { name: "nature", name_fr: "Nature", ability: "int", prof: false, bonus: -1 },
+    { name: "perception", name_fr: "Perception", ability: "wis", prof: true, bonus: 4 },
+    { name: "persuasion", name_fr: "Persuasion", ability: "cha", prof: false, bonus: 0 },
+    { name: "religion", name_fr: "Religion", ability: "int", prof: false, bonus: -1 },
+    { name: "performance", name_fr: "Représentation", ability: "cha", prof: false, bonus: 0 },
+    { name: "survival", name_fr: "Survie", ability: "wis", prof: true, bonus: 4 },
+    { name: "deception", name_fr: "Tromperie", ability: "cha", prof: false, bonus: 0 }
   ],
 
   attacks: [
     {
       name: "Hallebarde du Serment", type: "action", bonus: 8,
-      damage: "1d10+5", type_dmg: "Tranchant",
+      damage: "1d10+5", type_dmg: "slashing", type_dmg_fr: "Tranchant",
       tags: ["Magique +1", "Allonge", "2 mains"],
       range: "CàC (3m)",
       dice: "1d10", flat: 5,
@@ -407,7 +418,7 @@ const C = {
     },
     {
       name: "Manche de Hallebarde", type: "bonus", bonus: 8,
-      damage: "1d4+5", type_dmg: "Contondant",
+      damage: "1d4+5", type_dmg: "bludgeoning", type_dmg_fr: "Contondant",
       tags: ["Action Bonus", "Maître d'hast"],
       range: "CàC (3m)",
       dice: "1d4", flat: 5,
@@ -415,7 +426,7 @@ const C = {
     },
     {
       name: "Arbalète légère", type: "action", bonus: 4,
-      damage: "1d8+1", type_dmg: "Perforant",
+      damage: "1d8+1", type_dmg: "piercing", type_dmg_fr: "Perforant",
       tags: ["Munitions (24/96m)", "Chargement"],
       range: "Distance",
       dice: "1d8", flat: 1,
@@ -424,11 +435,11 @@ const C = {
   ],
 
   maneuvers: [
-    { name: "Riposte", type: "Réaction", desc: "Si raté au CàC → réaction + dé de supériorité → attaque CàC. Ajoute le dé aux dégâts." },
-    { name: "Balayage", type: "Action", desc: "Touche CàC → dé sup → frappe 2e créature à 1,5m. Dégâts = résultat du dé." },
-    { name: "Attaque menaçante", type: "Action", desc: "Touche → dé sup : +dégâts. JdS SAG DD 15 ou effrayée." },
-    { name: "Repousser", type: "Action", desc: "Touche → dé sup : +dégâts. JdS FOR DD 15 ou repoussée 4,5m (Taille G max)." },
-    { name: "Parade", type: "Réaction", desc: "Touché au CàC → réaction + dé sup → réduit dégâts (dé + DEX (+1))." }
+    { name: "Riposte", type: "reaction", type_fr: "Réaction", desc: "Si raté au CàC → réaction + dé de supériorité → attaque CàC. Ajoute le dé aux dégâts." },
+    { name: "Balayage", type: "action", type_fr: "Action", desc: "Touche CàC → dé sup → frappe 2e créature à 1,5m. Dégâts = résultat du dé." },
+    { name: "Attaque menaçante", type: "action", type_fr: "Action", desc: "Touche → dé sup : +dégâts. JdS SAG DD 15 ou effrayée." },
+    { name: "Repousser", type: "action", type_fr: "Action", desc: "Touche → dé sup : +dégâts. JdS FOR DD 15 ou repoussée 4,5m (Taille G max)." },
+    { name: "Parade", type: "reaction", type_fr: "Réaction", desc: "Touché au CàC → réaction + dé sup → réduit dégâts (dé + DEX (+1))." }
   ],
 
   class_features: [
@@ -468,15 +479,15 @@ const C = {
   },
 
   equipment: [
-    { name: "Hallebarde du Serment", cat: "arme", qty: 1, editable: false },
-    { name: "Arbalète légère", cat: "arme", qty: 1, editable: false },
-    { name: "Armure de plates", cat: "armure", qty: 1, editable: false },
-    { name: "Bouclier", cat: "armure", qty: 1, editable: false },
-    { name: "Carreaux d'arbalète", cat: "munition", qty: 20, editable: true },
-    { name: "Rations (1 jour)", cat: "consom", qty: 10, editable: true },
-    { name: "Torches", cat: "consom", qty: 10, editable: true },
-    { name: "Sac à dos", cat: "equip", qty: 1, editable: false },
-    { name: "Corde en chanvre (15 m)", cat: "equip", qty: 1, editable: false }
+    { name: "Hallebarde du Serment", cat: "weapon", qty: 1, editable: false },
+    { name: "Arbalète légère", cat: "weapon", qty: 1, editable: false },
+    { name: "Armure de plates", cat: "armor", qty: 1, editable: false },
+    { name: "Bouclier", cat: "armor", qty: 1, editable: false },
+    { name: "Carreaux d'arbalète", cat: "consumable", qty: 20, editable: true },
+    { name: "Rations (1 jour)", cat: "consumable", qty: 10, editable: true },
+    { name: "Torches", cat: "consumable", qty: 10, editable: true },
+    { name: "Sac à dos", cat: "misc", qty: 1, editable: false },
+    { name: "Corde en chanvre (15 m)", cat: "misc", qty: 1, editable: false }
   ],
 
   serment: {
@@ -598,7 +609,7 @@ function rollAttack(atk) {
   toast.innerHTML = `
     <div class="toast-title">⚔️ ${atk.name}</div>
     <div class="toast-result">Attaque : 1d20+${atk.bonus} = ${d20}+${atk.bonus} = <span class="dice-total">${total}</span></div>
-    <div class="toast-result" style="font-size:0.8rem;color:var(--text-2);">Dégâts : ${atk.dice}+${atk.flat} = ${dmgTotal} ${atk.type_dmg}</div>`;
+    <div class="toast-result" style="font-size:0.8rem;color:var(--text-2);">Dégâts : ${atk.dice}+${atk.flat} = ${dmgTotal} ${atk.type_dmg_fr || atk.type_dmg}</div>`;
   container.appendChild(toast);
   setTimeout(() => toast.remove(), 3500);
 }
@@ -613,7 +624,7 @@ function render() {
 function renderHeader() {
   const modes = [ { id: "social", icon: "🎭", label: "Social" }, { id: "exploration", icon: "🧭", label: "Exploration" }, { id: "combat", icon: "⚔️", label: "Combat" } ];
   const pct = state.hp / C.stats.hp_max;
-  return `<div class="header"><div class="header-inner"><div class="header-left"><div class="avatar"><img src="${C.avatar}"></div><div><div class="header-name">${C.name}</div><div class="header-sub">${C.class_fr} Nv.${C.level} · ${C.race}</div></div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;"><div class="mode-bar">${modes.map(m => `<button class="mode-btn ${gameMode === m.id ? 'active' : ''}" data-mode="${m.id}">${m.icon} ${m.label}</button>`).join("")}</div><div class="header-stats"><div class="glass stat-pill"><div class="stat-pill-lbl">PV</div><div class="stat-pill-val" style="color:${hpColor(pct)}">${state.hp}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">CA</div><div class="stat-pill-val">${C.stats.ac}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">Init</div><div class="stat-pill-val">${C.stats.init}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">DD</div><div class="stat-pill-val">${C.stats.dc}</div></div></div></div></div></div>`;
+  return `<div class="header"><div class="header-inner"><div class="header-left"><div class="avatar"><img src="${C.avatar}"></div><div><div class="header-name">${C.name}</div><div class="header-sub">${C.class_fr} Nv.${C.level} · ${C.race_fr || C.race}</div></div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;"><div class="mode-bar">${modes.map(m => `<button class="mode-btn ${gameMode === m.id ? 'active' : ''}" data-mode="${m.id}">${m.icon} ${m.label}</button>`).join("")}</div><div class="header-stats"><div class="glass stat-pill"><div class="stat-pill-lbl">PV</div><div class="stat-pill-val" style="color:${hpColor(pct)}">${state.hp}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">CA</div><div class="stat-pill-val">${C.stats.ac}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">Init</div><div class="stat-pill-val">${C.stats.init}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">DD</div><div class="stat-pill-val">${C.stats.dc}</div></div></div></div></div></div>`;
 }
 
 function renderTabs() {
@@ -654,7 +665,7 @@ function renderManeuvers() {
   C.maneuvers.forEach(m => {
     const id = `man-${m.name}`;
     const open = expandedCards.has(id);
-    html += `<div class="glass maneuver-card" data-expand="${id}"><div class="maneuver-header"><span class="maneuver-type-badge">${m.type}</span><span class="maneuver-name">${m.name}</span><span class="expand-chevron ${open?'open':''}">▸</span></div><div class="expand-body ${open?'open':''}">${m.desc}</div></div>`;
+    html += `<div class="glass maneuver-card" data-expand="${id}"><div class="maneuver-header"><span class="maneuver-type-badge">${m.type_fr || m.type}</span><span class="maneuver-name">${m.name}</span><span class="expand-chevron ${open?'open':''}">▸</span></div><div class="expand-body ${open?'open':''}">${m.desc}</div></div>`;
   });
   return html;
 }
@@ -688,11 +699,12 @@ function renderFiche() {
   html += `</div><div class="grid-2"><div class="glass" style="padding:12px;"><div class="section-title">Sauvegardes</div>`;
   Object.keys(C.saving_throws).forEach(k => {
     const s = C.saving_throws[k];
-    html += `<div class="save-row"><span class="skill-dot ${s.prof?'proficient':''}"></span><span>${k.toUpperCase()}</span><span class="skill-bonus">${fmtMod(s.bonus)}</span></div>`;
+    const label = k.endsWith("_save") ? k.replace("_save", "").toUpperCase() : k.toUpperCase();
+    html += `<div class="save-row"><span class="skill-dot ${s.prof?'proficient':''}"></span><span>${label}</span><span class="skill-bonus">${fmtMod(s.bonus)}</span></div>`;
   });
   html += `</div><div class="glass" style="padding:12px;"><div class="section-title">Compétences</div>`;
   C.skills.forEach(s => {
-    html += `<div class="skill-row"><span class="skill-dot ${s.prof?'proficient':''}"></span><span>${s.name}</span><span class="skill-bonus">${fmtMod(s.bonus)}</span></div>`;
+    html += `<div class="skill-row"><span class="skill-dot ${s.prof?'proficient':''}"></span><span>${s.name_fr || s.name}</span><span class="skill-bonus">${fmtMod(s.bonus)}</span></div>`;
   });
   html += `</div></div><div class="glass" style="padding:12px;margin-top:12px;"><div class="section-title">Inventaire</div>`;
   C.equipment.forEach(e => {
