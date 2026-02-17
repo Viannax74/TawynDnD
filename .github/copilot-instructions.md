@@ -145,14 +145,20 @@ Pour que Copilot lise automatiquement ces instructions, créer :
 ```bash
 mkdir -p .github
 cp COPILOT_GUIDE.md .github/copilot-instructions.md
-```
-#### Procédure d'ajout de traduction i18n
 
-1. Repérer la clé à ajouter ou étendre (ex : ui.hp ou spells.shield.name)
-2. Ajouter dans en.js (EN) et fr.js (FR) dans /translations
-3. Tester techniquement sur la fiche
-4. Valider terminologie D&D5/AideDD
-5. Faire review joueur FR
+```
+---
+### 🌍 Internationalisation : Ajouter/modifier une traduction
+
+1. Repérer la clé à traduire ou ajouter (ex : `ui.hp`, `skills.perception`, `spells.shield.name`)
+2. Compléter ou ajouter la clé dans `/translations/en.js` et `/translations/fr.js`.
+3. Valider la terminologie officielle D&D5e / AideDD.
+4. Tester le rendu sur la fiche, UI ou composant.
+5. Réaliser une review joueur FR.
+6. Les traductions, validations et conventions sont centralisées dans TECHNICAL_SPEC.md.
+
+Pour tout ajout complexe : documenter dans le commit le lien vers la fiche, la clé concernée et la méthode de fallback utilisée.
+---
 
 ```
 Copilot lit `.github/copilot-instructions.md` automatiquement sur chaque prompt.
