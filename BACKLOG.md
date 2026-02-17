@@ -29,6 +29,42 @@ Intégration des propriétés complètes des sorts : École, Composantes, Porté
 **Priorité :** Critique — Fondation pour toutes les fiches futures  
 **Estimation totale :** 38-50h (P0+P1), 58-70h (complet)
 
+### P0 (Prio 1) — Fondations i18n _(8-12h)_
+- [ ] Créer la structure i18n de base : translations/en.js, fr.js, index.js, fonction t() avec fallback & switch langue (M1 : switch FR/EN fonctionne)
+- [ ] Adapter le moteur (Moros & Steiner) : UI traduisible, labels/boutons dynamiques, plus de texte en dur
+- [ ] Documenter “comment ajouter une traduction” dans COPILOT_GUIDE.md
+- [ ] Critère de succès : une fiche test affiche l’UI entière en FR/EN
+
+### P1 — Dataset minimum viable _(30-38h, dont ~24h traduction clés)_
+- [ ] Script API Node.js/python : extraire sorts/classes de dnd5eapi.co → JSON EN
+- [ ] Chercher/importer dataset existant FR (AideDD ou OpenData) ; sinon DeepL+review manuelle pour sorts 0-3
+- [ ] Générer mapping EN→FR pour tout ce qui est utilisé dans Moros & Steiner d’abord, pas tout le catalogue
+- [ ] Critère de succès : 1 fiche personnage (Moros OU Steiner) 100% fonctionnelle en FR (M2 : 1 fiche traduite)
+- [ ] Checklist validation traduction :
+    1. Respecte la terminologie AideDD/WotC
+    2. Test technique : rendu correct dans la fiche traduite
+    3. Review par un joueur francophone réel
+- [ ] Décision stratégique : si le dataset FR complet n’est pas dispo ⇒ DeepL puis relecture humaine sur les sorts joués pour gain de temps (–15h)
+
+### P2 — Extension progressive _(20-30h selon besoin réel)_
+- [ ] Si un nouveau personnage/joueur a besoin de nouveaux sorts/capacités, déclencher la traduction et l’ajouter au mapping (évite de pré-traduire tout ce qui ne sera jamais joué)
+- [ ] Traduction des sorts restants, objets magiques, backgrounds, etc
+- [ ] Ajout de nouveaux templates : character builder, UI de création/injection directe depuis mapping-i18n
+- [ ] Critère de succès : toutes les fiches utilisées en session sont traduites (M3)
+
+### P3 — Caractérisation avancée _(12-16h)_
+- [ ] Interface “character-builder.html” opérationnelle multilingue, injection auto des capacités/traductions
+
+### Jalons mesurables (à documenter dans README & issues)
+- **M1 :** switch FR/EN fonctionne
+- **M2 :** une fiche 100% FR/EN ok
+- **M3 :** toutes fiches jouées traduites
+- **M4 :** character builder multilingue en prod
+
+### Notes stratégiques
+- Prioriser _juste ce qui est joué_, jamais tout traduire d’avance.
+- P2/P3 n’attaqués que si feedback joueur positif et utilité validée sur Moros/Steiner.
+- Validation : checklist terminologie AideDD > test technique > review joueur
 ---
 
 ### 🎯 P0 — Fondations i18n (Prio critique, 8-12h)
