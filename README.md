@@ -189,6 +189,18 @@ par :
 - Rappelle-toi : **pas de texte en dur** !
 - Respecte la validation par checklist et la priorisation sur l’usage réel.
 
+### 🌍 Internationalisation (i18n)
+Le projet dispose désormais d’un socle i18n :
+- Dossier `/translations` avec en.js et fr.js, extensible.
+- Fonction t() centrale, gestion du switch langue.
+- Toute contribution doit passer par t() (aucun texte en dur).
+- Ajout, extension et validation : voir COPILOT_GUIDE.md.
+- Prioriser la traduction pour les éléments utilisés en session.
+Exemple :
+```js
+import { t } from './translations/index.js';
+span.innerText = t('ui.hp'); // Affiche "Points de vie" ou "Hit Points" selon la langue
+
 ---
 
 Pour toute question de contribution i18n, voir aussi :
