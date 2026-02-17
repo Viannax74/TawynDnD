@@ -9,8 +9,11 @@ export const EN = {
   ui: {
     // Stats & Combat
     hp: 'Hit Points',
+    hp_short: 'HP',              // Short version for compact spaces
     hp_temp: 'Temporary HP',
+    hp_temp_short: 'Temp HP',    // Short version
     ac: 'Armor Class',
+    ac_short: 'AC',              // Short version
     init: 'Initiative',
     speed: 'Speed',
     prof: 'Proficiency',
