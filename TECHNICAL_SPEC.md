@@ -254,3 +254,11 @@ steiner-ferum-v3.0-20260216-1630.html
 ## 📋 Conformité
 
 Toute modification de cette spécification doit être accompagnée d'une mise à jour du `schemaVersion` dans `DND_VOCABULARY.md` et d'une entrée dans `CHANGELOG.md`.
+
+---
+
+#### Integration i18n (norme)
+
+- Toute UI, moteur ou fiche doit utiliser t() pour tous labels ou contenus dynamiques.
+- Convention de nommage : dot notation (ex : ui.hp, skills.perception).
+- Fallback automatique EN si non traduit
