@@ -1,557 +1,127 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TawynD&D — Steiner v3.0</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{--bg-primary:#140a00;--bg-secondary:#2e1408;--bg-tertiary:#4e2b1b;--bg-glass:rgba(46,20,8,0.7);--bg-glass-hover:rgba(78,43,27,0.8);--accent:#ef4444;--accent-light:#f87171;--accent-pale:#fecaca;--accent-rgb:239,68,68;--text-1:#f8fafc;--text-2:#cbd5e1;--text-3:#94a3b8;--border-1:rgba(255,255,255,0.08);--border-accent:rgba(239,68,68,0.3);--hp-green:#10b981;--hp-orange:#f97316;--hp-red:#ef4444;--hp-temp:#a78bfa;--tactic-blue:#60a5fa;--tactic-purple:#a78bfa;--font-body:'Inter',system-ui,sans-serif;--font-display:'Space Grotesk','Inter',sans-serif;--font-mono:'JetBrains Mono',monospace}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-1);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased}
-.glass{background:var(--bg-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border-1);border-radius:12px}
-.glass:hover{border-color:var(--border-accent)}
-::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(239,68,68,0.3);border-radius:3px}
-.header{position:sticky;top:0;z-index:50;background:linear-gradient(135deg,rgba(46,20,8,0.95),rgba(20,10,0,0.95));backdrop-filter:blur(20px);border-bottom:1px solid var(--border-1);padding:10px 24px}
-.header-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.header-name{font-family:var(--font-display);font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,var(--accent-light),var(--accent-pale));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.header-sub{color:var(--text-3);font-size:0.78rem}
-.stat-pill{text-align:center;padding:3px 10px}
-.stat-pill-val{font-family:var(--font-display);font-size:1.05rem;font-weight:700}
-.stat-pill-lbl{font-size:0.55rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.05em}
-.tab-bar{display:flex;gap:2px;padding:6px 24px;background:rgba(20,10,0,0.6);border-bottom:1px solid var(--border-1);overflow-x:auto}
-.tab-btn{padding:7px 14px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--text-3);font-family:var(--font-body);font-size:0.8rem;font-weight:500;cursor:pointer;transition:all 0.2s;white-space:nowrap}
-.tab-btn.active{background:rgba(239,68,68,0.15);border-color:var(--border-accent);color:var(--accent-light)}
-.tab-btn:hover{color:var(--text-1)}
-.main{padding:16px 24px;max-width:1400px;margin:0 auto}
-.section-title{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border-1)}
-.grid-fiche{display:grid;grid-template-columns:260px 1fr;gap:16px}
-.ability-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
-.ability-block{padding:8px;text-align:center}
-.ability-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent-light)}
-.ability-mod{font-family:var(--font-display);font-size:1.6rem;font-weight:700;line-height:1.1}
-.ability-score{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-3)}
-.skill-row{display:flex;align-items:center;gap:5px;padding:1px 6px;font-size:0.72rem;color:var(--text-3);border-radius:3px}
-.skill-row:hover{background:rgba(255,255,255,0.03)}
-.skill-dot{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--text-3);flex-shrink:0}
-.skill-dot.proficient{background:var(--accent);border-color:var(--accent)}
-.skill-bonus{margin-left:auto;font-family:var(--font-mono);font-weight:600;color:var(--text-2)}
-.save-row{display:flex;align-items:center;gap:5px;padding:2px 6px;font-size:0.72rem;color:var(--text-3)}
-.hp-bar-bg{height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;margin-top:4px;position:relative}
-.hp-bar-fill{height:100%;border-radius:4px;transition:width 0.4s,background 0.4s}
-.hp-temp-bar{height:100%;border-radius:4px;background:var(--hp-temp);position:absolute;right:0;top:0;transition:width 0.4s;opacity:0.85}
-.hp-value{font-family:var(--font-display);font-size:1.8rem;font-weight:700;cursor:pointer;transition:color 0.2s}
-.hp-value:hover{color:var(--accent-light)}
-.hp-temp-value{font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--hp-temp);cursor:pointer;transition:color 0.2s}
-.hp-temp-value:hover{color:#c4b5fd}
-.hp-input{font-family:var(--font-display);font-size:1.8rem;font-weight:700;width:55px;text-align:center;background:rgba(255,255,255,0.1);border:1px solid var(--accent);border-radius:6px;color:var(--text-1);outline:none}
-.hp-temp-input{font-family:var(--font-display);font-size:1.1rem;font-weight:600;width:50px;text-align:center;background:rgba(167,139,250,0.1);border:1px solid var(--hp-temp);border-radius:6px;color:var(--hp-temp);outline:none}
-.hp-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--border-1);background:transparent;color:var(--text-2);font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
-.hp-btn:hover{border-color:var(--accent);color:var(--accent-light)}
-.hp-temp-btn{width:22px;height:22px;border-radius:6px;border:1px solid rgba(167,139,250,0.3);background:transparent;color:var(--hp-temp);font-size:0.75rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
-.hp-temp-btn:hover{border-color:var(--hp-temp);background:rgba(167,139,250,0.1)}
-.martial-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--accent);cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:700}
-.martial-dot.filled{background:var(--accent);box-shadow:0 0 8px rgba(239,68,68,0.4);color:#fff}
-.martial-dot.empty{background:transparent;color:var(--accent)}
-.martial-dot:hover{transform:scale(1.15)}
-.use-toggle{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;border:1px solid var(--border-1);background:transparent;color:var(--text-2);font-family:var(--font-body);font-size:0.75rem;cursor:pointer;transition:all 0.2s}
-.use-toggle.available{border-color:var(--hp-green);color:var(--hp-green)}
-.use-toggle.used{border-color:var(--text-3);color:var(--text-3);opacity:0.6;text-decoration:line-through}
-.use-toggle:hover{border-color:var(--accent)}
-.checkbox-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;border:1px solid var(--border-1);background:rgba(255,255,255,0.02);cursor:pointer;transition:all 0.2s;margin-bottom:6px}
-.checkbox-row:hover{border-color:var(--accent);background:rgba(239,68,68,0.05)}
-.checkbox-row.checked{border-color:var(--hp-green);background:rgba(16,185,129,0.08)}
-.checkbox-box{width:16px;height:16px;border-radius:3px;border:2px solid var(--border-1);display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;font-size:0.65rem}
-.checkbox-row.checked .checkbox-box{background:var(--hp-green);border-color:var(--hp-green);color:white}
-.checkbox-label{font-size:0.72rem;color:var(--text-2);flex:1}
-.checkbox-row.checked .checkbox-label{color:var(--text-1);font-weight:600}
-.death-dot{width:14px;height:14px;border-radius:50%;border:2px solid;cursor:pointer;transition:all 0.2s}
-.death-dot:hover{transform:scale(1.2)}
-.death-dot.success{border-color:var(--hp-green)}.death-dot.success.filled{background:var(--hp-green)}
-.death-dot.failure{border-color:var(--hp-red)}.death-dot.failure.filled{background:var(--hp-red)}
-.combat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.turn-counter{display:flex;align-items:center;gap:12px;justify-content:center;padding:10px;margin-bottom:12px}
-.turn-num{font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--accent-light);min-width:40px;text-align:center}
-.turn-label{font-size:0.65rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em}
-.turn-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border-accent);background:rgba(239,68,68,0.1);color:var(--accent-light);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
-.turn-btn:hover{background:rgba(239,68,68,0.25)}
-.attack-card{padding:12px 14px;margin-bottom:6px}
-.attack-header{display:flex;align-items:center;gap:10px}
-.attack-bonus{font-family:var(--font-mono);font-size:1rem;font-weight:700;color:var(--accent-light);min-width:32px;text-align:center}
-.attack-name{font-weight:600;font-size:0.85rem}
-.attack-damage{font-family:var(--font-mono);font-size:0.78rem;color:var(--text-2);margin-left:auto;white-space:nowrap}
-.attack-props{font-size:0.68rem;color:var(--text-3);margin-top:3px;padding-left:42px}
-.attack-special{margin-top:6px;padding:6px 10px;background:rgba(239,68,68,0.08);border-radius:8px;border-left:3px solid var(--accent)}
-.attack-special-text{font-size:0.75rem;color:var(--text-2);line-height:1.5}
-.maneuver-card{padding:8px 12px;margin-bottom:4px;border-left:3px solid var(--accent)}
-.maneuver-name{font-weight:600;font-size:0.8rem;color:var(--text-1)}
-.maneuver-type{font-size:0.65rem;color:var(--hp-orange);font-weight:600}
-.maneuver-desc{font-size:0.73rem;color:var(--text-2);line-height:1.45;margin-top:2px}
-.expand-card{padding:10px 14px;margin-bottom:6px;cursor:pointer;transition:border-color 0.2s}
-.expand-header{display:flex;align-items:center;justify-content:space-between;font-weight:600;font-size:0.85rem}
-.expand-source{font-size:0.65rem;color:var(--text-3);font-weight:400;margin-left:8px}
-.expand-chevron{transition:transform 0.2s;color:var(--text-3);font-size:0.75rem}
-.expand-chevron.open{transform:rotate(90deg)}
-.expand-body{display:none;padding-top:8px;font-size:0.8rem;color:var(--text-2);line-height:1.6;border-top:1px solid var(--border-1);margin-top:8px}
-.expand-body.open{display:block}
-.personality-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:1px}
-.personality-text{font-size:0.78rem;color:var(--text-2);font-style:italic;margin-bottom:8px;line-height:1.45}
-.rest-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border-accent);background:rgba(239,68,68,0.1);color:var(--accent-light);font-family:var(--font-body);font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s}
-.rest-btn:hover{background:rgba(239,68,68,0.25)}
-.prof-list{font-size:0.73rem;color:var(--text-2);line-height:1.7}
-.prof-label{font-weight:600;color:var(--text-3);text-transform:uppercase;font-size:0.6rem;letter-spacing:0.05em}
-.ally-card{padding:7px 10px;margin-bottom:4px;font-size:0.78rem}
-.ally-name{font-weight:600;color:var(--text-1)}.ally-desc{color:var(--text-3);font-size:0.72rem}.ally-deceased{opacity:0.5;font-style:italic}
-.inv-row{display:flex;align-items:center;justify-content:space-between;padding:4px 8px;font-size:0.78rem;border-bottom:1px solid var(--border-1)}
-.inv-row:last-child{border-bottom:none}
-.inv-qty{font-family:var(--font-mono);font-weight:600;min-width:28px;text-align:center}
-.inv-btn{width:20px;height:20px;border-radius:4px;border:1px solid var(--border-1);background:transparent;color:var(--text-3);font-size:0.75rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.inv-btn:hover{border-color:var(--accent);color:var(--accent-light)}
-.bio-link{display:flex;align-items:center;gap:8px;padding:7px 10px;margin-bottom:4px;border-radius:8px;border:1px solid var(--border-1);background:rgba(255,255,255,0.03);text-decoration:none;color:var(--text-2);font-size:0.78rem;transition:all 0.2s}
-.bio-link:hover{border-color:var(--accent);color:var(--accent-light);background:rgba(239,68,68,0.08)}
-.secret-btn{display:block;margin:30px auto 16px;padding:4px 12px;border:none;background:transparent;color:var(--text-3);font-size:0.6rem;font-family:var(--font-mono);cursor:pointer;opacity:0.2;transition:opacity 0.3s;letter-spacing:0.05em}
-.secret-btn:hover{opacity:0.5}
-.secret-panel{display:none;max-width:600px;margin:0 auto 20px;padding:16px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);border-radius:12px;animation:fadeIn 0.3s ease}
-.secret-panel.open{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-.tactic-card{padding:14px;margin-bottom:10px;border-left:4px solid var(--tactic-blue)}
-.tactic-card.priority{border-left-color:var(--accent)}
-.tactic-card.social{border-left-color:var(--tactic-purple)}
-.tactic-text{font-size:0.8rem;color:var(--text-2);line-height:1.6}
-.tactic-tip{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px}
-.tactic-icon{font-size:0.9rem;flex-shrink:0;margin-top:1px}
-.tactic-subtitle{font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
-.tactic-subtitle.priority{color:var(--accent-light)}
-.tactic-subtitle.combat{color:var(--tactic-blue)}
-.tactic-subtitle.social{color:var(--tactic-purple)}
-.tactic-title{font-weight:700;font-size:0.9rem;margin-bottom:4px}
-.tactic-checklist{font-size:0.78rem;color:var(--text-2);line-height:1.7}
-.tactic-check-item{display:flex;gap:6px;align-items:flex-start;padding:2px 0}
-.tactic-check-label{font-size:0.65rem;font-weight:600;text-transform:uppercase;min-width:55px;flex-shrink:0}
-@media(max-width:1024px){.combat-grid{grid-template-columns:1fr}.grid-fiche{grid-template-columns:220px 1fr}}
-@media(max-width:768px){.grid-fiche{grid-template-columns:1fr}.header{padding:8px 16px}.tab-bar{padding:4px 16px}.main{padding:10px 16px}.header-name{font-size:1.1rem}.ability-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:480px){.ability-grid{grid-template-columns:repeat(2,1fr)}}
-.filter-bar{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
-.filter-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--border-1);background:transparent;color:var(--text-3);font-family:var(--font-body);font-size:0.68rem;font-weight:600;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.04em}
-.filter-btn:hover{border-color:var(--accent);color:var(--text-1)}
-.filter-btn.active{background:rgba(239,68,68,0.2);border-color:var(--accent);color:var(--accent-light)}
-.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:0.55rem;font-weight:700;letter-spacing:0.03em;vertical-align:middle;margin-left:4px}
-.tag-action{background:var(--accent);color:#fff}
-.tag-bonus{background:var(--hp-orange);color:#000}
-.tag-reaction{background:var(--tactic-blue);color:#000}
-.tag-passif{background:rgba(255,255,255,0.1);color:var(--text-3);border:1px solid var(--border-1)}
-.tag-offensif{background:rgba(239,68,68,0.15);color:var(--accent-light);border:1px solid rgba(239,68,68,0.3)}
-.tag-defensif{background:rgba(16,185,129,0.15);color:var(--hp-green);border:1px solid rgba(16,185,129,0.3)}
-.tag-controle{background:rgba(167,139,250,0.15);color:var(--tactic-purple);border:1px solid rgba(167,139,250,0.3)}
-.tag-utilitaire{background:rgba(96,165,250,0.15);color:var(--tactic-blue);border:1px solid rgba(96,165,250,0.3)}
-.ability-count{font-size:0.65rem;color:var(--text-3);margin-bottom:8px}
-</style>
-</head>
-<body>
-<div id="app"></div>
-<script>
-// ═══════════════════════════════════════
-// DATA — STEINER (source: PDF + DOCX)
-// ═══════════════════════════════════════
-const C={
-schemaVersion:"3.0-20260215-1558",
-id:"steiner-ferum",name:"Steiner",full_name:"Edward Adelbert Steiner Ferum",level:8,
-class_fr:"Guerrier",subclass_fr:"Maître de guerre",background:"Soldat (Officier)",race:"Nain des montagnes",alignment:"Loyal bon",
-str:19,dex:12,con:16,int:8,wis:13,cha:10,
-ac:19,hp_max:76,speed:25,
-abilities:{str:{score:19,mod:4,label:"Force",abbr:"FOR"},dex:{score:12,mod:1,label:"Dextérité",abbr:"DEX"},con:{score:16,mod:3,label:"Constitution",abbr:"CON"},int:{score:8,mod:-1,label:"Intelligence",abbr:"INT"},wis:{score:13,mod:1,label:"Sagesse",abbr:"SAG"},cha:{score:10,mod:0,label:"Charisme",abbr:"CHA"}},
-abilities_order:["str","dex","con","int","wis","cha"],
-proficiency_bonus:3,passive_perception:14,initiative:1,
-hit_dice:{total:8,type:"d10"},
-saving_throws:{str:{prof:true,bonus:7},dex:{prof:false,bonus:1},con:{prof:true,bonus:6},int:{prof:false,bonus:-1},wis:{prof:false,bonus:1},cha:{prof:false,bonus:0}},
-skills:[
-{code:"acrobatics",name:"Acrobaties",ability:"dex",prof:false,bonus:1},{code:"arcana",name:"Arcanes",ability:"int",prof:false,bonus:-1},
-{code:"athletics",name:"Athlétisme",ability:"str",prof:true,bonus:7},{code:"stealth",name:"Discrétion",ability:"dex",prof:false,bonus:1},
-{code:"animal_handling",name:"Dressage",ability:"wis",prof:false,bonus:1},{code:"sleight_of_hand",name:"Escamotage",ability:"dex",prof:false,bonus:1},
-{code:"history",name:"Histoire",ability:"int",prof:false,bonus:-1},{code:"intimidation",name:"Intimidation",ability:"cha",prof:true,bonus:3},
-{code:"insight",name:"Intuition",ability:"wis",prof:false,bonus:1},{code:"investigation",name:"Investigation",ability:"int",prof:false,bonus:-1},
-{code:"medicine",name:"Médecine",ability:"wis",prof:false,bonus:1},{code:"nature",name:"Nature",ability:"int",prof:false,bonus:-1},
-{code:"perception",name:"Perception",ability:"wis",prof:true,bonus:4},{code:"persuasion",name:"Persuasion",ability:"cha",prof:false,bonus:0},
-{code:"religion",name:"Religion",ability:"int",prof:false,bonus:-1},{code:"performance",name:"Représentation",ability:"cha",prof:false,bonus:0},
-{code:"survival",name:"Survie",ability:"wis",prof:true,bonus:4},{code:"deception",name:"Tromperie",ability:"cha",prof:false,bonus:0}],
-attacks:[
-{name:"Hallebarde du Serment Silencieux",bonus:8,damage:"1d10+5",type:"tranchant",props:"Magique +1 · Lourde · Allonge · Deux mains",range:"Corps à corps",magical:true,
-special:[{title:"Avantage AO (allié à 3 m)",desc:"Tant que tu es à 3 m d'un allié que tu protèges, tu as l'avantage sur les attaques d'opportunité."},{title:"Attaque en réaction",desc:"1×/repos long : quand un ennemi attaque un allié à portée, tu peux effectuer une attaque en réaction.",uses:"long_rest"}]},
-{name:"Arbalète légère",bonus:4,damage:"1d8+1",type:"perforant",props:"Munitions (24/96 m) · Chargement · Deux mains",range:"Distance",magical:false,special:[]},
-{name:"Manche de Hallebarde",bonus:8,damage:"1d4+5",type:"contondant",props:"Action Bonus · Maître d'hast · Deux mains",range:"Corps à corps",magical:true,is_bonus_action:true,special:[{title:"Action Bonus systématique",desc:"À chaque tour où tu attaques avec la hallebarde, tu peux frapper avec le manche en action bonus. Ne l'oublie jamais — c'est ta source de dégâts constants."}]}],
-martial_dice_d8:5,maneuver_save_dc:15,
-maneuvers:[
-{name:"Riposte",type:"Réaction",desc:"Si une créature vous rate lors d'une attaque au CàC, vous pouvez utiliser votre réaction et un dé de supériorité pour faire une attaque au CàC contre elle. Si vous touchez, ajoutez le dé de supériorité aux dégâts."},
-{name:"Balayage",type:"Action",desc:"Si vous touchez une créature au CàC, vous pouvez dépenser un dé de supériorité pour frapper une autre créature dans un rayon de 1,50 m autour de la cible et à votre portée. Si le jet d'attaque original touche aussi la seconde, elle subit les dégâts du dé de supériorité (même type)."},
-{name:"Attaque menaçante",type:"Action",desc:"Si vous touchez une créature avec une arme, dépensez un dé de supériorité : ajoutez-le aux dégâts. La cible doit réussir un JdS Sagesse (DD 15) ou être effrayée jusqu'à la fin de votre prochain tour."},
-{name:"Repousser",type:"Action",desc:"Si vous touchez une créature avec une arme, dépensez un dé de supériorité : ajoutez-le aux dégâts. Si taille G ou moins, JdS Force (DD 15) ou repoussée de 4,50 m."},
-{name:"Parade",type:"Réaction",desc:"Si une créature vous touche au CàC, vous pouvez utiliser votre réaction et un dé de supériorité pour réduire les dégâts du résultat du dé + modificateur de Dextérité (+1)."}],
-second_wind:{healing:"1d10+8"},action_surge:{},
-racial_traits:[
-{name:"Vision dans le noir",desc:"Vous pouvez voir dans les ténèbres (non magiques) jusqu'à 18 mètres. Vous discernez les formes en nuances de gris.",source:"Nain"},
-{name:"Résistance naine",desc:"Avantage aux jets de sauvegarde contre le poison, et résistance aux dégâts de poison.",source:"Nain"},
-{name:"Entraînement aux armes naines",desc:"Maîtrise de la hachette, hache d'armes, marteau léger et marteau de guerre.",source:"Nain"},
-{name:"Connaissance de la pierre",desc:"Bonus de maîtrise ×2 aux jets d'Intelligence (Histoire) en relation avec l'origine d'un travail sur la pierre.",source:"Nain"},
-{name:"Formation au port des armures naines",desc:"Votre vitesse n'est pas réduite lorsque vous portez une armure lourde.",source:"Nain des montagnes"}],
-feats:[
-{name:"Sentinelle",desc:"Lorsque vous touchez avec une AO, la vitesse de la créature tombe à 0 pour le reste du tour. Vous pouvez effectuer une AO même si la créature utilise Se désengager. Quand une créature à 1,50 m ou moins attaque une cible autre que vous (sans ce don), vous pouvez utiliser votre réaction pour une attaque au CàC.",source:"Don"},
-{name:"Maître d'hast",desc:"Quand vous attaquez avec seulement une coutille, hallebarde, bâton ou lance, action bonus pour frapper avec l'extrémité opposée (d4 contondant, même mod). Quand vous portez une de ces armes, AO quand une créature entre à portée de votre allonge.",source:"Don"}],
-class_features:[
-{name:"Style de combat : Arme à deux mains",desc:"Lorsque vous obtenez 1 ou 2 à un dé de dégâts lors d'une attaque avec une arme de CàC tenue à deux mains, vous pouvez relancer le dé et obligatoirement prendre le nouveau résultat. L'arme doit avoir la propriété à deux mains ou polyvalente."},
-{name:"Second souffle",desc:"Action bonus : regagne 1d10+8 PV. 1×/repos court ou long."},
-{name:"Fougue (Action Surge)",desc:"À votre tour, 1 action supplémentaire en plus de l'action normale et de l'action bonus. 1×/repos court ou long."},
-{name:"Attaque supplémentaire",desc:"Quand vous prenez l'action Attaquer, vous pouvez attaquer deux fois au lieu d'une."},
-{name:"Disciple martial",desc:"Maîtrise d'un outil d'artisan supplémentaire. Capacité maître de guerre niv 3."},
-{name:"Observation de l'ennemi",desc:"Si vous passez au moins 1 minute à observer ou interagir avec une créature hors combat, vous apprenez si elle est égale, supérieure ou inférieure à vous pour 2 caractéristiques au choix : FOR, DEX, CON, CA, PV actuels, niveaux de classe, niveau de guerrier."}],
-serment:{
-name:"Serment du dernier rempart",
-trigger:"Réaction — Déclenchée quand une créature hostile : attaque Sybilla (ou une créature que Steiner protège explicitement), ou s'apprête à infliger des dégâts mortels, ou franchit une ligne que Steiner s'est juré de ne jamais laisser dépasser. Peut être utilisé même si Steiner est entravé, paralysé ou à 0 PV, tant qu'il est conscient.",
-effect_main:"Steiner meurt instantanément. Cette mort ne peut pas être évitée, empêchée, retardée ou annulée par aucun effet. Il effectue une attaque automatique avec la Hallebarde du Serment Silencieux contre toutes les créatures hostiles de son choix dans un rayon de 4,50 m.",
-effect_damage:"Chaque créature ciblée subit 10d10 tranchant + 10d10 nécrotique. JdS Constitution DD 18 : échec = à terre + effrayée de la cible protégée pendant 1 minute. Réussite = moitié des dégâts, pas d'état. Les dégâts ignorent la résistance aux dégâts non magiques.",
-effect_protection:"Jusqu'à la fin du prochain tour suivant la mort de Steiner : aucune créature hostile ne peut volontairement s'approcher à moins de 6 m de la cible protégée. Toute tentative nécessite un JdS Sagesse DD 18, sous peine de perdre l'action.",
-warning:"⚠️ USAGE UNIQUE DANS TOUTE LA CAMPAGNE. MORT INSTANTANÉE ET DÉFINITIVE."},
-personality:{trait:"J'affronte les problèmes de front. Une solution simple et directe est le meilleur chemin vers le succès.",ideal:"Bonté. Notre sort est de donner notre vie pour la défense des autres (Bon).",bond:"Ceux qui se battent à mes côtés sont ceux pour qui cela vaut la peine de mourir.",flaw:"Je préfère manger mon armure plutôt qu'admettre que je me suis trompé."},
-backstory_sections:[
-{title:"Origines — Vel Ferum",text:"Né dans le clan Vel Ferum, cité de forgerons au cœur des montagnes du nord d'Iwapilseta. Issu d'une famille de forgerons, il apprend la discipline, la patience, le poids des choses bien faites."},
-{title:"Beorn — L'ami perdu",text:"Il se lie d'amitié profonde avec Beorn, son plus proche compagnon d'armes. Cette amitié se brise le jour où Beorn déserte — agent double infiltré à Hoghfhaldir."},
-{title:"La Guerre de Marfort",text:"Son frère, garde royal, tombe durant la grande guerre de Marfort et lui remet dans son dernier souffle la Hallebarde du Serment Silencieux. Steiner assiste au sacrifice de Beorn face à Cymdreth, entre dans une rage totale et balaye ennemi après ennemi."},
-{title:"Foi secrète",text:"Depuis, il croit secrètement en Eostre. L'Arbre-Dieu se tenait là, debout, victorieux, parmi les cadavres."},
-{title:"Dépression et renaissance",text:"Après la guerre, honoré par la reine Elis, il sombre dans la dépression. Il noie son chagrin dans le vin et la charcuterie."},
-{title:"Mission : Sybilla",text:"Elis lui confie la garde de sa fille Sybilla, confiée à un vieux gnome — l'un des Cinq. Steiner protège Sybilla depuis seize ans. Sa mission, d'abord calvaire, devient son ancre."},
-{title:"Le vrai rôle",text:"Il n'est pas seulement un garde du corps — il est le pont entre ce qui fut et ce qui vient. Un rempart silencieux, prêt à mourir pour cela."}],
-appearance:{age:"68 ans",perceived_age:"~55 ans (âge humain perçu)",height:"1,35 m",weight:"140 kg",hair:"Gris foncé poivre et sel, courts",eyes:"Brun très foncé, presque noirs, petits, enfoncés",skin:"Teint cuivré sombre, cicatrices anciennes, brûlures",desc:"Un nain massif, presque excessif. Son ventre proéminent, dur sous la graisse, forme un dôme que son armure peine à dissimuler. Visage large, anguleux, creusé. Mâchoire puissante, toujours serrée. Ses yeux ne cessent jamais de bouger : ils observent, évaluent, anticipent. Barbe épaisse, dense, grise, taillée court sans ornements. Armure de plates sur mesure, forgée pour son corps devenu trop large. Il respire fort, ronfle, grogne, mange bruyamment. Mais quand il se met en position, tout cela disparaît. Il devient immobile. Et dangereux."},
-allies:[
-{name:"Sybilla (Princesse Fannel)",desc:"Fille de la reine Elis. Protégée depuis 16 ans.",deceased:false,
-full_desc:"Sibylla approche de sa majorité. Menue, vive, trop jolie au goût des autres, elle supporte mal que l'on réduise son existence à son visage ou à son rang. Étudiante à la grande université de l'ancien Est, elle s'y distingue par un talent magique exceptionnel, aussi précoce qu'indésirable à ses yeux. Car Sibylla est de sang royal, un fait qu'elle déteste ouvertement. Courbettes, révérences et politesses forcées l'exaspèrent. Elle aurait voulu être charpentière, construire de ses mains plutôt que manier les arcanes. Sa mère en a décidé autrement. Élevée par un vieux gnome qu'elle considère comme son grand-père, elle ne voue un respect sincère qu'à lui. Directe, impulsive, téméraire, Sibylla n'a ni peur des mots ni des gifles quand elle estime qu'elles sont méritées. Ce qu'elle cherche avant tout, c'est s'émanciper, prouver sa valeur, et être vue pour ce qu'elle est vraiment, pas pour un titre ni pour un joli visage."},
-{name:"Reine Elis",desc:"Souveraine d'Iwapilseta. A confié Sybilla à Steiner.",deceased:false},
-{name:"Le vieux gnome",desc:"Tuteur de Sybilla. L'un des Cinq. Confident de Steiner.",deceased:false},
-{name:"Beorn",desc:"Ancien compagnon d'armes. Agent double à Hoghfhaldir.",deceased:true,
-full_desc:"Il se lie d'amitié profonde avec Beorn, son plus proche compagnon d'armes. Cette amitié se brise le jour où Beorn déserte — agent double infiltré à Hoghfhaldir. Steiner assiste plus tard au sacrifice de Beorn face à Cymdreth durant la grande guerre de Marfort."},
-{name:"Elyndar",desc:"Barde tieffelin étudiant. Courtise Sybilla.",deceased:false,
-full_desc:"Elyndar est un jeune Tieflin qui étudie à la même université que Sibylla, une institution réservée aux nobles et aux grandes fortunes. Inscrit dans la filière artistique, il brille autant par son talent que par son ego. Beau, charmeur, excellent musicien et chanteur, il sait qu'il plaît, et il en a largement pris l'habitude. Élevé dans le confort et les regards admiratifs, Elyndar est persuadé que ses charmes ouvrent toutes les portes. Prétentieux, sûr de lui, parfois franchement agaçant, il joue la comédie du séducteur sans toujours se rendre compte de la place qu'il prend. Il courtise Sibylla avec insistance, convaincu que personne ne peut longtemps lui résister, ce qui amuse certains, agace beaucoup, et met Steiner hors de lui. Peut-être simplement car si Elyndar réussit, cela voudra dire que Sibylla est devenue grande et que la mission de Steiner sera terminée ; ou pas."},
-{name:"Le Borgne",desc:"Clerc humain marin. Porteur d'une nouvelle redoutée.",deceased:false,
-full_desc:"Marin aguerri d'une quarantaine d'années, le Borgne est un homme exigeant, méthodique et remarquablement compétent. Ingénieux au sens le plus technique du terme, il connaît la mer, les mécanismes et les hommes. Jadis peu enclin à la foi, la vie l'a lentement conduit vers une piété discrète mais sincère. Terne en apparence, presque morose, il inspire le sérieux et la retenue. Il préfère la compagnie des vieux amis aux nouvelles rencontres, par habitude autant que par méfiance. Une histoire ancienne, jamais racontée, semble l'avoir marqué durablement. Il a jeté l'ancre il y a quelques mois seulement, non loin du lieu où débute cette aventure, porteur d'une nouvelle qu'il redoute de livrer à ceux qu'elle concerne. Depuis des années, il se sait recherché par un royaume. Il voyage donc discrètement, à pied ou à cheval, laissant derrière lui peu de traces, mais toujours quelques questions."}],
-tensions:[{name:"Elyndar",desc:"Barde tieffelin gravitant autour de Sybilla. Steiner le trouve stupide, arrogant, et le soupçonne de convoiter sa protégée."}],
-rp_tips:[
-{title:"Coupe court aux discussions",text:"Quand le groupe hésite trop : une phrase sèche, une décision tranchée. Steiner agit, il ne théorise pas."},
-{title:"Protège avant de réfléchir",text:"Si un danger surgit : tu t'interposes, tu prends le coup, tu utilises ton corps comme bouclier."},
-{title:"Râle pour masquer l'affection",text:"Exprime ton attachement par des interdictions, des reproches, des soupirs agacés. Jamais par des mots doux."},
-{title:"Méfie-toi d'Elyndar ouvertement",text:"Regarde-le de travers, fais des remarques désobligeantes. Comme un père qui voit sa fille avoir un petit copain !"},
-{title:"Accepte l'idée de mourir",text:"Joue Steiner comme quelqu'un qui a déjà fait son deuil. Ça rend chaque action plus lourde, plus forte."}],
-proficiencies:{armor:"Toutes les armures, boucliers, armures légères et intermédiaires",weapons:"Armes courantes, armes de guerre, hachette, hache d'armes, marteau léger, marteau de guerre",tools:"Outils de forgeron, outils de menuisier, jeu de cartes, véhicules (terrestres)",languages:"Commun, nain"},
-external_links:[
-{icon:"📄",label:"Fiche personnage (PDF)",url:"https://drive.google.com/file/d/1na8so0Y5UVD2n5_v6iGNvmpzmrndbRmo/view?usp=drive_link"},
-{icon:"⚔️",label:"Règles classe Guerrier",url:"https://docs.google.com/document/d/1krFLlvLD4CVi_FQq8yGQfioWPJDzMqs1L4OY5Tx_gYc/edit"},
-{icon:"✨",label:"Dons, Objet magique & Serment",url:"https://docs.google.com/document/d/1SnzRYNLH4nIEab1FMGzJ-KH-Zi2rJIJ963p-3ei1DmI/edit"},
-{icon:"📜",label:"Histoire complète",url:"https://docs.google.com/document/d/19C6yYUR0FlIAG4zeiw9xmf3kEb6zss-j6OvVQ3mdVz0/edit"},
-{icon:"🎭",label:"Apparence, Caractère & RP",url:"https://docs.google.com/document/d/1_FVF74JYIx98IsGk9f7hLCsS7j-HwYSz92wYO_vBWi4/edit"}],
-equipment:[
-{name:"Hallebarde du Serment Silencieux",quantity:1,editable:false,category:"arme"},
-{name:"Arbalète légère",quantity:1,editable:false,category:"arme"},
-{name:"Armure de plates",quantity:1,editable:false,category:"armure"},
-{name:"Bouclier",quantity:1,editable:false,category:"armure"},
-{name:"Carreaux d'arbalète",quantity:20,editable:true,category:"munition"},
-{name:"Torche",quantity:10,editable:true,category:"consommable"},
-{name:"Rations (1 jour)",quantity:10,editable:true,category:"consommable"},
-{name:"Piton",quantity:10,editable:true,category:"équipement"},
-{name:"Corde en chanvre (15 m)",quantity:1,editable:false,category:"équipement"},
-{name:"Sac à dos",quantity:1,editable:false,category:"équipement"},
-{name:"Pied-de-biche",quantity:1,editable:false,category:"équipement"},
-{name:"Marteau",quantity:1,editable:false,category:"équipement"},
-{name:"Boîte d'allume-feu",quantity:1,editable:false,category:"équipement"},
-{name:"Gourde",quantity:1,editable:false,category:"équipement"},
-{name:"Dés",quantity:1,editable:false,category:"équipement"},
-{name:"Vêtements communs",quantity:1,editable:false,category:"équipement"},
-{name:"Trophée",quantity:1,editable:false,category:"équipement"},
-{name:"Insigne de grade",quantity:1,editable:false,category:"équipement"},
-{name:"Bourse",quantity:1,editable:false,category:"équipement"}],
-
-// ═══════ CATALOGUE UNIFIÉ DES CAPACITÉS (avec tags) ═══════
-all_abilities:[
-// — Armes —
-{id:"atk-hall",name:"Hallebarde du Serment Silencieux",cat:"Arme",tags:["action","offensif"],is_attack:true,atk_idx:0},
-{id:"atk-arba",name:"Arbalète légère",cat:"Arme",tags:["action","offensif"],is_attack:true,atk_idx:1},
-{id:"atk-manc",name:"Manche de Hallebarde",cat:"Arme",tags:["bonus","offensif"],is_attack:true,atk_idx:2},
-// — Manœuvres —
-{id:"man-ripo",name:"Riposte",cat:"Manœuvre",tags:["reaction","offensif"],desc:"Si une créature vous rate au CàC → réaction + dé de supériorité → attaque CàC. Si touché, ajoutez le dé aux dégâts."},
-{id:"man-bala",name:"Balayage",cat:"Manœuvre",tags:["action","offensif"],desc:"Sur une touche CàC, dépensez un dé pour frapper une 2e créature à 1,50 m. Si le jet touche aussi, elle subit les dégâts du dé."},
-{id:"man-mena",name:"Attaque menaçante",cat:"Manœuvre",tags:["action","offensif","controle"],desc:"Sur une touche, dépensez un dé : +dégâts. JdS Sagesse DD 15 ou effrayée jusqu'à fin de votre prochain tour."},
-{id:"man-repo",name:"Repousser",cat:"Manœuvre",tags:["action","offensif","controle"],desc:"Sur une touche, dépensez un dé : +dégâts. Taille G ou moins → JdS Force DD 15 ou repoussée de 4,50 m."},
-{id:"man-para",name:"Parade",cat:"Manœuvre",tags:["reaction","defensif"],desc:"Si touché au CàC → réaction + dé de supériorité → réduit les dégâts du dé + DEX (+1)."},
-// — Capacités de classe —
-{id:"cls-gwf",name:"Style de combat : Arme à deux mains",cat:"Classe",tags:["passif","offensif"],desc:"Relance les 1 et 2 sur les dés de dégâts avec une arme CàC tenue à deux mains."},
-{id:"cls-sw",name:"Second souffle",cat:"Classe",tags:["bonus","defensif"],desc:"Action bonus : regagne 1d10+8 PV. 1×/repos court ou long."},
-{id:"cls-as",name:"Fougue (Action Surge)",cat:"Classe",tags:["action","offensif"],desc:"1 action supplémentaire à votre tour. 1×/repos court ou long. Permet 4 attaques + bonus."},
-{id:"cls-ea",name:"Attaque supplémentaire",cat:"Classe",tags:["passif","offensif"],desc:"2 attaques au lieu d'une quand vous prenez l'action Attaquer."},
-{id:"cls-dm",name:"Disciple martial",cat:"Classe",tags:["passif","utilitaire"],desc:"Maîtrise d'un outil d'artisan supplémentaire."},
-{id:"cls-oe",name:"Observation de l'ennemi",cat:"Classe",tags:["action","utilitaire"],desc:"1 minute hors combat → 2 infos parmi FOR, DEX, CON, CA, PV, niveaux."},
-// — Dons —
-{id:"feat-sent",name:"Sentinelle",cat:"Don",tags:["reaction","controle","defensif"],desc:"AO touche → vitesse = 0. AO même sur Se désengager. Réaction si créature à 1,50 m attaque un allié.",source:"Don"},
-{id:"feat-pam",name:"Maître d'hast",cat:"Don",tags:["bonus","reaction","offensif","controle"],desc:"Action bonus : frappe avec l'extrémité opposée (d4+5). AO quand une créature entre dans votre allonge.",source:"Don"},
-// — Traits raciaux —
-{id:"rac-dark",name:"Vision dans le noir",cat:"Racial",tags:["passif","utilitaire"],desc:"Voir dans les ténèbres non magiques jusqu'à 18 m. Nuances de gris.",source:"Nain"},
-{id:"rac-resi",name:"Résistance naine",cat:"Racial",tags:["passif","defensif"],desc:"Avantage JdS poison + résistance dégâts de poison.",source:"Nain"},
-{id:"rac-arms",name:"Entraînement aux armes naines",cat:"Racial",tags:["passif","utilitaire"],desc:"Maîtrise : hachette, hache d'armes, marteau léger, marteau de guerre.",source:"Nain"},
-{id:"rac-ston",name:"Connaissance de la pierre",cat:"Racial",tags:["passif","utilitaire"],desc:"Bonus maîtrise ×2 aux jets Histoire liés à la pierre.",source:"Nain"},
-{id:"rac-armr",name:"Formation armures naines",cat:"Racial",tags:["passif","defensif"],desc:"Vitesse non réduite en armure lourde.",source:"Nain des montagnes"}
-]
+const C = {
+  schemaVersion: "3.0-20260215-1558",
+  id: "steiner-ferum",
+  name: "Steiner",
+  full_name: "Edward Adelbert Steiner Ferum",
+  level: 8,
+  class: "fighter",
+  class_fr: "Guerrier",
+  subclass: "battle_master",
+  subclass_fr: "Maître de guerre",
+  background: "Soldat (Officier)",
+  race: "Nain des montagnes",
+  alignment: "Loyal bon",
+  str: 19, dex: 12, con: 16, int: 8, wis: 13, cha: 10,
+  ac: 19,
+  hp_max: 76,
+  speed: 25,
+  stats: {
+    ac: 19,
+    init: 1,
+    speed: "7.5 m",
+    prof: 3,
+    hp_max: 76,
+    hit_dice: "8d10",
+    passive_perception: 14,
+    dc: 15
+  },
+  abilities: {
+    str: { score: 19, mod: 4, label: "Force", abbr: "FOR" },
+    dex: { score: 12, mod: 1, label: "Dextérité", abbr: "DEX" },
+    con: { score: 16, mod: 3, label: "Constitution", abbr: "CON" },
+    int: { score: 8, mod: -1, label: "Intelligence", abbr: "INT" },
+    wis: { score: 13, mod: 1, label: "Sagesse", abbr: "SAG" },
+    cha: { score: 10, mod: 0, label: "Charisme", abbr: "CHA" }
+  },
+  abilities_order: ["str", "dex", "con", "int", "wis", "cha"],
+  proficiency_bonus: 3,
+  passive_perception: 14,
+  initiative: 1,
+  hit_dice: { total: 8, type: "d10" },
+  saving_throws: {
+    str: { prof: true, bonus: 7 },
+    dex: { prof: false, bonus: 1 },
+    con: { prof: true, bonus: 6 },
+    int: { prof: false, bonus: -1 },
+    wis: { prof: false, bonus: 1 },
+    cha: { prof: false, bonus: 0 }
+  },
+  skills: [
+    { code: "acrobatics", name: "Acrobaties", ability: "dex", prof: false, bonus: 1 },
+    { code: "arcana", name: "Arcanes", ability: "int", prof: false, bonus: -1 },
+    { code: "athletics", name: "Athlétisme", ability: "str", prof: true, bonus: 7 },
+    { code: "stealth", name: "Discrétion", ability: "dex", prof: false, bonus: 1 },
+    { code: "animal_handling", name: "Dressage", ability: "wis", prof: false, bonus: 1 },
+    { code: "sleight_of_hand", name: "Escamotage", ability: "dex", prof: false, bonus: 1 },
+    { code: "history", name: "Histoire", ability: "int", prof: false, bonus: -1 },
+    { code: "intimidation", name: "Intimidation", ability: "cha", prof: true, bonus: 3 },
+    { code: "insight", name: "Intuition", ability: "wis", prof: false, bonus: 1 },
+    { code: "investigation", name: "Investigation", ability: "int", prof: false, bonus: -1 },
+    { code: "medicine", name: "Médecine", ability: "wis", prof: false, bonus: 1 },
+    { code: "nature", name: "Nature", ability: "int", prof: false, bonus: -1 },
+    { code: "perception", name: "Perception", ability: "wis", prof: true, bonus: 4 },
+    { code: "persuasion", name: "Persuasion", ability: "cha", prof: false, bonus: 0 },
+    { code: "religion", name: "Religion", ability: "int", prof: false, bonus: -1 },
+    { code: "performance", name: "Représentation", ability: "cha", prof: false, bonus: 0 },
+    { code: "survival", name: "Survie", ability: "wis", prof: true, bonus: 4 },
+    { code: "deception", name: "Tromperie", ability: "cha", prof: false, bonus: 0 }
+  ],
+  attacks: [
+    {
+      name: "Hallebarde du Serment Silencieux", bonus: 8, damage: "1d10+5", 
+      type: "slashing", props: "Magique +1 · Lourde · Allonge · Deux mains", 
+      range: "Touch", magical: true,
+      special: [
+        { title: "Avantage AO (allié à 3 m)", desc: "Avantage sur les AO si allié protégé à 3m." },
+        { title: "Attaque en réaction", desc: "1×/repos long : attaque en réaction si allié ciblé.", uses: "long_rest" }
+      ]
+    },
+    {
+      name: "Arbalète légère", bonus: 4, damage: "1d8+1", 
+      type: "piercing", props: "Munitions (24/96 m) · Chargement · Deux mains", 
+      range: "80/320 feet", magical: false, special: []
+    },
+    {
+      name: "Manche de Hallebarde", bonus: 8, damage: "1d4+5", 
+      type: "bludgeoning", props: "Action Bonus · Maître d'hast · Deux mains", 
+      range: "Touch", magical: true, is_bonus_action: true,
+      special: [{ title: "Action Bonus systématique", desc: "Frappe bonus après attaque hallebarde." }]
+    }
+  ],
+  martial_dice_d8: 5,
+  maneuver_save_dc: 15,
+  maneuvers: [
+    { name: "Riposte", type: "reaction", desc: "Attaque suite à un raté adverse au CàC." },
+    { name: "Balayage", type: "action", desc: "Frappe une 2e cible à 1,5m sur réussite." },
+    { name: "Attaque menaçante", type: "action", desc: "Ajoute dé de supériorité. JdS SAG (DD 15) ou effrayée." },
+    { name: "Repousser", type: "action", desc: "Ajoute dé de supériorité. JdS FOR (DD 15) ou repoussé de 4,5m." },
+    { name: "Parade", type: "reaction", desc: "Réduit dégâts subis : dé + DEX (+1)." }
+  ],
+  equipment: [
+    { name: "Hallebarde du Serment Silencieux", qty: 1, editable: false, cat: "weapon" },
+    { name: "Arbalète légère", qty: 1, editable: false, cat: "weapon" },
+    { name: "Armure de plates", qty: 1, editable: false, cat: "armor" },
+    { name: "Bouclier", qty: 1, editable: false, cat: "armor" },
+    { name: "Carreaux d'arbalète", qty: 20, editable: true, cat: "consumable" },
+    { name: "Torche", qty: 10, editable: true, cat: "consumable" },
+    { name: "Rations (1 jour)", qty: 10, editable: true, cat: "consumable" },
+    { name: "Piton", qty: 10, editable: true, cat: "misc" },
+    { name: "Corde en chanvre (15 m)", qty: 1, editable: false, cat: "misc" },
+    { name: "Sac à dos", qty: 1, editable: false, cat: "misc" },
+    { name: "Pied-de-biche", qty: 1, editable: false, cat: "misc" },
+    { name: "Marteau", qty: 1, editable: false, cat: "misc" },
+    { name: "Boîte d'allume-feu", qty: 1, editable: false, cat: "misc" },
+    { name: "Gourde", qty: 1, editable: false, cat: "misc" },
+    { name: "Dés", qty: 1, editable: false, cat: "misc" },
+    { name: "Vêtements communs", qty: 1, editable: false, cat: "misc" },
+    { name: "Trophée", qty: 1, editable: false, cat: "misc" },
+    { name: "Insigne de grade", qty: 1, editable: false, cat: "misc" },
+    { name: "Bourse", qty: 1, editable: false, cat: "misc" }
+  ],
+  personality: {
+    trait: "J'affronte les problèmes de front. Une solution simple et directe est le meilleur chemin.",
+    ideal: "Bonté. Notre sort est de donner notre vie pour la défense des autres.",
+    bond: "Ceux qui se battent à mes côtés sont ceux pour qui cela vaut la peine de mourir.",
+    flaw: "Je préfère manger mon armure plutôt qu'admettre que je me suis trompé."
+  }
 };
-
-// ═══════ STATE ═══════
-const SK=`tawyndnd-${C.id}-v23`;
-const DS={hp_current:C.hp_max,hp_temp:0,death_saves:{successes:0,failures:0},martial_dice_d8_current:C.martial_dice_d8,second_wind_used:false,action_surge_used:false,hallebarde_reaction_used:false,serment_used:false,inspiration_bardic:false,inspiration_dm:false,equipment_quantities:{},hit_dice_used:0,combat_turn:0};
-function loadState(){try{const s=localStorage.getItem(SK);if(s)return{...DS,...JSON.parse(s)}}catch(e){}return{...DS}}
-function saveState(){try{localStorage.setItem(SK,JSON.stringify(state))}catch(e){}}
-let state=loadState(),activeTab="combat",editingHP=false,editingHPTemp=false,expandedCards=new Set(),secretOpen=false,abilityFilter="all";
-
-// ═══════ HELPERS ═══════
-const fm=n=>n>=0?`+${n}`:`${n}`;
-const hpColor=p=>p>0.75?"var(--hp-green)":p>0.25?"var(--hp-orange)":"var(--hp-red)";
-const getEQ=name=>state.equipment_quantities[name]!==undefined?state.equipment_quantities[name]:(C.equipment.find(e=>e.name===name)?.quantity||0);
-const ec=id=>{const o=expandedCards.has(id);return{chev:`<span class="expand-chevron ${o?'open':''}">▸</span>`,cls:o?'open':''}};
-
-// ═══════ RENDER ═══════
-function render(){
-const tabs={sheet:renderSheet,combat:renderCombat,abilities:renderAbilities,tactics:renderTactics,bio:renderBio};
-document.getElementById("app").innerHTML=renderHeader()+renderTabs()+`<div class="main">${tabs[activeTab]()}</div>`;
-attachEvents();
-}
-
-function renderHeader(){
-return`<div class="header"><div class="header-row"><div><div class="header-name">${C.name}</div><div class="header-sub">${C.class_fr} (${C.subclass_fr}) ${C.level} · ${C.race} · ${C.alignment}</div></div><div style="display:flex;gap:6px;align-items:center;"><div class="glass stat-pill"><div class="stat-pill-lbl">CA</div><div class="stat-pill-val">${C.ac}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">Init</div><div class="stat-pill-val">${fm(C.initiative)}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">Vit</div><div class="stat-pill-val">${C.speed}</div></div><div class="glass stat-pill"><div class="stat-pill-lbl">Perc</div><div class="stat-pill-val">${C.passive_perception}</div></div></div></div></div>`;
-}
-
-function renderTabs(){
-const t=[{id:"sheet",l:"📋 Fiche"},{id:"combat",l:"⚔️ Combat"},{id:"abilities",l:"💪 Capacités"},{id:"tactics",l:"🎯 Tactique"},{id:"bio",l:"📖 Bio"}];
-return`<div class="tab-bar">${t.map(x=>`<button class="tab-btn ${activeTab===x.id?'active':''}" data-tab="${x.id}">${x.l}</button>`).join("")}</div>`;
-}
-
-// ═══════ FICHE ═══════
-function renderSheet(){return`<div class="grid-fiche"><div>${renderAbilityCol()}</div><div>${renderSheetRight()}</div></div>`}
-
-function renderAbilityCol(){
-const so=["str","dex","con","int","wis","cha"],sl={str:"FOR",dex:"DEX",con:"CON",int:"INT",wis:"SAG",cha:"CHA"};
-let h=`<div class="ability-grid">`;
-for(const k of C.abilities_order){const a=C.abilities[k];h+=`<div class="glass ability-block"><div class="ability-label">${a.abbr}</div><div class="ability-mod">${fm(a.mod)}</div><div class="ability-score">${a.score}</div></div>`}
-h+=`</div><div class="section-title">Jets de sauvegarde</div><div class="glass" style="padding:6px;margin-bottom:10px;">`;
-for(const k of so){const s=C.saving_throws[k];h+=`<div class="save-row"><span class="skill-dot ${s.prof?'proficient':''}"></span><span>${sl[k]}</span><span class="skill-bonus">${fm(s.bonus)}</span></div>`}
-h+=`</div><div class="section-title">Compétences</div><div class="glass" style="padding:6px;">`;
-for(const sk of C.skills)h+=`<div class="skill-row"><span class="skill-dot ${sk.prof?'proficient':''}"></span><span>${sk.name}</span><span class="skill-bonus">${fm(sk.bonus)}</span></div>`;
-return h+`</div>`}
-
-function renderSheetRight(){
-return`<div class="glass" style="padding:14px;margin-bottom:12px;"><div class="section-title" style="margin-bottom:6px;">Personnalité</div><div class="personality-label">Trait</div><div class="personality-text">${C.personality.trait}</div><div class="personality-label">Idéal</div><div class="personality-text">${C.personality.ideal}</div><div class="personality-label">Lien</div><div class="personality-text">${C.personality.bond}</div><div class="personality-label">Défaut</div><div class="personality-text">${C.personality.flaw}</div></div><div class="glass" style="padding:14px;margin-bottom:12px;"><div class="section-title" style="margin-bottom:4px;">Maîtrises</div><div class="prof-list"><div><span class="prof-label">Armures : </span>${C.proficiencies.armor}</div><div><span class="prof-label">Armes : </span>${C.proficiencies.weapons}</div><div><span class="prof-label">Outils : </span>${C.proficiencies.tools}</div><div><span class="prof-label">Langues : </span>${C.proficiencies.languages}</div></div></div><div class="glass" style="padding:14px;"><div class="section-title" style="margin-bottom:6px;">Historique : ${C.background}</div><div style="font-size:0.78rem;color:var(--text-2);line-height:1.5;">Vous avez un grade militaire de votre ancienne carrière. Les soldats loyaux à votre ancienne organisation militaire reconnaissent toujours votre autorité et influence.</div></div>`}
-
-// ═══════ COMBAT ═══════
-function renderCombat(){
-const pct=Math.max(0,state.hp_current/C.hp_max),color=hpColor(pct);
-let h=`<div class="glass turn-counter"><button class="turn-btn" data-turn="-1">−</button><div><div class="turn-label">Tour</div><div class="turn-num">${state.combat_turn}</div></div><button class="turn-btn" data-turn="1">+</button><button class="turn-btn" data-turn="0" style="margin-left:8px;font-size:0.65rem;width:auto;padding:0 10px;" title="Reset">↺</button></div>`;
-
-h+=`<div class="glass" style="padding:12px;margin-bottom:10px;">`;
-// PV Temp section (si présents)
-if(state.hp_temp>0||editingHPTemp){
-h+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:6px;"><span style="font-size:0.65rem;color:var(--text-3);text-transform:uppercase;">PV Temp</span><button class="hp-temp-btn" data-hp-temp-delta="-1">−</button>${editingHPTemp?`<input type="number" class="hp-temp-input" id="hp-temp-edit" value="${state.hp_temp}" min="0">`:`<span class="hp-temp-value" id="hp-temp-display">🛡️ ${state.hp_temp}</span>`}<button class="hp-temp-btn" data-hp-temp-delta="1">+</button></div>`;
-}else{
-h+=`<div style="margin-bottom:6px;"><button class="hp-temp-btn" data-hp-temp-delta="1" style="font-size:0.65rem;padding:4px 8px;width:auto;">+ PV Temp</button></div>`;
-}
-// PV normaux
-h+=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;"><div style="display:flex;gap:4px;align-items:center;"><button class="hp-btn" data-hp-delta="-5">−5</button><button class="hp-btn" data-hp-delta="-1">−</button>${editingHP?`<input type="number" class="hp-input" id="hp-edit" value="${state.hp_current}" min="0" max="${C.hp_max}">`:`<span class="hp-value" id="hp-display" style="color:${color}">${state.hp_current}</span>`}<span style="color:var(--text-3);font-size:1.2rem;font-weight:300;">/ ${C.hp_max}</span><button class="hp-btn" data-hp-delta="1">+</button><button class="hp-btn" data-hp-delta="5">+5</button></div><div style="display:flex;gap:4px;flex-wrap:wrap;"><button class="use-toggle ${state.second_wind_used?'used':'available'}" data-toggle="second_wind">${state.second_wind_used?'✗':'✓'} Second souffle</button><button class="use-toggle ${state.action_surge_used?'used':'available'}" data-toggle="action_surge">${state.action_surge_used?'✗':'✓'} Fougue</button></div></div>`;
-// Barres HP (temp au-dessus si présent)
-const tempPct=Math.min(100,(state.hp_temp/C.hp_max)*100);
-h+=`<div class="hp-bar-bg"><div class="hp-bar-fill" style="width:${pct*100}%;background:${color};"></div>${state.hp_temp>0?`<div class="hp-temp-bar" style="width:${tempPct}%;"></div>`:''}</div></div>`;
-
-h+=`<div class="combat-grid"><div>`;
-h+=`<div class="section-title">Armes</div><div style="font-size:0.65rem;color:var(--text-3);margin:-4px 0 6px;font-style:italic;">⚙️ Arme à deux mains : relance les 1 et 2 sur tous les dés de dégâts</div>`;
-for(const a of C.attacks){
-const icon=a.is_bonus_action?'⚡ ':a.magical?'✦ ':'';
-const baTag=a.is_bonus_action?'<span style="display:inline-block;padding:1px 6px;border-radius:4px;background:var(--hp-orange);color:#000;font-size:0.55rem;font-weight:700;margin-left:6px;vertical-align:middle;">ACTION BONUS</span>':'';
-h+=`<div class="glass attack-card" ${a.is_bonus_action?'style="border-left:3px solid var(--hp-orange);"':''}><div class="attack-header"><div class="attack-bonus">${fm(a.bonus)}</div><div><div class="attack-name">${icon}${a.name}${baTag}</div><div class="attack-props">${a.props}</div></div><div class="attack-damage">${a.damage} ${a.type}</div></div>`;
-for(const sp of a.special){h+=`<div class="attack-special"><div class="attack-special-text"><strong>${sp.title}</strong> : ${sp.desc}${sp.uses==="long_rest"?` <button class="use-toggle ${state.hallebarde_reaction_used?'used':'available'}" data-toggle="hallebarde_reaction" style="padding:2px 6px;font-size:0.65rem;">${state.hallebarde_reaction_used?'✗':'✓'}</button>`:''}</div></div>`}
-h+=`</div>`}
-
-h+=`</div><div>`;
-
-h+=`<div class="section-title">Dés de supériorité · DD ${C.maneuver_save_dc}</div><div class="glass" style="padding:10px;margin-bottom:10px;"><div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">`;
-for(let i=0;i<C.martial_dice_d8;i++){const f=i<state.martial_dice_d8_current;h+=`<div class="martial-dot ${f?'filled':'empty'}" data-martial-d8="${i}" title="d8">${f?'●':'○'}</div>`}
-h+=`<span style="font-size:0.55rem;color:var(--text-3);">d8</span></div>`;
-for(const m of C.maneuvers)h+=`<div class="glass maneuver-card"><div style="display:flex;justify-content:space-between;align-items:center;"><div class="maneuver-name">⚔️ ${m.name}</div><div class="maneuver-type">${m.type}</div></div><div class="maneuver-desc">${m.desc}</div></div>`;
-h+=`</div>`;
-
-h+=`<div class="section-title">Inspirations</div><div class="glass" style="padding:10px;margin-bottom:10px;">`;
-h+=`<div class="checkbox-row ${state.inspiration_bardic?'checked':''}" data-checkbox="inspiration_bardic"><div class="checkbox-box">${state.inspiration_bardic?'✓':''}</div><div class="checkbox-label">🎵 Inspiration bardique (d8) — Elyndar</div></div>`;
-h+=`<div class="checkbox-row ${state.inspiration_dm?'checked':''}" data-checkbox="inspiration_dm"><div class="checkbox-box">${state.inspiration_dm?'✓':''}</div><div class="checkbox-label">⭐ Point d'inspiration (MJ)</div></div>`;
-h+=`<div style="font-size:0.65rem;color:var(--text-3);margin-top:6px;font-style:italic;">💡 Inspiration bardique = +1d8 à un jet. Point d'inspiration = Avantage sur un jet.</div>`;
-h+=`</div>`;
-
-h+=`<div class="glass" style="padding:10px;border-left:3px solid var(--accent);margin-bottom:8px;"><div style="font-size:0.72rem;font-weight:700;color:var(--accent-light);">💡 Sentinelle + Maître d'hast + Allonge</div><div style="font-size:0.73rem;color:var(--text-2);line-height:1.45;">Ennemi entre dans 3 m → AO (Maître d'hast). Si touché → vitesse = 0 (Sentinelle). Verrouillage zone.</div></div>`;
-h+=`</div></div>`;
-
-h+=`<div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">`;
-h+=`<div class="glass" style="padding:10px;flex:1;min-width:200px;"><div style="font-size:0.65rem;color:var(--text-3);text-transform:uppercase;margin-bottom:4px;">Jets contre la mort</div><div style="display:flex;gap:16px;"><div><div style="font-size:0.65rem;color:var(--text-3);margin-bottom:2px;">Succès</div><div style="display:flex;gap:4px;">${[0,1,2].map(i=>`<div class="death-dot success ${i<state.death_saves.successes?'filled':''}" data-death="success" data-idx="${i}"></div>`).join("")}</div></div><div><div style="font-size:0.65rem;color:var(--text-3);margin-bottom:2px;">Échecs</div><div style="display:flex;gap:4px;">${[0,1,2].map(i=>`<div class="death-dot failure ${i<state.death_saves.failures?'filled':''}" data-death="failure" data-idx="${i}"></div>`).join("")}</div></div></div></div>`;
-h+=`<div class="glass" style="padding:10px;display:flex;align-items:center;gap:10px;"><div><div style="font-size:0.65rem;color:var(--text-3);text-transform:uppercase;">Dés de vie</div><div style="font-family:var(--font-mono);font-size:0.85rem;">${C.hit_dice.total-state.hit_dice_used}/${C.hit_dice.total}${C.hit_dice.type}</div></div><button class="hp-btn" data-hitdice="use" title="Dépenser">−</button><button class="hp-btn" data-hitdice="restore" title="Récupérer">+</button></div>`;
-h+=`<div style="display:flex;gap:6px;align-items:center;"><button class="rest-btn" id="short-rest-btn">🌙 Repos court</button><button class="rest-btn" id="long-rest-btn">🌅 Repos long</button></div></div>`;
-return h}
-
-// ═══════ CAPACITÉS ═══════
-function renderAbilities(){
-const filters=[
-{id:"all",label:"Tout"},{id:"action",label:"Action"},{id:"bonus",label:"Bonus"},{id:"reaction",label:"Réaction"},{id:"passif",label:"Passif"},
-{id:"offensif",label:"Offensif"},{id:"defensif",label:"Défensif"},{id:"controle",label:"Contrôle"},{id:"utilitaire",label:"Utilitaire"}];
-const items=C.all_abilities.filter(a=>abilityFilter==="all"||a.tags.includes(abilityFilter));
-const tagColors={action:"tag-action",bonus:"tag-bonus",reaction:"tag-reaction",passif:"tag-passif",offensif:"tag-offensif",defensif:"tag-defensif",controle:"tag-controle",utilitaire:"tag-utilitaire"};
-function renderTags(tags){return tags.map(t=>`<span class="tag ${tagColors[t]||''}">${t}</span>`).join("")}
-
-let h=`<div style="max-width:800px;margin:0 auto;">`;
-h+=`<div class="filter-bar">${filters.map(f=>`<button class="filter-btn ${abilityFilter===f.id?'active':''}" data-ability-filter="${f.id}">${f.label}</button>`).join("")}</div>`;
-h+=`<div class="ability-count">${items.length} capacité${items.length>1?'s':''} affichée${items.length>1?'s':''}</div>`;
-
-// Group by category
-const cats=["Arme","Manœuvre","Classe","Don","Racial"];
-for(const cat of cats){
-const catItems=items.filter(a=>a.cat===cat);
-if(!catItems.length)continue;
-const catLabels={Arme:"⚔️ Armes",Manœuvre:`🎲 Manœuvres · DD ${C.maneuver_save_dc}`,Classe:"🏰 Capacités de classe",Don:"⭐ Dons",Racial:"🪨 Traits raciaux"};
-h+=`<div class="section-title" style="margin-top:12px;">${catLabels[cat]}</div>`;
-
-for(const a of catItems){
-if(a.is_attack){
-// Render as full attack card
-const atk=C.attacks[a.atk_idx];if(!atk)continue;
-const icon=atk.is_bonus_action?'⚡ ':atk.magical?'✦ ':'';
-const baTag=atk.is_bonus_action?'<span class="tag tag-bonus" style="margin-left:6px;">ACTION BONUS</span>':'';
-h+=`<div class="glass attack-card" ${atk.is_bonus_action?'style="border-left:3px solid var(--hp-orange);"':''}><div class="attack-header"><div class="attack-bonus">${fm(atk.bonus)}</div><div><div class="attack-name">${icon}${atk.name}${baTag} ${renderTags(a.tags)}</div><div class="attack-props">${atk.props}</div></div><div class="attack-damage">${atk.damage} ${atk.type}</div></div>`;
-for(const sp of atk.special){h+=`<div class="attack-special"><div class="attack-special-text"><strong>${sp.title}</strong> : ${sp.desc}</div></div>`}
-h+=`</div>`;
-}else{
-// Render as expandable card with tags
-const e=ec(a.id);
-const srcTag=a.source?`<span class="expand-source">${a.source}</span>`:'';
-const catTag=`<span class="expand-source">${a.cat}</span>`;
-h+=`<div class="glass expand-card" data-expand="${a.id}"><div class="expand-header"><span>${a.name}${srcTag} ${renderTags(a.tags)}</span>${e.chev}</div><div class="expand-body ${e.cls}">${a.desc}</div></div>`;
-}}}
-
-// Serment (always at bottom, unfiltered)
-if(abilityFilter==="all"||abilityFilter==="reaction"||abilityFilter==="offensif"||abilityFilter==="defensif"){
-h+=`<button class="secret-btn" id="secret-toggle">· · · serment · · ·</button><div class="secret-panel ${secretOpen?'open':''}" id="secret-panel"><div style="text-align:center;margin-bottom:10px;"><div style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--accent);">${C.serment.name}</div><div style="font-size:0.65rem;color:var(--hp-red);font-weight:700;margin-top:3px;">${C.serment.warning}</div><div style="margin-top:4px;">${renderTags(["reaction","offensif","defensif"])}</div></div><div style="font-size:0.75rem;font-weight:700;color:var(--accent-light);margin-bottom:3px;">Déclenchement</div><div style="font-size:0.78rem;color:var(--text-2);line-height:1.5;margin-bottom:10px;">${C.serment.trigger}</div><div style="padding:8px;background:rgba(239,68,68,0.1);border-radius:8px;border:1px solid rgba(239,68,68,0.3);margin-bottom:6px;"><div style="font-size:0.7rem;font-weight:700;color:var(--accent-light);margin-bottom:2px;">Effet</div><div style="font-size:0.78rem;color:var(--text-2);line-height:1.5;">${C.serment.effect_main}</div></div><div style="padding:8px;background:rgba(239,68,68,0.08);border-radius:8px;border:1px solid rgba(239,68,68,0.2);margin-bottom:6px;"><div style="font-size:0.7rem;font-weight:700;color:var(--accent-light);margin-bottom:2px;">Dégâts</div><div style="font-size:0.78rem;color:var(--text-2);line-height:1.5;">${C.serment.effect_damage}</div></div><div style="padding:8px;background:rgba(239,68,68,0.05);border-radius:8px;border:1px solid rgba(239,68,68,0.15);"><div style="font-size:0.7rem;font-weight:700;color:var(--accent-light);margin-bottom:2px;">Protection post-mortem</div><div style="font-size:0.78rem;color:var(--text-2);line-height:1.5;">${C.serment.effect_protection}</div></div></div>`}
-
-return h+`</div>`}
-
-// ═══════ TACTIQUE ═══════
-function renderTactics(){
-let h=`<div style="max-width:800px;margin:0 auto;">`;
-h+=`<div class="section-title">🛡️ Priorité absolue — Protection de Sybilla</div>`;
-h+=`<div class="glass tactic-card priority"><div class="tactic-subtitle priority">Positionnement</div><div class="tactic-text"><div class="tactic-tip"><span class="tactic-icon">📍</span><span>Toujours rester dans un rayon de 3 m de Sybilla. Ton allonge (hallebarde) couvre 3 m — tu contrôles un cercle de 6 m de diamètre autour d'elle.</span></div><div class="tactic-tip"><span class="tactic-icon">🚧</span><span>Place-toi entre Sybilla et la menace. En couloir, tu es le mur. En terrain ouvert, tu colles à elle côté ennemi.</span></div><div class="tactic-tip"><span class="tactic-icon">⚡</span><span>Sentinelle bloque les ennemis qui passent à portée. Maître d'hast déclenche une AO quand ils <em>entrent</em> dans ta zone. Résultat : personne ne passe.</span></div></div></div>`;
-h+=`<div class="glass tactic-card priority"><div class="tactic-subtitle priority">Quand Sybilla est ciblée directement</div><div class="tactic-text"><div class="tactic-tip"><span class="tactic-icon">1️⃣</span><span><strong>Réaction Hallebarde</strong> (1×/repos long) : attaque gratuite contre l'ennemi qui attaque un allié à portée.</span></div><div class="tactic-tip"><span class="tactic-icon">2️⃣</span><span><strong>Sentinelle</strong> : si l'ennemi est à 1,50 m et attaque Sybilla → attaque au CàC en réaction.</span></div><div class="tactic-tip"><span class="tactic-icon">3️⃣</span><span><strong>Attaque menaçante</strong> : effraie l'ennemi (DD 15 SAG). Effrayé = ne peut pas s'approcher volontairement.</span></div><div class="tactic-tip"><span class="tactic-icon">💀</span><span><strong>Serment du dernier rempart</strong> : si tout échoue et que la mort de Sybilla est imminente. Dernier recours absolu.</span></div></div></div>`;
-
-h+=`<div class="section-title" style="margin-top:16px;">⚔️ Situations de combat</div>`;
-h+=`<div class="glass tactic-card"><div class="tactic-title">Contrôle de zone (standard)</div><div class="tactic-subtitle combat">Positionnement normal</div><div class="tactic-text"><div class="tactic-tip"><span class="tactic-icon">🎯</span><span>Exploite l'allonge 3 m : tu frappes sans qu'on te frappe à 1,50 m. Reste à distance maximale.</span></div><div class="tactic-tip"><span class="tactic-icon">🔄</span><span><strong>Tour 1</strong> : Fougue → 4 attaques (2 × Attaquer) + action bonus Maître d'hast (d4). Pose la domination.</span></div><div class="tactic-tip"><span class="tactic-icon">🛡️</span><span>Garde ta <strong>réaction</strong> pour Riposte ou Sentinelle. Ne la gaspille pas en AO classique.</span></div></div></div>`;
-h+=`<div class="glass tactic-card"><div class="tactic-title">vs Boss solo</div><div class="tactic-subtitle combat">Ennemi unique et puissant</div><div class="tactic-text"><div class="tactic-tip"><span class="tactic-icon">💥</span><span><strong>Tour 1</strong> : Fougue + 4 attaques. Place Attaque menaçante sur la première touche (effrayé → ne s'approche pas de Sybilla).</span></div><div class="tactic-tip"><span class="tactic-icon">🛡️</span><span><strong>Parade</strong> pour réduire les gros coups. Chaque d8+1 de réduction compte.</span></div><div class="tactic-tip"><span class="tactic-icon">💚</span><span><strong>Second souffle</strong> (1d10+8) sous 50% PV. Un nain mort ne protège personne.</span></div><div class="tactic-tip"><span class="tactic-icon">📊</span><span><strong>Observation de l'ennemi</strong> : 1 minute de répit → 2 stats du boss (CA + PV recommandé).</span></div></div></div>`;
-h+=`<div class="glass tactic-card"><div class="tactic-title">vs Horde / Meute</div><div class="tactic-subtitle combat">Multiples ennemis</div><div class="tactic-text"><div class="tactic-tip"><span class="tactic-icon">🌀</span><span><strong>Balayage</strong> à chaque touche — frappe 2 ennemis pour le prix d'un.</span></div><div class="tactic-tip"><span class="tactic-icon">📍</span><span>Cherche les <strong>goulots d'étranglement</strong> : portes, couloirs. Allonge + Sentinelle = personne ne passe.</span></div><div class="tactic-tip"><span class="tactic-icon">💨</span><span><strong>Repousser</strong> pour éloigner ceux qui débordent vers Sybilla.</span></div></div></div>`;
-h+=`<div class="glass tactic-card"><div class="tactic-title">Défense / Survie</div><div class="tactic-subtitle combat">HP bas, situation critique</div><div class="tactic-text"><div class="tactic-tip"><span class="tactic-icon">🛡️</span><span><strong>Parade</strong> systématique + Second souffle dès que possible.</span></div><div class="tactic-tip"><span class="tactic-icon">🧱</span><span>Résistance naine : avantage JdS poison. Contre créatures venimeuses, tu résistes mieux.</span></div><div class="tactic-tip"><span class="tactic-icon">⚠️</span><span>À 0 PV : 3 succès JdS mort = stabilisé. Tes alliés peuvent soigner. Serment seulement si Sybilla en danger mortel.</span></div></div></div>`;
-
-h+=`<div class="section-title" style="margin-top:16px;">🗣️ Interactions sociales</div>`;
-h+=`<div class="glass tactic-card social"><div class="tactic-title">Intimidation (+3)</div><div class="tactic-subtitle social">Ta meilleure compétence sociale</div><div class="tactic-text"><div class="tactic-tip"><span class="tactic-icon">💪</span><span>140 kg d'armure et de mauvaise humeur. L'intimidation est physique : tu te lèves, tu t'approches, tu fixes.</span></div><div class="tactic-tip"><span class="tactic-icon">🎭</span><span>Efficace sur : soldats, gardes, bandits, gens du commun. Moins sur : nobles, mages, créatures sans peur.</span></div></div></div>`;
-h+=`<div class="glass tactic-card social"><div class="tactic-title">Observation de l'ennemi</div><div class="tactic-subtitle social">Battle Master niv 7</div><div class="tactic-text"><div class="tactic-tip"><span class="tactic-icon">👁️</span><span>1 minute d'observation hors combat → 2 infos parmi : FOR, DEX, CON, CA, PV, niveaux. Utilise ça sur les PNJ suspects AVANT que ça dégénère.</span></div></div></div>`;
-h+=`<div class="glass tactic-card social"><div class="tactic-title">Avec Sybilla</div><div class="tactic-subtitle social">Dynamique père-protecteur</div><div class="tactic-text"><div class="tactic-tip"><span class="tactic-icon">🚫</span><span>Interdis, reproche, soupire. L'affection passe par les actes : t'interposer, vérifier sa cape, grogner quand elle prend des risques.</span></div><div class="tactic-tip"><span class="tactic-icon">💔</span><span>Ne mentionne JAMAIS son identité royale. Même sous torture.</span></div></div></div>`;
-h+=`<div class="glass tactic-card social"><div class="tactic-title">Avec Elyndar</div><div class="tactic-subtitle social">Méfiance productive</div><div class="tactic-text"><div class="tactic-tip"><span class="tactic-icon">😤</span><span>Regarde-le de travers. Remarques désobligeantes. Comme un père qui voit sa fille avec un petit copain.</span></div><div class="tactic-tip"><span class="tactic-icon">🎲</span><span>Ne va jamais trop loin. La tension est comique et dramatique.</span></div></div></div>`;
-h+=`<div class="glass tactic-card social"><div class="tactic-title">Avec des inconnus</div><div class="tactic-subtitle social">Le mur silencieux</div><div class="tactic-text"><div class="tactic-tip"><span class="tactic-icon">🧱</span><span>Tu ne parles pas. Tu observes. Tu laisses les autres négocier. Tu interviens sec quand il le faut.</span></div></div></div>`;
-
-h+=`<div class="section-title" style="margin-top:16px;">📋 Aide-mémoire — Tour de combat</div>`;
-h+=`<div class="glass" style="padding:14px;"><div class="tactic-checklist"><div class="tactic-check-item"><span class="tactic-check-label" style="color:var(--accent-light);">Action</span><span>Attaquer (2 attaques hallebarde : +8, 1d10+5) OU Se désengager / Esquiver</span></div><div class="tactic-check-item"><span class="tactic-check-label" style="color:var(--hp-orange);">Bonus</span><span>⚡ Manche hallebarde (+8, 1d4+5 contondant) — CHAQUE TOUR · OU Second souffle (1d10+8 PV)</span></div><div class="tactic-check-item"><span class="tactic-check-label" style="color:var(--tactic-blue);">Réaction</span><span>🛡️ PRIORITÉ : AO Maître d'hast (ennemi entre 3 m → vitesse = 0). Sinon : Riposte / Parade / Sentinelle</span></div><div class="tactic-check-item"><span class="tactic-check-label" style="color:var(--tactic-purple);">Mouvement</span><span>7,50 m. Rester à 3 m de Sybilla (pas collé) = Avantage AO + allonge optimale</span></div><div class="tactic-check-item"><span class="tactic-check-label" style="color:var(--hp-green);">Spécial</span><span>Fougue = +2 attaques supplémentaires. 1×/repos court. Nova = 4 attaques + bonus.</span></div></div><div style="margin-top:10px;padding:10px;background:rgba(239,68,68,0.12);border-radius:8px;border-left:3px solid var(--accent);"><div style="font-size:0.75rem;font-weight:700;color:var(--accent-light);margin-bottom:4px;">🎯 Antisèche NotebookLM — 5 règles d'or</div><div style="font-size:0.78rem;color:var(--text-1);line-height:1.7;"><strong style="color:var(--hp-orange);">1.</strong> Toujours utiliser l'attaque bonus (manche) si tu ne fais rien d'autre de ton action bonus.<br><strong style="color:var(--hp-orange);">2.</strong> Garder la Réaction pour stopper les mouvements ennemis (Sentinelle) sauf urgence.<br><strong style="color:var(--hp-orange);">3.</strong> Relancer les 1 et 2 aux dégâts (Style de combat : Arme à deux mains).<br><strong style="color:var(--hp-orange);">4.</strong> Menacer les gros (Attaque menaçante), Repousser ceux qui collent Sybilla.<br><strong style="color:var(--hp-orange);">5.</strong> Rester à 3 mètres de Sybilla pour avoir l'Avantage sur les AO.</div></div><div style="margin-top:8px;padding:8px;background:rgba(239,68,68,0.06);border-radius:8px;border-left:3px solid var(--border-accent);"><div style="font-size:0.72rem;font-weight:700;color:var(--accent-light);">🔔 Triggers automatiques (pas d'action requise)</div><div style="font-size:0.73rem;color:var(--text-2);line-height:1.5;margin-top:2px;">→ Ennemi entre dans 3 m : AO via Maître d'hast<br>→ Ennemi touché par AO : vitesse = 0 via Sentinelle<br>→ Ennemi à 1,50 m attaque un allié : AO via Sentinelle<br>→ Ennemi Se désengage : AO quand même via Sentinelle<br>→ Dégâts hallebarde : relance les 1 et 2 (Arme à deux mains)</div></div></div>`;
-return h+`</div>`}
-
-// ═══════ BIO ═══════
-function renderBio(){
-let h=`<div style="max-width:800px;margin:0 auto;">`;
-h+=`<div class="glass" style="padding:14px;margin-bottom:10px;"><div class="section-title" style="margin-bottom:6px;">🎭 Apparence</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:3px 14px;font-size:0.78rem;margin-bottom:6px;"><div><span style="color:var(--text-3);">Âge :</span> ${C.appearance.age}</div><div><span style="color:var(--text-3);">Perçu :</span> ${C.appearance.perceived_age}</div><div><span style="color:var(--text-3);">Taille :</span> ${C.appearance.height}</div><div><span style="color:var(--text-3);">Poids :</span> ${C.appearance.weight}</div><div><span style="color:var(--text-3);">Cheveux :</span> ${C.appearance.hair}</div><div><span style="color:var(--text-3);">Yeux :</span> ${C.appearance.eyes}</div><div style="grid-column:1/-1;"><span style="color:var(--text-3);">Peau :</span> ${C.appearance.skin}</div></div><div style="font-size:0.78rem;color:var(--text-2);line-height:1.5;font-style:italic;">${C.appearance.desc}</div></div>`;
-
-h+=`<div class="glass" style="padding:14px;margin-bottom:10px;"><div class="section-title" style="margin-bottom:6px;">📜 Histoire — ${C.full_name}</div>`;
-for(const s of C.backstory_sections){const e=ec(`story-${s.title}`);h+=`<div class="glass expand-card" data-expand="story-${s.title}" style="background:rgba(255,255,255,0.02);"><div class="expand-header"><span>${s.title}</span>${e.chev}</div><div class="expand-body ${e.cls}" style="font-style:italic;">${s.text}</div></div>`}
-h+=`</div>`;
-
-h+=`<div class="glass" style="padding:14px;margin-bottom:10px;"><div class="section-title" style="margin-bottom:6px;">🤝 Alliés & Relations</div>`;
-for(const a of C.allies){
-const hasFullDesc=a.full_desc&&a.full_desc.length>0;
-const expandId=`ally-${a.name.replace(/\s+/g,'-').toLowerCase()}`;
-const e=hasFullDesc?ec(expandId):{chev:'',cls:''};
-h+=`<div class="${hasFullDesc?'glass expand-card':'ally-card glass'} ${a.deceased?'ally-deceased':''}" ${hasFullDesc?`data-expand="${expandId}"`:''}><div class="${hasFullDesc?'expand-header':''}"><div class="ally-name">${a.name} ${a.deceased?'✝':''}</div>${hasFullDesc?e.chev:''}</div><div class="ally-desc">${a.desc}</div>${hasFullDesc?`<div class="expand-body ${e.cls}" style="margin-top:8px;font-size:0.78rem;line-height:1.6;font-style:italic;">${a.full_desc}</div>`:''}​</div>`;
-}
-if(C.tensions.length){h+=`<div style="font-size:0.65rem;color:var(--text-3);text-transform:uppercase;margin-top:8px;margin-bottom:3px;">⚡ Tensions</div>`;for(const t of C.tensions)h+=`<div class="ally-card glass" style="border-left:3px solid var(--hp-orange);"><div class="ally-name">${t.name}</div><div class="ally-desc">${t.desc}</div></div>`}
-h+=`</div>`;
-
-h+=`<div class="glass" style="padding:14px;margin-bottom:10px;"><div class="section-title" style="margin-bottom:6px;">🎲 Conseils RP</div>`;
-for(const tip of C.rp_tips)h+=`<div class="glass" style="padding:7px 10px;margin-bottom:4px;border-left:3px solid var(--hp-orange);"><div style="font-size:0.78rem;font-weight:700;color:var(--hp-orange);">${tip.title}</div><div style="font-size:0.73rem;color:var(--text-2);line-height:1.45;">${tip.text}</div></div>`;
-h+=`</div>`;
-
-h+=`<div class="glass" style="padding:14px;margin-bottom:10px;"><div class="section-title" style="margin-bottom:6px;">🎒 Inventaire</div>`;
-for(const item of C.equipment){const q=getEQ(item.name);h+=`<div class="inv-row"><span style="color:${item.category==='arme'?'var(--accent-light)':item.category==='armure'?'var(--text-1)':'var(--text-2)'};">${item.name}</span><div style="display:flex;align-items:center;gap:3px;">${item.editable?`<button class="inv-btn" data-inv="${item.name}" data-inv-delta="-1">−</button>`:''}<span class="inv-qty">${q}</span>${item.editable?`<button class="inv-btn" data-inv="${item.name}" data-inv-delta="1">+</button>`:''}</div></div>`}
-h+=`</div>`;
-
-if(C.external_links.filter(l=>l.url).length){h+=`<div class="glass" style="padding:14px;"><div class="section-title" style="margin-bottom:6px;">🔗 Documents</div>`;for(const l of C.external_links.filter(l=>l.url))h+=`<a href="${l.url}" target="_blank" rel="noopener" class="bio-link"><span>${l.icon}</span><span>${l.label}</span><span style="margin-left:auto;font-size:0.65rem;color:var(--text-3);">↗</span></a>`;h+=`</div>`}
-return h+`</div>`}
-
-// ═══════ EVENTS ═══════
-function attachEvents(){
-document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{activeTab=b.dataset.tab;render()}));
-document.querySelectorAll("[data-ability-filter]").forEach(b=>b.addEventListener("click",()=>{abilityFilter=b.dataset.abilityFilter;render()}));
-document.querySelectorAll("[data-turn]").forEach(b=>b.addEventListener("click",()=>{const d=parseInt(b.dataset.turn);if(d===0)state.combat_turn=0;else state.combat_turn=Math.max(0,state.combat_turn+d);saveState();render()}));
-
-// HP damage logic: temp absorbs first
-document.querySelectorAll("[data-hp-delta]").forEach(b=>b.addEventListener("click",()=>{
-const delta=parseInt(b.dataset.hpDelta);
-if(delta<0){
-// Dégâts: retirer d'abord temp_hp puis hp
-const dmg=Math.abs(delta);
-if(state.hp_temp>0){
-const absorbed=Math.min(state.hp_temp,dmg);
-state.hp_temp-=absorbed;
-const remaining=dmg-absorbed;
-if(remaining>0)state.hp_current=Math.max(0,state.hp_current-remaining);
-}else{
-state.hp_current=Math.max(0,state.hp_current-dmg);
-}
-}else{
-// Soins: ajouter aux HP normaux uniquement
-state.hp_current=Math.min(C.hp_max,state.hp_current+delta);
-}
-saveState();render()
-}));
-
-// PV temp handlers
-document.querySelectorAll("[data-hp-temp-delta]").forEach(b=>b.addEventListener("click",()=>{
-const delta=parseInt(b.dataset.hpTempDelta);
-state.hp_temp=Math.max(0,state.hp_temp+delta);
-saveState();render()
-}));
-
-const hpTempD=document.getElementById("hp-temp-display");
-if(hpTempD)hpTempD.addEventListener("click",()=>{editingHPTemp=true;render();setTimeout(()=>{const i=document.getElementById("hp-temp-edit");if(i){i.focus();i.select()}},50)});
-const hpTempE=document.getElementById("hp-temp-edit");
-if(hpTempE){
-const commit=()=>{state.hp_temp=Math.max(0,parseInt(hpTempE.value)||0);editingHPTemp=false;saveState();render()};
-hpTempE.addEventListener("blur",commit);
-hpTempE.addEventListener("keydown",e=>{if(e.key==="Enter")commit();if(e.key==="Escape"){editingHPTemp=false;render()}})
-}
-
-// Checkboxes inspiration
-document.querySelectorAll("[data-checkbox]").forEach(c=>c.addEventListener("click",()=>{
-const key=c.dataset.checkbox;
-if(state[key]!==undefined){state[key]=!state[key];saveState();render()}
-}));
-
-const hpD=document.getElementById("hp-display");if(hpD)hpD.addEventListener("click",()=>{editingHP=true;render();setTimeout(()=>{const i=document.getElementById("hp-edit");if(i){i.focus();i.select()}},50)});
-const hpE=document.getElementById("hp-edit");if(hpE){const commit=()=>{state.hp_current=Math.max(0,Math.min(C.hp_max,parseInt(hpE.value)||0));editingHP=false;saveState();render()};hpE.addEventListener("blur",commit);hpE.addEventListener("keydown",e=>{if(e.key==="Enter")commit();if(e.key==="Escape"){editingHP=false;render()}})}
-document.querySelectorAll("[data-martial-d8]").forEach(d=>d.addEventListener("click",()=>{const i=parseInt(d.dataset.martialD8);state.martial_dice_d8_current=i<state.martial_dice_d8_current?i:i+1;saveState();render()}));
-document.querySelectorAll("[data-toggle]").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.toggle+"_used";if(state[k]!==undefined){state[k]=!state[k];saveState();render()}}));
-document.querySelectorAll("[data-death]").forEach(d=>d.addEventListener("click",()=>{const t=d.dataset.death==="success"?"successes":"failures";const i=parseInt(d.dataset.idx);state.death_saves[t]=i<state.death_saves[t]?i:i+1;saveState();render()}));
-document.querySelectorAll("[data-hitdice]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.hitdice==="use"&&state.hit_dice_used<C.hit_dice.total)state.hit_dice_used++;if(b.dataset.hitdice==="restore"&&state.hit_dice_used>0)state.hit_dice_used--;saveState();render()}));
-document.querySelectorAll("[data-expand]").forEach(c=>c.addEventListener("click",()=>{const id=c.dataset.expand;expandedCards.has(id)?expandedCards.delete(id):expandedCards.add(id);render()}));
-const secB=document.getElementById("secret-toggle");if(secB)secB.addEventListener("click",()=>{secretOpen=!secretOpen;render()});
-document.querySelectorAll("[data-inv]").forEach(b=>b.addEventListener("click",()=>{const n=b.dataset.inv,d=parseInt(b.dataset.invDelta),cur=getEQ(n);state.equipment_quantities[n]=Math.max(0,cur+d);saveState();render()}));
-const sR=document.getElementById("short-rest-btn");if(sR)sR.addEventListener("click",()=>{state.martial_dice_d8_current=C.martial_dice_d8;state.second_wind_used=false;state.action_surge_used=false;state.inspiration_bardic=false;state.death_saves={successes:0,failures:0};saveState();render()});
-const lR=document.getElementById("long-rest-btn");if(lR)lR.addEventListener("click",()=>{state.hp_current=C.hp_max;state.hp_temp=0;state.martial_dice_d8_current=C.martial_dice_d8;state.second_wind_used=false;state.action_surge_used=false;state.hallebarde_reaction_used=false;state.inspiration_bardic=false;state.death_saves={successes:0,failures:0};state.hit_dice_used=Math.max(0,state.hit_dice_used-Math.floor(C.hit_dice.total/2));state.combat_turn=0;saveState();render()});
-}
-render();
-</script>
-</body>
-</html>
