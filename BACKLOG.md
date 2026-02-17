@@ -1,120 +1,101 @@
----
-**Version : 3.0-20260215-1558**  
-**Last Updated:** 15 février 2026  
-**Status:** ✅ Aligned with GitHub Issues
----
-
 # 📋 BACKLOG — TawynDnD Ultimate
-
-> **Note:** Ce backlog est maintenant synchronisé avec les GitHub Issues. Chaque item est traçable via son numéro d'issue.
-
----
-
-## 🗺️ Roadmap & Phase Planning
-
-### 🔵 Phase 1 — Standardisation & Cohérence Technique
-**Issue:** [#2 - Phase 1 - Standardisation & cohérence technique du repo](https://github.com/Viannax74/TawynDnD/issues/2)  
-**Status:** ✅ Terminée  
-**Priorité:** Élevée  
-**Description:** Unification du thème Glassmorphism, schéma `const C` universel, validation automatique.
+**Version :** 3.0.1 — 17 février 2026  
+**Synchronisé avec :** [GitHub Issues](https://github.com/Viannax74/TawynDnD/issues) | [Project Board](https://github.com/users/Viannax74/projects/2)
 
 ---
 
-### 🟣 Phase 2 — Format AideDD Complet pour les Sorts
-**Issue:** [#3 - Phase 2 - Implémentation du format AideDD complet pour les sorts](https://github.com/Viannax74/TawynDnD/issues/3)  
-**Status:** 🔴 À faire  
-**Priorité:** Élevée  
-**Description:** Intégration des propriétés complètes des sorts (École, Composantes, Portée, Temps d'incantation).
+## 🔥 Priorité Immédiate
+
+### Moteur de rendu Steiner — Template Martial
+**Issue :** À créer  
+**Status :** 🔴 Bloquant  
+**Description :**  
+Le fichier `steiner-ferum-v3.0-20260216-1630.html` contient un `const C` complet mais **aucun moteur de rendu** (HTML/CSS/JS). La fiche est fonctionnellement vide côté affichage.
+
+**Travail requis :**
+- Implémenter le moteur HTML/JS pour les sections : Stats, Combat, Manœuvres, Équipement, Personnalité, Serment
+- Adapter le design system glassmorphism en rouge (`--accent: #ef4444`)
+- Afficher les dés de supériorité (5d8) avec cases à cocher interactives
+- Afficher le bloc Serment du dernier rempart avec avertissement visuel
+- **Ne pas implémenter de section Sorts** (classe martiale)
+
+**Référence :** Utiliser `moros-v3.0-20260217-1200.html` comme inspiration de structure, adapter les sections spécifiques aux guerriers.
 
 ---
 
-### 🟠 Phase 3 — Internationalisation (i18n)
-**Issue:** [#4 - Phase 3 - Internationalisation (i18n) du projet](https://github.com/Viannax74/TawynDnD/issues/4)  
-**Status:** 🔴 À faire  
-**Priorité:** Moyenne  
-**Description:** Support multilingue (Français/Anglais) pour interface et sorts.
+## 🗺️ Roadmap & Phases
+
+### ✅ Phase 1 — Standardisation & Cohérence Technique
+**Issue :** [#2](https://github.com/Viannax74/TawynDnD/issues/2)  
+**Status :** ✅ Terminée  
+Unification du thème Glassmorphism, schéma `const C` universel, validation automatique.
 
 ---
 
-### 🟡 Phase 4 — Inventaire Interactif
-**Issue:** [#5 - Phase 4 - Inventaire interactif pour tous les personnages](https://github.com/Viannax74/TawynDnD/issues/5)  
-**Status:** 🔴 À faire  
-**Priorité:** Moyenne  
-**Description:** Gestion dynamique de l'inventaire avec catégories, quantités et poids.
+### 🔴 Phase 2 — Format AideDD Complet pour les Sorts
+**Issue :** [#3](https://github.com/Viannax74/TawynDnD/issues/3)  
+**Status :** 🔴 À faire — Concerne uniquement Moros  
+**Priorité :** Haute  
+Intégration des propriétés complètes des sorts : École, Composantes, Portée, Temps d'incantation.  
+**Périmètre :** `moros-v3.0-*.html` uniquement. Steiner n'est pas concerné.
 
 ---
 
-### 🟢 Phase 5 — Export & Import des Personnages
-**Issue:** [#6 - Phase 5 - Export & Import des personnages](https://github.com/Viannax74/TawynDnD/issues/6)  
-**Status:** 🔴 À faire  
-**Priorité:** Élevée  
-**Description:** Sauvegarde/chargement JSON, URL sharing (base64), backup localStorage.
+### 🔴 Phase 3 — Internationalisation (i18n)
+**Issue :** [#4](https://github.com/Viannax74/TawynDnD/issues/4)  
+**Status :** 🔴 À faire  
+**Priorité :** Moyenne  
+Support multilingue Français/Anglais pour l'interface et les sorts.
 
 ---
 
-## 🎯 Features Complémentaires (Post-v3.0)
-
-### Progressive Web App (PWA)
-**Issue:** [#8 - PWA - Installer la fiche comme application native](https://github.com/Viannax74/TawynDnD/issues/8)  
-**Priorité:** Moyenne  
-**Effort estimé:** 4h  
-**Description:** Permettre l'installation comme app native sur smartphone (mode offline, icône d'accueil).
+### 🔴 Phase 4 — Inventaire Interactif
+**Issue :** [#5](https://github.com/Viannax74/TawynDnD/issues/5)  
+**Status :** 🔴 À faire  
+**Priorité :** Moyenne  
+Gestion dynamique de l'inventaire : catégories, quantités, poids, objets magiques.
 
 ---
 
-### Backup Automatique (24h)
-**Issue:** [#9 - Backup - Export automatique du localStorage toutes les 24h](https://github.com/Viannax74/TawynDnD/issues/9)  
-**Priorité:** Élevée  
-**Effort estimé:** 3h  
-**Description:** Export JSON automatique pour sécuriser les données contre toute perte.
+### 🔴 Phase 5 — Export & Import des Personnages
+**Issue :** [#6](https://github.com/Viannax74/TawynDnD/issues/6)  
+**Status :** 🔴 À faire  
+**Priorité :** Haute  
+Sauvegarde/chargement JSON, partage URL (base64), backup localStorage.
 
 ---
 
-### Bestiaire Officiel PHB
-**Issue:** [#10 - Bestiaire - Référence rapide de monstres PHB](https://github.com/Viannax74/TawynDnD/issues/10)  
-**Priorité:** Faible  
-**Effort estimé:** 20h  
-**Description:** Table statique des monstres officiels avec recherche et filtrage.
+## 🎯 Features Complémentaires
 
----
+### PWA — App Native
+**Issue :** [#8](https://github.com/Viannax74/TawynDnD/issues/8) | Effort : 4h  
+Installation comme app native smartphone (mode offline, icône d'accueil).
+
+### Backup Automatique 24h
+**Issue :** [#9](https://github.com/Viannax74/TawynDnD/issues/9) | Effort : 3h  
+Export JSON automatique toutes les 24h.
 
 ### Historique des Jets de Dés
-**Issue:** [#11 - Historique - Log des 20 derniers jets de dés saisis](https://github.com/Viannax74/TawynDnD/issues/11)  
-**Priorité:** Moyenne  
-**Effort estimé:** 2h  
-**Description:** Journal circulaire des jets manuels pour tracking roleplay.
-
----
+**Issue :** [#11](https://github.com/Viannax74/TawynDnD/issues/11) | Effort : 2h  
+Journal circulaire des 20 derniers jets manuels.
 
 ### Notes de Session
-**Issue:** [#12 - Notes - Bloc de notes de session intégré à la fiche](https://github.com/Viannax74/TawynDnD/issues/12)  
-**Priorité:** Basse  
-**Effort estimé:** 2h  
-**Description:** Textarea pour noter événements, PNJ et indices (persistance localStorage).
+**Issue :** [#12](https://github.com/Viannax74/TawynDnD/issues/12) | Effort : 2h  
+Textarea persistant (localStorage) pour notes de session.
 
 ---
 
-## ✅ Features to Keep (Physical First Compliance)
-- ✅ Personal character management
-- ✅ Local backups (localStorage + JSON export)
-- ✅ Progressive Web App (PWA) capability
-- ✅ Spell history tracking
-- ✅ Session notes
-- ✅ Bestiary reference
-- ✅ Weight calculator
-- ✅ Theme customization (CSS variables)
+## ✅ Features à Conserver (Physical First)
+- Gestion de personnage local
+- Backups locaux (localStorage + JSON export)
+- PWA capability
+- Suivi des emplacements de sorts (Moros)
+- Notes de session
+- Calculateur de poids
+- Thème customisable via variables CSS
 
-## ❌ Features to Remove (Against Physical First Principles)
-- ❌ Dice animations (RNG)
-- ❌ Multiplayer features
-- ❌ Community features
-- ❌ Discord integration
-
----
-
-## 📊 Project Board
-Voir aussi le [Project Board GitHub](https://github.com/users/Viannax74/projects/2) pour le suivi en temps réel.
-
----
-
-**Changelog:** Toute modification de ce backlog doit être synchronisée avec les GitHub Issues et documentée dans [CHANGELOG.md](./CHANGELOG.md).
+## ❌ Features Hors Périmètre
+- Animations de dés (RNG) — contre le principe Physical First
+- Fonctionnalités multijoueur
+- Intégration Discord
+- Fonctionnalités communautaires
