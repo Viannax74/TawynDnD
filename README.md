@@ -200,7 +200,7 @@ Exemple :
 ```js
 import { t } from './translations/index.js';
 span.innerText = t('ui.hp'); // Affiche "Points de vie" ou "Hit Points" selon la langue
-
+```
 ---
 
 Pour toute question de contribution i18n, voir aussi :
