@@ -12,6 +12,10 @@ Format : [Semantic Versioning](https://semver.org/) | [Keep a Changelog](https:/
 - Documenté la convention d'intégration i18n pour toute nouvelle fiche ou contribution.
 - Synchronisation avec la roadmap, README, COPILOT_GUIDE.
 
+- Ajout de translations/en.js, fr.js, index.js : fonction t(), mapping, switch langue natif, fallback EN.
+- Démarrage de la migration i18n sur les fiches, UI, moteurs.
+- Documentation COPILOT_GUIDE.md & TECHNICAL_SPEC synchronisée sur ajout de traduction et normes multi-langue.
+
 
 ## [3.0.2] — 2026-02-17
 
