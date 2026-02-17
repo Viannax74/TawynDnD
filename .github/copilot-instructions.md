@@ -146,5 +146,15 @@ Pour que Copilot lise automatiquement ces instructions, créer :
 mkdir -p .github
 cp COPILOT_GUIDE.md .github/copilot-instructions.md
 ```
+#### Procédure d'ajout de traduction i18n
 
+1. Repérer la clé à ajouter ou étendre (ex : ui.hp ou spells.shield.name)
+2. Ajouter dans en.js (EN) et fr.js (FR) dans /translations
+3. Tester techniquement sur la fiche
+4. Valider terminologie D&D5/AideDD
+5. Faire review joueur FR
+
+```
 Copilot lit `.github/copilot-instructions.md` automatiquement sur chaque prompt.
+
+
