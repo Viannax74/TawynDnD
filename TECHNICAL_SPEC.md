@@ -256,9 +256,12 @@ steiner-ferum-v3.0-20260216-1630.html
 Toute modification de cette spécification doit être accompagnée d'une mise à jour du `schemaVersion` dans `DND_VOCABULARY.md` et d'une entrée dans `CHANGELOG.md`.
 
 ---
+---
+## 🌍 Norme d'intégration i18n
 
-#### Integration i18n (norme)
-
-- Toute UI, moteur ou fiche doit utiliser t() pour tous labels ou contenus dynamiques.
-- Convention de nommage : dot notation (ex : ui.hp, skills.perception).
-- Fallback automatique EN si non traduit
+- Toute UI, fiche ou moteur doit utiliser la fonction t() pour labels et contenu dynamique.
+- Convention : clés en dot notation (`ui.hp`, `abilities.str`, `skills.acrobatics`, etc).
+- Fallback automatique EN si FR manquant, jamais de clé "undefined".
+- Extension facile par ajout dans `/translations/`, review joueur systématique.
+- Voir COPILOT_GUIDE.md pour procédure d'ajout, validation, et onboarding IA.
+---
