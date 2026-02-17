@@ -3,7 +3,14 @@ Toutes les modifications notables de ce projet sont documentées ici.
 Format : [Semantic Versioning](https://semver.org/) | [Keep a Changelog](https://keepachangelog.com/)
 
 ---
+## [3.0.2] — 2026-02-17
 
+### Documentation et Moteur
+- Fiche Steiner Ferum : moteur de rendu complet finalisé, statut passé à “version stable” dans toute la documentation.
+- Suppression des mentions “en cours”, “stub”, “à implémenter” pour Steiner dans README, BACKLOG, CHANGELOG.
+- Rétrospective : migration/normalisation terminée pour les deux templates principaux (“Moros” et “Steiner”).
+
+  
 ## [3.0.1] — 2026-02-17
 
 ### Documentation
