@@ -8,8 +8,11 @@ export const FR = {
   ui: {
     // Stats & Combat
     hp: 'Points de vie',
+    hp_short: 'PV',              // Version courte pour espaces réduits
     hp_temp: 'PV temporaires',
+    hp_temp_short: 'PV temp',    // Version courte
     ac: "Classe d'armure",
+    ac_short: 'CA',              // Version courte
     init: 'Initiative',
     speed: 'Vitesse',
     prof: 'Maîtrise',
