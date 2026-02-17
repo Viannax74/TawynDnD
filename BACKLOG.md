@@ -4,25 +4,6 @@
 
 ---
 
-## 🔥 Priorité Immédiate
-
-### Moteur de rendu Steiner — Template Martial
-**Issue :** À créer  
-**Status :** 🔴 Bloquant  
-**Description :**  
-Le fichier `steiner-ferum-v3.0-20260216-1630.html` contient un `const C` complet mais **aucun moteur de rendu** (HTML/CSS/JS). La fiche est fonctionnellement vide côté affichage.
-
-**Travail requis :**
-- Implémenter le moteur HTML/JS pour les sections : Stats, Combat, Manœuvres, Équipement, Personnalité, Serment
-- Adapter le design system glassmorphism en rouge (`--accent: #ef4444`)
-- Afficher les dés de supériorité (5d8) avec cases à cocher interactives
-- Afficher le bloc Serment du dernier rempart avec avertissement visuel
-- **Ne pas implémenter de section Sorts** (classe martiale)
-
-**Référence :** Utiliser `moros-v3.0-20260217-1200.html` comme inspiration de structure, adapter les sections spécifiques aux guerriers.
-
----
-
 ## 🗺️ Roadmap & Phases
 
 ### ✅ Phase 1 — Standardisation & Cohérence Technique
