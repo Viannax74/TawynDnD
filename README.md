@@ -19,9 +19,10 @@ Ce dépôt sert de base technique et documentaire pour l'évolution vers une **M
 ## 📁 Écosystème Actuel
 
 -   **Moros Gravewalker** (Occultiste Lame Maudite) :
-    -   `characters/moros-v3.0-20260215-1558.html` : Dernière version stable, moteur optimisé avec gestion des sorts et invocations.
+    -   `characters/moros-v3.0-20260217-1200.html` : Dernière version stable, moteur optimisé avec gestion des sorts et invocations.
 -   **Steiner Ferum** (Guerrier Maître de Guerre) :
     -   `characters/steiner-ferum-v3.0-20260216-1630.html` : Modèle de fiche martiale avec gestion des manœuvres, dés de supériorité et tactiques de combat.
+    -   **Statut sorts :** Classe martiale sans liste de sorts, aucun enrichissement sorts requis à ce stade.
 
 ---
 

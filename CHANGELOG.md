@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.0.1] - 2026-02-17
+### Maintenance & Archivage
+- **Archivage Moros** : Déplacement de `moros-v3.0-20260215-1558.html` vers `/archive`.
+- **Référence stable** : README mis à jour vers `moros-v3.0-20260217-1200.html`.
+- **Statut Steiner** : Justification documentée pour l'absence d'enrichissement sorts.
+
 ## [3.0.0] - 2026-02-16
 ### Phase 1: Standardisation &amp; Cohérence Technique
 - **Restructuration du repository** : Création du dossier `/characters` pour isoler les fiches.
