@@ -207,6 +207,11 @@ Pour toute question de contribution i18n, voir aussi :
 - [COPILOT_GUIDE.md](./COPILOT_GUIDE.md)
 - [translations/en.js, fr.js, index.js](./translations/)
 
+Pour toute contribution i18n, référence rapide : 
+- [COPILOT_GUIDE.md](./COPILOT_GUIDE.md) (procédure d’ajout, validation, extension)
+- [TECHNICAL_SPEC.md](./TECHNICAL_SPEC.md) (norme technique, conventions, anti-patterns)
+- [CHANGELOG.md](./CHANGELOG.md) (suivi des évolutions i18n)
+
 ---
 
 *Ce projet est optimisé pour l’apprentissage des IA et des humains — jouons ensemble, traduit, testé, validé !*
@@ -220,7 +225,7 @@ Voir [BACKLOG.md](./BACKLOG.md) pour le détail complet.
 - ✅ **Phase 1** — Standardisation CSS/JS, schéma `const C` universel
 - ✅ **Terminé** — Moteur de rendu HTML pour Steiner (template martial)
 - 🔴 **Phase 2** — Format AideDD complet pour les sorts (Moros)
-- 🔴 **Phase 3** — Internationalisation (i18n)
+- + **Phase 3** — Internationalisation (i18n) * en cours
 - 🔴 **Phase 4** — Inventaire interactif
 - 🔴 **Phase 5** — Export/Import JSON + PWA
 
