@@ -6,16 +6,10 @@ Format : [Semantic Versioning](https://semver.org/) | [Keep a Changelog](https:/
 ## [3.1.0] — 2026-02-17
 
 ### Internationalisation (i18n)
-- Ajout du dossier /translations avec en.js, fr.js, index.js.
-- Fonction t() + switch langue natif avec fallback EN, gestion localStorage.
-- Mapping complet EN/FR pour labels UI, caractéristiques, compétences, classes principales.
-- Documenté la convention d'intégration i18n pour toute nouvelle fiche ou contribution.
-- Synchronisation avec la roadmap, README, COPILOT_GUIDE.
-
-- Ajout de translations/en.js, fr.js, index.js : fonction t(), mapping, switch langue natif, fallback EN.
-- Démarrage de la migration i18n sur les fiches, UI, moteurs.
-- Documentation COPILOT_GUIDE.md & TECHNICAL_SPEC synchronisée sur ajout de traduction et normes multi-langue.
-
+- Ajout du dossier /translations (`en.js`, `fr.js`, `index.js`), fonction t(), switch langue avec fallback EN.
+- Principes et conventions i18n détaillés dans README.md et TECHNICAL_SPEC.md.
+- COPILOT_GUIDE.md enrichi pour onboarding human/IA, process review et extension.
+---
 
 ## [3.0.2] — 2026-02-17
 
@@ -23,7 +17,7 @@ Format : [Semantic Versioning](https://semver.org/) | [Keep a Changelog](https:/
 - Fiche Steiner Ferum : moteur de rendu complet finalisé, statut passé à “version stable” dans toute la documentation.
 - Suppression des mentions “en cours”, “stub”, “à implémenter” pour Steiner dans README, BACKLOG, CHANGELOG.
 - Rétrospective : migration/normalisation terminée pour les deux templates principaux (“Moros” et “Steiner”).
-
+---
   
 ## [3.0.1] — 2026-02-17
 
