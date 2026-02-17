@@ -45,7 +45,7 @@ TawynDnD/
 
 ### Steiner Ferum — Guerrier Maître de Guerre (Template Martial)
 - **Fichier :** `characters/steiner-ferum-v3.0-20260216-1630.html`
-- **Statut :** 🔧 En cours — stub `const C` complet, moteur de rendu à implémenter
+- **Statut :** ✅ Version stable — moteur complet, ready pour usage & extension
 - **Accentuation CSS :** Rouge (`--accent: #ef4444`)
 - **Spécificités moteur :** Manœuvres de combat, Dés de supériorité (5d8), Action Surge, Serment du dernier rempart
 - **⚠️ Pas de sorts** — Classe martiale. Ne pas implémenter de section sorts. Ne pas copier le moteur Moros tel quel.
@@ -126,7 +126,7 @@ NE PAS MODIFIER    : le CSS dans <style>, le HTML du body, le moteur JS après c
 Voir [BACKLOG.md](./BACKLOG.md) pour le détail complet.
 
 - ✅ **Phase 1** — Standardisation CSS/JS, schéma `const C` universel
-- 🔧 **En cours** — Moteur de rendu HTML pour Steiner (template martial)
+- ✅ **Terminé** — Moteur de rendu HTML pour Steiner (template martial)
 - 🔴 **Phase 2** — Format AideDD complet pour les sorts (Moros)
 - 🔴 **Phase 3** — Internationalisation (i18n)
 - 🔴 **Phase 4** — Inventaire interactif
