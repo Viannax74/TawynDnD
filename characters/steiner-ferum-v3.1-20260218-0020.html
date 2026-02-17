@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="fr" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TawynD&D — Steiner Ferum v3.1</title>
+<meta name="description" content="Fiche interactive D&D 5e — Steiner Ferum v3.1 i18n">
+<meta name="version" content="3.1-20260218-0020">
+<meta name="template" content="fighter-battlemaster">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   DESIGN SYSTEM — TawynD&D v3.0 (Steiner Edition)
+   Glassmorphisme rouge — Template Fighter
+   ═══════════════════════════════════════════════ */
+:root {
+  --bg-primary:      #140a00;
+  --bg-secondary:    #2e1408;
+  --bg-tertiary:     #4e2b1b;
+  --bg-glass:        rgba(46, 20, 8, 0.72);
+  --bg-glass-hover:  rgba(78, 43, 27, 0.85);
+  --accent:          #ef4444;
+  --accent-light:    #f87171;
+  --accent-pale:     #fecaca;
+  --accent-rgb:      239, 68, 68;
+  --text-1:          #f8fafc;
+  --text-2:          #cbd5e1;
+  --text-3:          #94a3b8;
+  --border-1:        rgba(255,255,255,0.08);
+  --border-accent:   rgba(239, 68, 68, 0.3);
+  --hp-green:        #10b981;
+  --hp-orange:       #f97316;
+  --hp-red:          #ef4444;
+  --hp-temp:         #a78bfa;
+  --act-a:           #60a5fa;
+  --act-b:           #f97316;
+  --act-r:           #ef4444;
+  --font-body:       'Inter', system-ui, sans-serif;
+  --font-display:    'Space Grotesk', 'Inter', sans-serif;
+  --font-mono:       'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-1);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 40px;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(239,68,68,0.3); border-radius: 3px; }
+
+button { cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+
+/* ── Glass ── */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-1);
+  border-radius: 12px;
+}
+.glass:hover { border-color: var(--border-accent); }
+
+/* ── Header ── */
+.header {
+  position: sticky; top: 0; z-index: 50;
+  background: linear-gradient(135deg, rgba(46,20,8,0.97), rgba(20,10,0,0.97));
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border-accent);
+  padding: 10px 20px;
+}
+.header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; max-width: 1400px; margin: 0 auto; }
+.header-left  { display: flex; align-items: center; gap: 14px; }
+
+.avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 14px rgba(239,68,68,0.4);
+  flex-shrink: 0; background: var(--bg-secondary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; overflow: hidden;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.header-name {
+  font-family: var(--font-display);
+  font-size: 1.4rem; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-light), var(--accent-pale));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+.header-sub { color: var(--text-3); font-size: 0.78rem; margin-top: 1px; }
+
+.mode-bar { display: flex; gap: 4px; }
+.mode-btn {
+  padding: 5px 12px; border-radius: 8px;
+  border: 1px solid var(--border-1); background: transparent;
+  color: var(--text-3); font-size: 0.75rem; cursor: pointer; transition: all 0.2s;
+}
+.mode-btn.active { background: rgba(239,68,68,0.18); border-color: var(--accent); color: var(--accent-light); }
+.mode-btn:hover:not(.active) { border-color: var(--border-accent); color: var(--text-2); }
+
+.header-stats { display: flex; gap: 5px; flex-wrap: wrap; }
+.stat-pill { text-align: center; padding: 3px 9px; min-width: 42px; }
+.stat-pill-val { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; }
+.stat-pill-lbl { font-size: 0.5rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* ── Tabs ── */
+.tab-bar {
+  display: flex; gap: 2px; padding: 6px 20px;
+  background: rgba(20,10,0,0.6);
+  border-bottom: 1px solid var(--border-1);
+  overflow-x: auto; scrollbar-width: none; justify-content: center;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: 7px 16px; border-radius: 20px;
+  border: 1px solid transparent; background: transparent;
+  color: var(--text-3); font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.tab-btn.active { background: rgba(239,68,68,0.15); border-color: var(--border-accent); color: var(--accent-light); }
+.tab-btn:hover:not(.active) { color: var(--text-1); }
+
+/* ── Main ── */
+.main { padding: 14px 20px; max-width: 1400px; margin: 0 auto; }
+.section-title {
+  font-size: 0.68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-3); margin-bottom: 8px; padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-1);
+}
+
+.grid-3 { display: grid; grid-template-columns: 260px 1fr 300px; gap: 14px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ── Ability block ── */
+.ability-block { padding: 10px; margin-bottom: 8px; text-align: center; }
+.ability-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-light); }
+.ability-mod   { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; line-height: 1.1; }
+.ability-score { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-3); }
+
+/* Skills */
+.skill-row { display: flex; align-items: center; gap: 5px; padding: 2px 8px; font-size: 0.73rem; color: var(--text-3); border-radius: 4px; transition: background 0.15s; }
+.skill-row:hover { background: rgba(255,255,255,0.03); }
+.skill-dot { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid var(--text-3); flex-shrink: 0; }
+.skill-dot.proficient { background: var(--accent); border-color: var(--accent); }
+.skill-bonus { margin-left: auto; font-family: var(--font-mono); font-weight: 600; color: var(--text-2); }
+
+.save-row { display: flex; align-items: center; gap: 5px; padding: 3px 8px; font-size: 0.73rem; color: var(--text-3); }
+
+/* ── HP ── */
+.hp-bar-bg  { height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; margin-top: 6px; }
+.hp-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s, background 0.4s; }
+.hp-value {
+  font-family: var(--font-display); font-size: 2rem; font-weight: 700;
+  cursor: pointer; transition: color 0.2s;
+}
+.hp-value:hover { color: var(--accent-light); }
+.hp-input {
+  font-family: var(--font-display); font-size: 2rem; font-weight: 700;
+  width: 64px; text-align: center;
+  background: rgba(255,255,255,0.1); border: 1px solid var(--accent);
+  border-radius: 6px; color: var(--text-1); outline: none;
+}
+.hp-btn {
+  width: 28px; height: 28px; border-radius: 6px;
+  border: 1px solid var(--border-1); background: transparent;
+  color: var(--text-2); font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.hp-btn:hover { border-color: var(--accent); color: var(--accent-light); }
+
+/* ── Martial dice (supériorité) ── */
+.martial-dot {
+  width: 22px; height: 22px; border-radius: 4px;
+  border: 2px solid var(--accent); cursor: pointer; transition: all 0.2s;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.55rem; font-weight: 700; color: var(--accent);
+  font-family: var(--font-mono);
+}
+.martial-dot.filled {
+  background: var(--accent); color: var(--bg-primary);
+  box-shadow: 0 0 8px rgba(239,68,68,0.4);
+}
+.martial-dot:hover { transform: scale(1.15); }
+
+/* ── Maneuver card ── */
+.maneuver-card {
+  padding: 12px 14px; margin-bottom: 6px;
+  border-left: 3px solid var(--accent);
+  background: rgba(239,68,68,0.04);
+  border-radius: 0 10px 10px 0;
+  transition: background 0.15s;
+}
+.maneuver-card:hover { background: rgba(239,68,68,0.08); }
+.maneuver-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.maneuver-name  { font-weight: 700; font-size: 0.88rem; }
+.maneuver-type  {
+  font-size: 0.62rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+  white-space: nowrap;
+}
+.maneuver-type.action   { background: rgba(96,165,250,0.15);  color: var(--act-a); }
+.maneuver-type.bonus    { background: rgba(249,115,22,0.15);  color: var(--act-b); }
+.maneuver-type.reaction { background: rgba(239,68,68,0.15);   color: var(--act-r); }
+.maneuver-desc { font-size: 0.78rem; color: var(--text-2); line-height: 1.6; }
+
+/* ── Attack card ── */
+.attack-card { padding: 10px 14px; margin-bottom: 6px; display: flex; align-items: center; gap: 12px; }
+.attack-bonus {
+  font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700;
+  color: var(--accent-light); min-width: 40px; text-align: center;
+  padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-accent);
+}
+.attack-name   { font-weight: 600; font-size: 0.85rem; }
+.attack-damage {
+  font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-2);
+  margin-left: auto; white-space: nowrap;
+  padding: 2px 8px; border-radius: 5px; border: 1px solid transparent;
+}
+
+/* ── Tactic card ── */
+.tactic-card {
+  padding: 14px; margin-bottom: 10px;
+  border-left: 3px solid var(--act-a);
+  background: rgba(255,255,255,0.02);
+  border-radius: 0 10px 10px 0;
+}
+.tactic-title { font-weight: 700; color: var(--text-1); margin-bottom: 6px; font-size: 0.9rem; }
+.tactic-text  { font-size: 0.82rem; color: var(--text-2); line-height: 1.65; }
+
+/* ── Expand card ── */
+.expand-card { padding: 10px 14px; margin-bottom: 6px; cursor: pointer; transition: border-color 0.2s, background 0.15s; }
+.expand-card:hover { background: rgba(239,68,68,0.04); }
+.expand-header { display: flex; align-items: center; justify-content: space-between; font-weight: 600; font-size: 0.84rem; }
+.expand-chevron { transition: transform 0.2s; color: var(--text-3); font-size: 0.72rem; }
+.expand-chevron.open { transform: rotate(90deg); }
+.expand-body { display: none; padding-top: 8px; font-size: 0.8rem; color: var(--text-2); line-height: 1.6; border-top: 1px solid var(--border-1); margin-top: 8px; }
+.expand-body.open { display: block; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Personality ── */
+.personality-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 2px; }
+.personality-text  { font-size: 0.8rem; color: var(--text-2); font-style: italic; margin-bottom: 10px; line-height: 1.5; }
+
+/* ── Stat box ── */
+.stat-box { text-align: center; padding: 10px 8px; }
+.stat-box-value { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; }
+.stat-box-label { font-size: 0.6rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* ── Serment block ── */
+.serment-block {
+  padding: 16px; border-radius: 12px;
+  background: rgba(239,68,68,0.1);
+  border: 2px solid rgba(239,68,68,0.5);
+  margin-top: 16px;
+}
+.serment-warning {
+  font-size: 0.7rem; font-weight: 700; color: var(--accent);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.serment-name { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+.serment-detail { font-size: 0.8rem; color: var(--text-2); line-height: 1.7; }
+
+/* ── Rest button ── */
+.rest-btn {
+  padding: 6px 14px; border-radius: 8px;
+  border: 1px solid var(--border-accent);
+  background: rgba(239,68,68,0.1); color: var(--accent-light);
+  font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.rest-btn:hover { background: rgba(239,68,68,0.25); }
+
+/* ── Death saves ── */
+.death-dot { width: 15px; height: 15px; border-radius: 50%; border: 2px solid; cursor: pointer; transition: all 0.2s; }
+.death-dot:hover { transform: scale(1.2); }
+.death-dot.success { border-color: var(--hp-green); }
+.death-dot.success.filled { background: var(--hp-green); }
+.death-dot.failure { border-color: var(--hp-red); }
+.death-dot.failure.filled { background: var(--hp-red); }
+
+/* ── Inventory ── */
+.inv-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 5px 10px; border-bottom: 1px solid var(--border-1); font-size: 0.78rem;
+}
+.inv-row:last-child { border-bottom: none; }
+.inv-name { color: var(--text-2); flex: 1; }
+.inv-name.weapon  { color: var(--text-1); }
+.inv-name.magical { color: var(--accent-light); }
+.inv-qty-controls { display: flex; align-items: center; gap: 4px; }
+.inv-qty { font-family: var(--font-mono); font-weight: 600; min-width: 24px; text-align: center; color: var(--text-2); font-size: 0.82rem; }
+.inv-btn {
+  width: 20px; height: 20px; border-radius: 4px;
+  border: 1px solid var(--border-1); background: transparent;
+  color: var(--text-3); font-size: 0.75rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.inv-btn:hover { border-color: var(--accent); color: var(--accent-light); }
+
+/* ── Prof list ── */
+.prof-list { font-size: 0.75rem; color: var(--text-2); line-height: 1.8; }
+.prof-label { font-weight: 600; color: var(--text-3); text-transform: uppercase; font-size: 0.6rem; letter-spacing: 0.05em; }
+
+/* ── Toast ── */
+#toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.toast {
+  background: linear-gradient(135deg, rgba(46,20,8,0.97), rgba(20,10,0,0.97));
+  border: 1px solid var(--accent); border-radius: 12px;
+  padding: 10px 18px; color: var(--text-1);
+  font-family: var(--font-mono); font-size: 0.88rem;
+  box-shadow: 0 4px 24px rgba(239,68,68,0.35);
+  animation: toastIn 0.3s ease, toastOut 0.4s ease 2.6s forwards;
+  pointer-events: all; white-space: nowrap; text-align: center;
+}
+.toast-title  { font-weight: 700; color: var(--accent-light); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 2px; }
+.toast-result { font-size: 1rem; }
+.toast-result .dice-natural { color: var(--hp-green); font-weight: 800; }
+.toast-result .dice-nat1    { color: var(--hp-red);   font-weight: 800; }
+.toast-result .dice-total   { color: var(--accent-pale); font-weight: 700; font-size: 1.1rem; }
+@keyframes toastIn  { from { opacity: 0; transform: translateY(14px) scale(0.92); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(8px); } }
+
+/* ── Mode visibility ── */
+.hide-in-social { transition: opacity 0.3s; }
+body.mode-social .hide-in-social { display: none !important; }
+.combat-highlight { transition: all 0.3s; }
+body.mode-combat .combat-highlight { border-color: var(--accent) !important; box-shadow: 0 0 14px rgba(239,68,68,0.2); }
+
+/* ── Responsive ── */
+@media (max-width: 1100px) { .grid-3 { grid-template-columns: 240px 1fr 280px; } }
+@media (max-width: 900px) {
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .grid-3 > :nth-child(3) { grid-column: 1 / -1; }
+  .grid-2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .grid-3 { grid-template-columns: 1fr; }
+  .header { padding: 8px 14px; }
+  .tab-bar { padding: 6px 14px; }
+  .main { padding: 10px 14px; }
+  .header-name { font-size: 1.1rem; }
+  .header-stats { display: none; }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast-container"></div>
+
+<script type="module">
+// ═══════════════════════════════════════════════════════════════════
+// ░░ IMPORT i18n
+// ═══════════════════════════════════════════════════════════════════
+import { t, setLanguage, getCurrentLanguage } from '../translations/index.js';
+
+// ═══════════════════════════════════════════════════════════════════
+// ░░ CHARACTER DATA — STEINER FERUM v3.1
+// ░░ ZONE MODIFIABLE PAR IA/COPILOT : uniquement le bloc const C
+// ░░ Ne jamais toucher au moteur de rendu après ce bloc
+// ═══════════════════════════════════════════════════════════════════
+const C = {
+  "schemaVersion": "3.0",
+  "id": "steiner-ferum",
+  "name": "Steiner Ferum",
+  "level": 8,
+  "class": "fighter",
+  "class_fr": "Guerrier",
+  "subclass": "battle_master",
+  "subclass_fr": "Maître de guerre",
+  "background": "Soldat",
+  "race": "mountain_dwarf",
+  "race_fr": "Nain des montagnes",
+  "alignment": "Loyal Bon",
+  "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=Steiner&backgroundColor=2e1408",
+
+  "stats": {
+    "ac": 19,
+    "init": 1,
+    "speed": 25,
+    "prof": 3,
+    "dc": 15,
+    "hp_max": 76,
+    "hit_dice": "8d10",
+    "martial_dice": 5,
+    "martial_dice_type": "d8"
+  },
+
+  "abilities": {
+    "str": { "score": 19, "mod": 4,  "label": "Force",        "abbr": "FOR" },
+    "dex": { "score": 12, "mod": 1,  "label": "Dextérité",    "abbr": "DEX" },
+    "con": { "score": 16, "mod": 3,  "label": "Constitution", "abbr": "CON" },
+    "int": { "score": 8,  "mod": -1, "label": "Intelligence", "abbr": "INT" },
+    "wis": { "score": 13, "mod": 1,  "label": "Sagesse",      "abbr": "SAG" },
+    "cha": { "score": 10, "mod": 0,  "label": "Charisme",     "abbr": "CHA" }
+  },
+  "abilities_order": ["str", "dex", "con", "int", "wis", "cha"],
+
+  "passive_perception": 14,
+
+  "saving_throws": {
+    "str": { "prof": true,  "bonus": 7,  "label": "FOR" },
+    "dex": { "prof": false, "bonus": 1,  "label": "DEX" },
+    "con": { "prof": true,  "bonus": 6,  "label": "CON" },
+    "int": { "prof": false, "bonus": -1, "label": "INT" },
+    "wis": { "prof": false, "bonus": 1,  "label": "SAG" },
+    "cha": { "prof": false, "bonus": 0,  "label": "CHA" }
+  },
+
+  "skills": [
+    { "name": "Athlétisme",  "ability": "str", "prof": true,  "bonus": 7 },
+    { "name": "Acrobaties",  "ability": "dex", "prof": false, "bonus": 1 },
+    { "name": "Perception",  "ability": "wis", "prof": true,  "bonus": 4 },
+    { "name": "Intuition",   "ability": "wis", "prof": false, "bonus": 1 },
+    { "name": "Survie",      "ability": "wis", "prof": true,  "bonus": 4 },
+    { "name": "Discrétion",  "ability": "dex", "prof": false, "bonus": 1 },
+    { "name": "Intimidation","ability": "cha", "prof": true,  "bonus": 3 },
+    { "name": "Histoire",    "ability": "int", "prof": false, "bonus": -1 },
+    { "name": "Tromperie",   "ability": "cha", "prof": false, "bonus": 0 },
+    { "name": "Persuasion",  "ability": "cha", "prof": false, "bonus": 0 }
+  ],
+
+  "attacks": [
+    {
+      "name": "Hallebarde du Serment",
+      "type": "action", "bonus": 8, "damage": "1d10+5", "type_dmg": "Tranchant",
+      "tags": ["Magique +1", "Allonge", "2 mains"], "range": "CàC (3m)",
+      "dice": "1d10", "flat": 5,
+      "desc": "Avantage sur Attaque d'Opportunité si allié à 3m (Sentinelle)."
+    },
+    {
+      "name": "Manche de Hallebarde",
+      "type": "bonus", "bonus": 8, "damage": "1d4+5", "type_dmg": "Contondant",
+      "tags": ["Action Bonus", "Maître d'hast"], "range": "CàC (3m)",
+      "dice": "1d4", "flat": 5,
+      "desc": "Frappe avec l'extrémité opposée. Action Bonus uniquement."
+    },
+    {
+      "name": "Arbalète légère",
+      "type": "action", "bonus": 4, "damage": "1d8+1", "type_dmg": "Perforant",
+      "tags": ["Munitions (24/96m)", "Chargement"], "range": "Distance",
+      "dice": "1d8", "flat": 1,
+      "desc": "Arme à distance secondaire."
+    }
+  ],
+
+  "maneuvers": [
+    {
+      "name": "Riposte",
+      "type": "reaction", "type_fr": "Réaction",
+      "dc_ability": "FOR",
+      "desc": "Quand une créature vous rate au CàC → Réaction : attaque CàC + dé de supériorité aux dégâts."
+    },
+    {
+      "name": "Balayage",
+      "type": "action", "type_fr": "Action",
+      "dc_ability": "—",
+      "desc": "Touche au CàC → dépense 1 dé sup → frappe une 2e créature à 1,5m. Dégâts = résultat du dé (pas de mod FOR)."
+    },
+    {
+      "name": "Attaque menaçante",
+      "type": "action", "type_fr": "Action",
+      "dc_ability": "SAG",
+      "desc": "Touche → dé sup en bonus dégâts. JdS SAG DD 15 ou la cible est Effrayée jusqu'à la fin de son prochain tour."
+    },
+    {
+      "name": "Repousser",
+      "type": "action", "type_fr": "Action",
+      "dc_ability": "FOR",
+      "desc": "Touche → dé sup en bonus dégâts. JdS FOR DD 15 ou la cible est repoussée de 4,5m (Taille Grande max)."
+    },
+    {
+      "name": "Parade",
+      "type": "reaction", "type_fr": "Réaction",
+      "dc_ability": "—",
+      "desc": "Vous êtes touché au CàC → Réaction : réduisez les dégâts de (dé sup + mod DEX (+1))."
+    }
+  ],
+
+  "class_features": [
+    {
+      "name": "Style de combat : Arme à deux mains",
+      "desc": "Quand vous obtenez 1 ou 2 sur un dé de dégâts avec une arme à deux mains, relancez le dé. Vous devez garder le nouveau résultat."
+    },
+    {
+      "name": "Second souffle",
+      "desc": "Action bonus : récupérez 1d10 + 8 PV. Utilisable 1×/repos court ou long."
+    },
+    {
+      "name": "Fougue (Action Surge)",
+      "desc": "1 fois par repos court : prenez 1 action supplémentaire à votre tour. Ne peut pas être utilisé pour lancer un sort supérieur au niveau 1."
+    },
+    {
+      "name": "Attaque supplémentaire",
+      "desc": "Vous attaquez 2 fois (au lieu d'une) chaque fois que vous utilisez l'action Attaquer."
+    },
+    {
+      "name": "Observation de l'ennemi",
+      "desc": "Après 1 minute d'observation d'une créature, apprenez si elle est supérieure, inférieure ou égale à Steiner pour 2 caractéristiques au choix (FOR, DEX, CA, PV max, etc.)."
+    }
+  ],
+
+  "racial_traits": [
+    {
+      "name": "Résistance naine",
+      "desc": "Avantage aux jets de sauvegarde contre le poison. Résistance aux dégâts de poison."
+    },
+    {
+      "name": "Vision dans le noir",
+      "desc": "Voyez à 18 mètres dans l'obscurité comme s'il faisait sombre (nuances de gris)."
+    },
+    {
+      "name": "Connaissance de la pierre",
+      "desc": "Double bonus de maîtrise pour les tests d'Histoire liés à l'origine des travaux en pierre."
+    },
+    {
+      "name": "Formation armures naines",
+      "desc": "La vitesse de Steiner n'est pas réduite par le port d'une armure lourde."
+    }
+  ],
+
+  "feats": [
+    {
+      "name": "Sentinelle",
+      "desc": "① Attaque d'opportunité réussie → vitesse de la cible = 0 jusqu'à la fin du tour. ② Vous pouvez effectuer une AO contre une créature qui attaque un allié adjacent (même si elle ne vous attaque pas). ③ Les créatures qui esquivent ne sont pas à l'abri de vos AO."
+    },
+    {
+      "name": "Maître d'hast",
+      "desc": "① AO contre toute créature qui entre dans votre allonge avec une arme d'hast. ② Frappe de manche : action bonus — 1d4+FOR avec l'extrémité opposée de la hallebarde."
+    }
+  ],
+
+  "personality": {
+    "trait": "J'affronte les problèmes de front. Une solution simple et directe est le meilleur chemin.",
+    "ideal": "Bonté. Notre sort est de donner notre vie pour la défense des autres.",
+    "bond": "Ceux qui se battent à mes côtés sont ceux pour qui cela vaut la peine de mourir.",
+    "flaw": "Je préfère manger mon armure plutôt qu'admettre que je me suis trompé."
+  },
+
+  "backstory": "Né dans le clan Vel Ferum. Son frère est tombé à la bataille de Marfort. Depuis seize ans, Steiner protège Sybilla — sa ward, sa raison de vivre. Un rempart silencieux qui ne parle que par l'acier.",
+
+  "proficiencies": {
+    "armor": "Toutes armures, boucliers",
+    "weapons": "Armes courantes, armes de guerre",
+    "tools": "Outils de forgeron, outils de menuisier, cartes, véhicules terrestres",
+    "languages": "Commun, nain"
+  },
+
+  "equipment": [
+    { "name": "Hallebarde du Serment", "cat": "arme",    "qty": 1,  "editable": false },
+    { "name": "Arbalète légère",       "cat": "arme",    "qty": 1,  "editable": false },
+    { "name": "Armure de plates",      "cat": "armure",  "qty": 1,  "editable": false },
+    { "name": "Bouclier",              "cat": "armure",  "qty": 1,  "editable": false },
+    { "name": "Carreaux d'arbalète",   "cat": "munition","qty": 20, "editable": true  },
+    { "name": "Rations (1 jour)",      "cat": "consom",  "qty": 10, "editable": true  },
+    { "name": "Torches",               "cat": "consom",  "qty": 10, "editable": true  },
+    { "name": "Sac à dos",             "cat": "equip",   "qty": 1,  "editable": false },
+    { "name": "Corde en chanvre (15m)","cat": "equip",   "qty": 1,  "editable": false }
+  ],
+
+  "serment": {
+    "name": "Serment du dernier rempart",
+    "trigger": "Réaction — Sybilla subit une attaque ou des dégâts mortels.",
+    "effect": "Steiner meurt (mort définitive). Déclenche une attaque automatique dans un rayon de 4,5m : 10d10 dégâts tranchants + 10d10 dégâts nécrotiques. JdS CON DD 18 pour moitié.",
+    "warning": "⚠️ USAGE UNIQUE — TOUTE LA CAMPAGNE"
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// ░░ STATE (localStorage) — NE PAS MODIFIER
+// ═══════════════════════════════════════════════════════════════════
+const STORAGE_KEY = `tawyndnd-${C.id}-v3`;
+
+const DEFAULT_STATE = {
+  hp:              C.stats.hp_max,
+  hp_temp:         0,
+  martial_dice:    C.stats.martial_dice,  // 5 dés d8 disponibles
+  action_surge:    true,                  // 1×/repos court
+  second_wind:     true,                  // 1×/repos court
+  death_saves:     { successes: 0, failures: 0 },
+  inv_qty:         {}
+};
+
+function loadState() {
+  try {
+    const s = localStorage.getItem(STORAGE_KEY);
+    if (s) return { ...DEFAULT_STATE, ...JSON.parse(s) };
+  } catch(e) {}
+  return { ...DEFAULT_STATE };
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+let state    = loadState();
+let activeTab  = "combat";
+let gameMode   = "exploration";
+let editingHP  = false;
+let expandedCards = new Set();
+
+const fmtMod = n => n >= 0 ? `+${n}` : `${n}`;
+
+function hpColor(pct) {
+  if (pct > 0.6)  return "var(--hp-green)";
+  if (pct > 0.25) return "var(--hp-orange)";
+  return "var(--hp-red)";
+}
+
+function getInvQty(name) {
+  if (state.inv_qty[name] !== undefined) return state.inv_qty[name];
+  return C.equipment.find(e => e.name === name)?.qty ?? 0;
+}
+
+// ── HP ──
+function modHP(delta) {
+  if (delta < 0 && state.hp_temp > 0) {
+    const dmg = Math.abs(delta);
+    const abs  = Math.min(state.hp_temp, dmg);
+    state.hp_temp -= abs;
+    const rem = dmg - abs;
+    if (rem > 0) state.hp = Math.max(0, state.hp - rem);
+  } else {
+    state.hp = Math.max(0, Math.min(C.stats.hp_max, state.hp + delta));
+  }
+  saveState(); render();
+}
+
+// ── Rests ──
+function rest(type) {
+  const label = type === "long" ? "repos long" : "repos court";
+  if (!confirm(`Confirmer le ${label} ?`)) return;
+  state.action_surge = true;
+  state.second_wind  = true;
+  state.martial_dice = C.stats.martial_dice;
+  state.death_saves  = { successes: 0, failures: 0 };
+  if (type === "long") { state.hp = C.stats.hp_max; state.hp_temp = 0; }
+  saveState(); render();
+  showToast(`✅ ${type === "long" ? "Repos long" : "Repos court"} — ressources rechargées !`);
+}
+
+// ── Toast ──
+function showToast(msg) {
+  const container = document.getElementById("toast-container");
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerHTML = `<div class="toast-result">${msg}</div>`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3100);
+}
+
+function rollAttack(atk) {
+  const d20   = Math.floor(Math.random() * 20) + 1;
+  const total = d20 + atk.bonus;
+  const isNat20 = d20 === 20;
+  const isNat1  = d20 === 1;
+  const faces   = parseInt(atk.dice.replace(/^\d*d/i, "")) || 6;
+  const count   = parseInt(atk.dice) || 1;
+  const rolls   = Array.from({length: count}, () => Math.floor(Math.random() * faces) + 1);
+  const dmg     = rolls.reduce((a,b) => a+b, 0) + atk.flat;
+  const atkClass = isNat20 ? "dice-natural" : isNat1 ? "dice-nat1" : "";
+  const atkNote  = isNat20 ? " 🎲 CRITIQUE !" : isNat1 ? " 💀 Raté !" : "";
+  const container = document.getElementById("toast-container");
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerHTML = `
+    <div class="toast-title">⚔️ ${atk.name}</div>
+    <div class="toast-result">Attaque : 1d20${fmtMod(atk.bonus)} = <span class="${atkClass}">${d20}</span>${fmtMod(atk.bonus)} = <span class="dice-total">${total}</span>${atkNote}</div>
+    <div class="toast-result" style="margin-top:2px;font-size:0.8rem;color:var(--text-2);">Dégâts : ${atk.dice}${fmtMod(atk.flat)} = ${dmg} ${atk.type_dmg}</div>`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ░░ RENDER
+// ═══════════════════════════════════════════════════════════════════
+function render() {
+  document.body.className = `mode-${gameMode}`;
+  document.getElementById("app").innerHTML =
+    renderHeader() + renderTabs() + `<div class="main">${renderActiveTab()}</div>`;
+  attachEvents();
+}
+
+function renderActiveTab() {
+  switch (activeTab) {
+    case "combat":    return renderCombat();
+    case "maneuvers": return renderManeuvers();
+    case "capacites": return renderCapacites();
+    case "tactique":  return renderTactics();
+    case "fiche":     return renderFiche();
+    case "bio":       return renderBio();
+    default:          return renderCombat();
+  }
+}
+
+// ── Header ──
+function renderHeader() {
+  const pct   = state.hp / C.stats.hp_max;
+  const hpCol = hpColor(pct);
+const currentLang = getCurrentLanguage();
+const modes = [
+  { id: "social",      icon: "🎭", label: t('ui.mode_social') },
+  { id: "exploration", icon: "🧭", label: t('ui.mode_exploration') },
+  { id: "combat",      icon: "⚔️", label: t('ui.mode_combat') }
+];
+  return `<div class="header"><div class="header-inner">
+    <div class="header-left">
+      <div class="avatar"><img src="${C.avatar}" alt="${C.name}" onerror="this.parentElement.innerHTML='🪖'"></div>
+      <div>
+        <div class="header-name">${C.name}</div>
+        <div class="header-sub">${C.class_fr} (${C.subclass_fr}) Nv.${C.level} · ${C.race_fr} · ${C.alignment}</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+<div class="mode-bar">
+  ${modes.map(m => `<button class="mode-btn ${gameMode === m.id ? "active" : ""}" data-mode="${m.id}">${m.icon} ${m.label}</button>`).join("")}
+  <span style="width:1px;height:20px;background:var(--border-1);margin:0 4px;"></span>
+  <button class="mode-btn ${currentLang === 'fr' ? "active" : ""}" data-lang="fr">🇫🇷</button>
+  <button class="mode-btn ${currentLang === 'en' ? "active" : ""}" data-lang="en">🇬🇧</button>
+</div>
+      <div class="header-stats">
+<div class="glass stat-pill"><div class="stat-pill-lbl">${t('ui.hp_short')}</div><div class="stat-pill-val" style="color:${hpCol}">${state.hp}</div></div>
+<div class="glass stat-pill"><div class="stat-pill-lbl">${t('ui.ac_short')}</div><div class="stat-pill-val">${C.stats.ac}</div></div>
+        <div class="glass stat-pill"><div class="stat-pill-lbl">Init</div><div class="stat-pill-val">${fmtMod(C.stats.init)}</div></div>
+        <div class="glass stat-pill"><div class="stat-pill-lbl">DD</div><div class="stat-pill-val">${C.stats.dc}</div></div>
+        <div class="glass stat-pill"><div class="stat-pill-lbl">Dés Sup</div><div class="stat-pill-val" style="color:var(--accent-light)">${state.martial_dice}</div></div>
+      </div>
+    </div>
+  </div></div>`;
+}
+
+// ── Tabs ──
+function renderTabs() {
+  const tabs = [
+    { id: "combat",    label: "⚔️ Combat" },
+    { id: "maneuvers", label: "🎯 Manœuvres" },
+    { id: "capacites", label: "⚡ Capacités" },
+    { id: "tactique",  label: "🗺️ Tactique" },
+    { id: "fiche",     label: "📋 Fiche" },
+    { id: "bio",       label: "📖 Bio" }
+  ];
+  return `<div class="tab-bar">
+    ${tabs.map(t => `<button class="tab-btn ${activeTab === t.id ? "active" : ""}" data-tab="${t.id}">${t.label}</button>`).join("")}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ░░ TAB: COMBAT
+// ═══════════════════════════════════════════════════════════════════
+function renderCombat() {
+  const pct    = Math.max(0, state.hp / C.stats.hp_max);
+  const color  = hpColor(pct);
+  const isCombat = gameMode === "combat";
+  let html = "";
+
+  // Stat boxes
+  if (isCombat) {
+    html += `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;">
+      <div class="glass stat-box combat-highlight"><div class="stat-box-value" style="font-size:2rem;color:${color}">${state.hp}</div><div class="stat-box-label">PV / ${C.stats.hp_max}</div></div>
+      <div class="glass stat-box combat-highlight"><div class="stat-box-value">${C.stats.ac}</div><div class="stat-box-label">CA</div></div>
+      <div class="glass stat-box combat-highlight"><div class="stat-box-value">${C.stats.dc}</div><div class="stat-box-label">DD Manœuvres</div></div>
+      <div class="glass stat-box combat-highlight"><div class="stat-box-value" style="color:var(--accent-light)">${state.martial_dice}</div><div class="stat-box-label">Dés Sup. (${C.stats.martial_dice_type})</div></div>
+    </div>`;
+  } else {
+    html += `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;">
+      <div class="glass stat-box"><div class="stat-box-value">${C.stats.ac}</div><div class="stat-box-label">CA</div></div>
+      <div class="glass stat-box"><div class="stat-box-value">${fmtMod(C.stats.init)}</div><div class="stat-box-label">Initiative</div></div>
+      <div class="glass stat-box"><div class="stat-box-value">${C.stats.speed}m</div><div class="stat-box-label">Vitesse</div></div>
+      <div class="glass stat-box"><div class="stat-box-value">${fmtMod(C.stats.prof)}</div><div class="stat-box-label">Maîtrise</div></div>
+    </div>`;
+  }
+
+  // HP block
+  html += `<div class="glass combat-highlight" style="padding:14px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div class="section-title" style="margin:0;border:0;padding:0;">Points de vie</div>
+      <div style="display:flex;gap:5px;align-items:center;">
+        <button class="hp-btn" data-hp-delta="-5" style="font-size:0.7rem;width:34px;">-5</button>
+        <button class="hp-btn" data-hp-delta="-1">−</button>
+        ${editingHP
+          ? `<input type="number" class="hp-input" id="hp-edit" value="${state.hp}" min="0" max="${C.stats.hp_max}">`
+          : `<span class="hp-value" id="hp-display" style="color:${color}">${state.hp}</span>`}
+        <span style="color:var(--text-3);font-size:1.2rem;font-weight:300;">/ ${C.stats.hp_max}</span>
+        <button class="hp-btn" data-hp-delta="1">+</button>
+        <button class="hp-btn" data-hp-delta="5" style="font-size:0.7rem;width:34px;">+5</button>
+      </div>
+    </div>
+    <div class="hp-bar-bg"><div class="hp-bar-fill" style="width:${pct*100}%;background:${color};"></div></div>
+    ${state.hp_temp > 0 ? `<div style="font-size:0.75rem;color:var(--hp-temp);margin-top:5px;">🛡️ PV temporaires : <strong>${state.hp_temp}</strong></div>` : ""}
+  </div>`;
+
+  // Dés de supériorité
+  html += `<div class="glass" style="padding:14px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div>
+        <div style="font-size:0.6rem;color:var(--text-3);text-transform:uppercase;margin-bottom:8px;">
+          Dés de supériorité · ${C.stats.martial_dice_type} · DD ${C.stats.dc} · Repos court
+        </div>
+        <div style="display:flex;gap:6px;" id="martial-dots">
+          ${Array.from({length: C.stats.martial_dice}, (_, i) => {
+            const filled = i < state.martial_dice;
+            return `<div class="martial-dot ${filled ? "filled" : ""}" data-martial="${i}" title="${filled ? "Disponible — clic pour dépenser" : "Utilisé"}">${C.stats.martial_dice_type}</div>`;
+          }).join("")}
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="rest-btn" data-rest="short">🌙 Repos court</button>
+        <button class="rest-btn" style="border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.08);color:var(--hp-green);" data-rest="long">☀️ Repos long</button>
+      </div>
+    </div>
+  </div>`;
+
+  // Ressources de classe
+  html += `<div class="glass" style="padding:12px;margin-bottom:12px;">
+    <div class="section-title" style="margin-bottom:6px;">Ressources limitées</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;font-size:0.8rem;border-bottom:1px solid var(--border-1);">
+      <span>Second souffle <span style="color:var(--text-3);font-size:0.68rem;">(Action bonus · 1d10+8 PV · 1×/repos court)</span></span>
+      <div style="width:12px;height:12px;border-radius:50%;border:2px solid var(--accent);cursor:pointer;transition:all 0.2s;${state.second_wind ? "background:var(--accent);box-shadow:0 0 6px rgba(239,68,68,0.5);" : ""}" data-toggle="second_wind"></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;font-size:0.8rem;">
+      <span>Fougue (Action Surge) <span style="color:var(--text-3);font-size:0.68rem;">(+1 action · 1×/repos court)</span></span>
+      <div style="width:12px;height:12px;border-radius:50%;border:2px solid var(--accent);cursor:pointer;transition:all 0.2s;${state.action_surge ? "background:var(--accent);box-shadow:0 0 6px rgba(239,68,68,0.5);" : ""}" data-toggle="action_surge"></div>
+    </div>
+  </div>`;
+
+  // Attaques
+  html += `<div class="section-title">Attaques <span style="font-size:0.58rem;color:var(--text-3);font-weight:400;">(clic sur le bonus = jet complet)</span></div>`;
+  for (let i = 0; i < C.attacks.length; i++) {
+    const atk = C.attacks[i];
+    const typeColor = atk.type === "action" ? "var(--act-a)" : atk.type === "bonus" ? "var(--act-b)" : "var(--act-r)";
+    html += `<div class="glass attack-card">
+      <div class="attack-bonus" data-roll-atk="${i}" style="cursor:pointer;" title="Jet d'attaque">${fmtMod(atk.bonus)}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="attack-name">${atk.name} <span style="font-size:0.65rem;color:${typeColor};font-weight:700;margin-left:4px;">${atk.type === "action" ? "Action" : atk.type === "bonus" ? "Action Bonus" : "Réaction"}</span></div>
+        <div style="font-size:0.68rem;color:var(--text-3);">${atk.range} · ${atk.tags.join(" · ")}</div>
+        <div style="font-size:0.72rem;color:var(--text-3);margin-top:2px;font-style:italic;">${atk.desc}</div>
+      </div>
+      <div class="attack-damage">${atk.damage} ${atk.type_dmg}</div>
+    </div>`;
+  }
+
+  // Jets contre la mort
+  html += `<div class="glass" style="padding:12px;margin-top:10px;">
+    <div class="section-title" style="margin-bottom:8px;">Jets contre la mort</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:0.68rem;color:var(--text-3);margin-bottom:4px;">Succès</div>
+        <div style="display:flex;gap:6px;">
+          ${[0,1,2].map(i => `<div class="death-dot success ${i < state.death_saves.successes ? "filled" : ""}" data-death="successes" data-idx="${i}"></div>`).join("")}
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.68rem;color:var(--text-3);margin-bottom:4px;">Échecs</div>
+        <div style="display:flex;gap:6px;">
+          ${[0,1,2].map(i => `<div class="death-dot failure ${i < state.death_saves.failures ? "filled" : ""}" data-death="failures" data-idx="${i}"></div>`).join("")}
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.68rem;color:var(--text-3);">Dés de vie</div>
+        <div style="font-family:var(--font-mono);font-size:0.85rem;">${C.stats.hit_dice}</div>
+      </div>
+    </div>
+    ${state.death_saves.successes >= 3 ? `<div style="text-align:center;margin-top:6px;color:var(--hp-green);font-weight:700;">✅ Stabilisé</div>` : ""}
+    ${state.death_saves.failures  >= 3 ? `<div style="text-align:center;margin-top:6px;color:var(--hp-red);font-weight:700;">💀 Mort</div>` : ""}
+  </div>`;
+
+  return html;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ░░ TAB: MANŒUVRES
+// ═══════════════════════════════════════════════════════════════════
+function renderManeuvers() {
+  let html = `<div style="max-width:700px;margin:0 auto;">`;
+
+  html += `<div class="glass" style="padding:12px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+    <div>
+      <div style="font-size:0.6rem;color:var(--text-3);text-transform:uppercase;margin-bottom:4px;">Dés disponibles · ${C.stats.martial_dice_type} · DD ${C.stats.dc} (8 + maîtrise + FOR)</div>
+      <div style="display:flex;gap:6px;" id="martial-dots-m">
+        ${Array.from({length: C.stats.martial_dice}, (_, i) => {
+          const filled = i < state.martial_dice;
+          return `<div class="martial-dot ${filled ? "filled" : ""}" data-martial="${i}">${C.stats.martial_dice_type}</div>`;
+        }).join("")}
+      </div>
+    </div>
+    <div style="font-size:0.75rem;color:var(--text-2);text-align:right;">
+      <div>Dégâts bonus : <strong style="color:var(--accent-light);">+1${C.stats.martial_dice_type}</strong></div>
+      <div style="font-size:0.65rem;color:var(--text-3);">Ajouté aux dégâts de l'attaque déclenchante</div>
+    </div>
+  </div>`;
+
+  html += `<div class="section-title">Manœuvres de combat (${C.maneuvers.length}/5)</div>`;
+
+  for (const m of C.maneuvers) {
+    html += `<div class="maneuver-card">
+      <div class="maneuver-header">
+        <span class="maneuver-name">${m.name}</span>
+        <span class="maneuver-type ${m.type}">${m.type_fr}</span>
+        ${m.dc_ability !== "—" ? `<span style="font-size:0.65rem;color:var(--text-3);">JdS ${m.dc_ability} DD ${C.stats.dc}</span>` : ""}
+      </div>
+      <div class="maneuver-desc">${m.desc}</div>
+    </div>`;
+  }
+
+  html += `<div class="glass" style="padding:12px;margin-top:14px;font-size:0.78rem;color:var(--text-2);line-height:1.8;">
+    <div class="section-title" style="margin-bottom:6px;">Règles générales</div>
+    <div>• Un seul dé de supériorité par manœuvre (sauf précision).</div>
+    <div>• Les dés dépensés se récupèrent au repos court ou long.</div>
+    <div>• Le dé de supériorité est un d8 au niveau 8 (devient d10 au niveau 10).</div>
+    <div>• DD de sauvegarde = 8 + bonus de maîtrise (+3) + mod. FOR (+4) = <strong>DD ${C.stats.dc}</strong>.</div>
+  </div>`;
+
+  html += `</div>`;
+  return html;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ░░ TAB: CAPACITÉS
+// ═══════════════════════════════════════════════════════════════════
+function renderCapacites() {
+  let html = "";
+
+  html += `<div class="section-title">Capacités de classe</div>`;
+  for (const feat of C.class_features) {
+    const id   = `cf-${feat.name}`;
+    const open = expandedCards.has(id);
+    html += `<div class="glass expand-card" data-expand="${id}">
+      <div class="expand-header"><span>${feat.name}</span><span class="expand-chevron ${open ? "open" : ""}">▸</span></div>
+      <div class="expand-body ${open ? "open" : ""}">${feat.desc}</div>
+    </div>`;
+  }
+
+  html += `<div class="section-title" style="margin-top:14px;">Dons</div>`;
+  for (const feat of C.feats) {
+    const id   = `ft-${feat.name}`;
+    const open = expandedCards.has(id);
+    html += `<div class="glass expand-card" data-expand="${id}">
+      <div class="expand-header"><span>${feat.name}</span><span class="expand-chevron ${open ? "open" : ""}">▸</span></div>
+      <div class="expand-body ${open ? "open" : ""}">${feat.desc}</div>
+    </div>`;
+  }
+
+  html += `<div class="section-title" style="margin-top:14px;">Traits raciaux — ${C.race_fr}</div>`;
+  for (const trait of C.racial_traits) {
+    const id   = `rt-${trait.name}`;
+    const open = expandedCards.has(id);
+    html += `<div class="glass expand-card" data-expand="${id}">
+      <div class="expand-header"><span>${trait.name}</span><span class="expand-chevron ${open ? "open" : ""}">▸</span></div>
+      <div class="expand-body ${open ? "open" : ""}">${trait.desc}</div>
+    </div>`;
+  }
+
+  html += `<div class="glass" style="padding:12px;margin-top:14px;">
+    <div class="section-title" style="margin-bottom:6px;">Maîtrises & Langues</div>
+    <div class="prof-list">
+      <div><span class="prof-label">Armures : </span>${C.proficiencies.armor}</div>
+      <div><span class="prof-label">Armes : </span>${C.proficiencies.weapons}</div>
+      <div><span class="prof-label">Outils : </span>${C.proficiencies.tools}</div>
+      <div><span class="prof-label">Langues : </span>${C.proficiencies.languages}</div>
+    </div>
+  </div>`;
+
+  return html;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ░░ TAB: TACTIQUE
+// ═══════════════════════════════════════════════════════════════════
+function renderTactics() {
+  return `<div style="max-width:700px;margin:0 auto;">
+    <div class="section-title">Stratégies — Le Rempart Vivant</div>
+
+    <div class="glass tactic-card" style="border-left-color:var(--accent);margin-bottom:10px;">
+      <div class="tactic-title">🛡️ Zone de Contrôle (Sentinelle + Maître d'hast)</div>
+      <div class="tactic-text">
+        <strong>Combo de base :</strong> La hallebarde a une allonge de 3m. Toute créature qui <em>entre</em> dans cette allonge déclenche une AO (<em>Maître d'hast</em>). Si l'AO touche → vitesse = 0 (<em>Sentinelle</em>).<br><br>
+        <strong>Résultat :</strong> Steiner crée un périmètre de 3m qu'aucun ennemi ne peut traverser sans payer le prix. Les ennemis sont forcés de rester à distance ou de s'arrêter net.
+      </div>
+    </div>
+
+    <div class="glass tactic-card" style="border-left-color:var(--act-b);margin-bottom:10px;">
+      <div class="tactic-title">⚡ Fougue + Double Attaque</div>
+      <div class="tactic-text">
+        <strong>Tour Nova :</strong> Action → 2 attaques (Attaque supplémentaire) → Action Surge → 2 attaques supplémentaires = <strong>4 attaques</strong> en un tour.<br><br>
+        <strong>Intégrer une manœuvre :</strong> Sur l'une de ces 4 attaques, ajouter <em>Attaque menaçante</em> (DD SAG 15 → Effrayée) ou <em>Repousser</em> (DD FOR 15 → 4,5m repoussée) pour contrôle de masse.
+      </div>
+    </div>
+
+    <div class="glass tactic-card" style="border-left-color:var(--act-a);margin-bottom:10px;">
+      <div class="tactic-title">🔁 Riposte + Parade (Réactions)</div>
+      <div class="tactic-text">
+        <strong>Riposte :</strong> Si un ennemi rate son attaque CàC → contre-attaque immédiate avec dé de supériorité en bonus. Prioritaire sur Parade.<br><br>
+        <strong>Parade :</strong> Si vous allez prendre de gros dégâts (boss) → réduisez de 1d8 + 1 (mod DEX). À utiliser quand les dégâts entrants menacent de mettre Steiner à 0.<br><br>
+        <strong>⚠️ Attention :</strong> Vous ne pouvez utiliser qu'une réaction par round. Choisissez.
+      </div>
+    </div>
+
+    <div class="glass tactic-card" style="border-left-color:var(--hp-green);margin-bottom:10px;">
+      <div class="tactic-title">🐌 Balayage + Contrôle de Foule</div>
+      <div class="tactic-text">
+        <strong>Contre les hordes :</strong> Touche une créature → Balayage → frappe une 2e créature adjacente pour 1d8 (pas de mod FOR). Pas de jet d'attaque pour la 2e cible.<br><br>
+        <strong>Idéal contre :</strong> Groupes de monstres faibles (gobelins, zombies) qui se regroupent autour de Steiner. Le Balayage transforme chaque touche principale en dégâts de zone.
+      </div>
+    </div>
+
+    <div class="glass tactic-card" style="border-left-color:var(--act-r);">
+      <div class="tactic-title">⚠️ Ressources à gérer</div>
+      <div class="tactic-text">
+        • <strong>Dés de supériorité (5d8) :</strong> Repos court. Ne pas tous dépenser au premier round — garder 1-2 pour Riposte ou Parade si le combat dure.<br>
+        • <strong>Action Surge :</strong> Repos court. Réserver pour les rounds décisifs (boss, protection de Sybilla).<br>
+        • <strong>Second Souffle :</strong> Repos court. Action bonus — à utiliser quand les PV tombent sous 40% (30 PV).<br>
+        • <strong>Serment du dernier rempart :</strong> Unique toute la campagne. Uniquement si Sybilla est en danger de mort immédiate.
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ░░ TAB: FICHE
+// ═══════════════════════════════════════════════════════════════════
+function renderFiche() {
+  let html = "";
+  const saves_order = ["str","dex","con","int","wis","cha"];
+
+  html += `<div class="section-title">Caractéristiques & Compétences</div>
+  <div class="grid-3" style="margin-bottom:16px;">`;
+
+  const skillsByAbility = {};
+  C.skills.forEach(sk => {
+    if (!skillsByAbility[sk.ability]) skillsByAbility[sk.ability] = [];
+    skillsByAbility[sk.ability].push(sk);
+  });
+
+  for (const key of C.abilities_order) {
+    const ab = C.abilities[key];
+    html += `<div>
+      <div class="glass ability-block">
+        <div class="ability-label">${ab.abbr}</div>
+        <div class="ability-mod">${fmtMod(ab.mod)}</div>
+        <div class="ability-score">${ab.score}</div>
+      </div>
+      <div style="margin-bottom:6px;">`;
+    for (const sk of (skillsByAbility[key] || [])) {
+      html += `<div class="skill-row">
+        <span class="skill-dot ${sk.prof ? "proficient" : ""}"></span>
+        <span>${sk.name}</span>
+        <span class="skill-bonus">${fmtMod(sk.bonus)}</span>
+      </div>`;
+    }
+    html += `</div></div>`;
+  }
+  html += `</div>`;
+
+  html += `<div class="grid-2" style="margin-bottom:16px;">
+    <div class="glass" style="padding:12px;">
+      <div class="section-title" style="margin-bottom:6px;">Jets de sauvegarde</div>`;
+  for (const key of saves_order) {
+    const s = C.saving_throws[key];
+    html += `<div class="save-row">
+      <span class="skill-dot ${s.prof ? "proficient" : ""}"></span>
+      <span>${s.label}</span>
+      <span class="skill-bonus">${fmtMod(s.bonus)}</span>
+    </div>`;
+  }
+  html += `</div>
+    <div class="glass" style="padding:8px;text-align:center;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-size:0.6rem;color:var(--text-3);text-transform:uppercase;">Perception passive</div>
+      <div style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;">${C.passive_perception}</div>
+    </div>
+  </div>`;
+
+  // Inventaire
+  html += `<div class="glass" style="padding:12px;">
+    <div class="section-title" style="margin-bottom:6px;">🎒 Inventaire</div>`;
+  const catMeta = {
+    arme:    { label: "⚔️ Armes",      cls: "weapon"  },
+    armure:  { label: "🛡️ Armure",     cls: ""        },
+    munition:{ label: "🏹 Munitions",   cls: ""        },
+    consom:  { label: "🧪 Consommables",cls: ""        },
+    equip:   { label: "🎒 Équipement",  cls: ""        }
+  };
+  for (const [cat, meta] of Object.entries(catMeta)) {
+    const items = C.equipment.filter(e => e.cat === cat);
+    if (!items.length) continue;
+    html += `<div style="font-size:0.6rem;color:var(--text-3);text-transform:uppercase;font-weight:600;margin:8px 0 3px;padding-left:4px;">${meta.label}</div>`;
+    for (const item of items) {
+      const qty = getInvQty(item.name);
+      html += `<div class="inv-row">
+        <span class="inv-name ${meta.cls}">${item.name}</span>
+        <div class="inv-qty-controls">
+          ${item.editable ? `<button class="inv-btn" data-inv="${item.name}" data-inv-d="-1">−</button>` : ""}
+          <span class="inv-qty">${item.editable ? qty : "—"}</span>
+          ${item.editable ? `<button class="inv-btn" data-inv="${item.name}" data-inv-d="1">+</button>` : ""}
+        </div>
+      </div>`;
+    }
+  }
+  html += `</div>`;
+
+  return html;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ░░ TAB: BIO
+// ═══════════════════════════════════════════════════════════════════
+function renderBio() {
+  return `<div style="max-width:700px;margin:0 auto;">
+    <div class="glass" style="padding:16px;margin-bottom:14px;">
+      <div class="section-title" style="margin-bottom:10px;">Personnalité</div>
+      <div class="personality-label">Trait de caractère</div>
+      <div class="personality-text">${C.personality.trait}</div>
+      <div class="personality-label">Idéal</div>
+      <div class="personality-text">${C.personality.ideal}</div>
+      <div class="personality-label">Lien</div>
+      <div class="personality-text">${C.personality.bond}</div>
+      <div class="personality-label">Défaut</div>
+      <div class="personality-text">${C.personality.flaw}</div>
+    </div>
+
+    <div class="glass" style="padding:16px;margin-bottom:14px;">
+      <div class="section-title" style="margin-bottom:8px;">Histoire</div>
+      <div style="font-size:0.82rem;color:var(--text-2);line-height:1.7;">${C.backstory}</div>
+    </div>
+
+    <div class="glass" style="padding:16px;margin-bottom:14px;">
+      <div class="section-title" style="margin-bottom:8px;">Identité</div>
+      <div style="font-size:0.8rem;color:var(--text-2);line-height:1.8;">
+        <div><span class="prof-label">Classe : </span>${C.class_fr} (${C.subclass_fr}) Nv. ${C.level}</div>
+        <div><span class="prof-label">Race : </span>${C.race_fr}</div>
+        <div><span class="prof-label">Historique : </span>${C.background}</div>
+        <div><span class="prof-label">Alignement : </span>${C.alignment}</div>
+        <div><span class="prof-label">Bonus de maîtrise : </span>${fmtMod(C.stats.prof)}</div>
+        <div><span class="prof-label">Dés de vie : </span>${C.stats.hit_dice}</div>
+        <div><span class="prof-label">Vision dans le noir : </span>18 mètres</div>
+      </div>
+    </div>
+
+    <div class="serment-block">
+      <div class="serment-warning">⚠️ ${C.serment.warning}</div>
+      <div class="serment-name">🩸 ${C.serment.name}</div>
+      <div class="serment-detail">
+        <div style="margin-bottom:6px;"><strong style="color:var(--accent-light);">Déclencheur :</strong> ${C.serment.trigger}</div>
+        <div><strong style="color:var(--accent-light);">Effet :</strong> ${C.serment.effect}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ░░ EVENTS
+// ═══════════════════════════════════════════════════════════════════
+function attachEvents() {
+  // Mode buttons
+  document.querySelectorAll("[data-mode]").forEach(btn =>
+    btn.addEventListener("click", () => { gameMode = btn.dataset.mode; render(); })
+  );
+
+  // Tab buttons
+  document.querySelectorAll("[data-tab]").forEach(btn =>
+    btn.addEventListener("click", () => { activeTab = btn.dataset.tab; render(); })
+  );
+
+  // HP click-to-edit
+  const hpDisplay = document.getElementById("hp-display");
+  if (hpDisplay) hpDisplay.addEventListener("click", () => {
+    editingHP = true; render();
+    setTimeout(() => { const i = document.getElementById("hp-edit"); if (i) { i.focus(); i.select(); } }, 50);
+  });
+  const hpEdit = document.getElementById("hp-edit");
+  if (hpEdit) {
+    const commit = () => {
+      const val = parseInt(hpEdit.value);
+      if (!isNaN(val)) { state.hp = Math.max(0, Math.min(C.stats.hp_max, val)); saveState(); }
+      editingHP = false; render();
+    };
+    hpEdit.addEventListener("blur", commit);
+    hpEdit.addEventListener("keydown", e => { if (e.key === "Enter") commit(); if (e.key === "Escape") { editingHP = false; render(); } });
+  }
+
+  // HP +/-
+  document.querySelectorAll("[data-hp-delta]").forEach(btn =>
+    btn.addEventListener("click", () => modHP(parseInt(btn.dataset.hpDelta)))
+  );
+
+  // Martial dice dots (both tabs)
+  document.querySelectorAll("[data-martial]").forEach(dot => {
+    dot.addEventListener("click", () => {
+      const idx    = parseInt(dot.dataset.martial);
+      const filled = idx < state.martial_dice;
+      state.martial_dice = filled ? idx : idx + 1;
+      saveState(); render();
+    });
+  });
+
+  // Resource toggles
+  document.querySelectorAll("[data-toggle]").forEach(dot =>
+    dot.addEventListener("click", () => {
+      const key = dot.dataset.toggle;
+      state[key] = !state[key];
+      saveState(); render();
+    })
+  );
+
+  // Rests
+  document.querySelectorAll("[data-rest]").forEach(btn =>
+    btn.addEventListener("click", () => rest(btn.dataset.rest))
+  );
+
+  // Expand cards
+  document.querySelectorAll("[data-expand]").forEach(card =>
+    card.addEventListener("click", () => {
+      const id = card.dataset.expand;
+      expandedCards.has(id) ? expandedCards.delete(id) : expandedCards.add(id);
+      render();
+    })
+  );
+
+  // Death saves
+  document.querySelectorAll("[data-death]").forEach(dot =>
+    dot.addEventListener("click", () => {
+      const type = dot.dataset.death;
+      const idx  = parseInt(dot.dataset.idx);
+      state.death_saves[type] = idx < state.death_saves[type] ? idx : idx + 1;
+      saveState(); render();
+    })
+  );
+
+  // Attack roll
+  document.querySelectorAll("[data-roll-atk]").forEach(el =>
+    el.addEventListener("click", e => {
+      e.stopPropagation();
+      rollAttack(C.attacks[parseInt(el.dataset.rollAtk)]);
+    })
+  );
+
+  // Inventory +/-
+  document.querySelectorAll("[data-inv]").forEach(btn =>
+    btn.addEventListener("click", () => {
+      const name  = btn.dataset.inv;
+      const delta = parseInt(btn.dataset.invD);
+      state.inv_qty[name] = Math.max(0, getInvQty(name) + delta);
+      saveState(); render();
+    })
+  );
+
+  // Switch langue
+  document.querySelectorAll("[data-lang]").forEach(btn =>
+    btn.addEventListener("click", () => {
+      setLanguage(btn.dataset.lang);
+      document.getElementById('html-root').lang = btn.dataset.lang;
+      render();
+    })
+  );
+}
+}
+
+// Init
+render();
+</script>
+</body>
+</html>
