@@ -3,6 +3,16 @@ Toutes les modifications notables de ce projet sont documentées ici.
 Format : [Semantic Versioning](https://semver.org/) | [Keep a Changelog](https://keepachangelog.com/)
 
 ---
+## [3.1.0] — 2026-02-17
+
+### Internationalisation (i18n)
+- Ajout du dossier /translations avec en.js, fr.js, index.js.
+- Fonction t() + switch langue natif avec fallback EN, gestion localStorage.
+- Mapping complet EN/FR pour labels UI, caractéristiques, compétences, classes principales.
+- Documenté la convention d'intégration i18n pour toute nouvelle fiche ou contribution.
+- Synchronisation avec la roadmap, README, COPILOT_GUIDE.
+
+
 ## [3.0.2] — 2026-02-17
 
 ### Documentation et Moteur
