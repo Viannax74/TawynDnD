@@ -1,4 +1,5 @@
----
+# TawynDnD — Vocabulaire Technique Officiel (v3.0)
+
 **Version** : 3.0-20260215-1558  
 **Dernière mise à jour** : 15 février 2026 à 15:58  
 **Statut** : ✅ Stable (Production)  
@@ -10,9 +11,8 @@
 > - **v4.0** : Changements majeurs (breaking changes)
 >
 > ⚠️ **Toute modification de ce document nécessite une mise à jour du `schemaVersion` dans `const C`**
----
 
-# 📖 TawynDnD — Vocabulaire Technique Officiel (v3.0)
+---
 
 > **Ce document définit le vocabulaire technique standardisé pour TawynDnD Ultimate (v3.0).**  
 > Toute propriété de `const C` doit utiliser ces termes exacts pour garantir la compatibilité IA-Ready.
