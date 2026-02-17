@@ -121,6 +121,86 @@ NE PAS MODIFIER    : le CSS dans <style>, le HTML du body, le moteur JS après c
 
 ---
 
+## 🌍 Internationalisation (i18n) — Contribuer efficacement
+
+### Pourquoi ?
+Le projet TawynDnD est conçu pour être jouable et extensible en français/anglais (voire plus).  
+Toute nouvelle fiche, fonctionnalité ou contribution doit être prête à accepter plusieurs langues pour maximiser l’utilité et faciliter l’évolution.
+
+---
+
+### Principes clés pour contributeurs (humains et IA/Copilot)
+
+1. **Structure i18n obligatoire**
+   - Toutes les chaînes de texte (UI, labels, descriptions, titles…) doivent passer par la fonction `t()` et les fichiers de mapping translations/en.js, fr.js, index.js (modèle : [voir structure dans `/translations/`]).
+   - Ne jamais “hardcoder” de texte dans l’HTML, JS ou dans le bloc `const C` : tout doit être référencé par clé.
+
+2. **Fallback automatique**
+   - Si une clé n’est pas traduite dans la langue cible (ex. FR), le moteur affichera la version EN.
+   - Jamais de clé “undefined” ou de texte manquant : la fonction t() garantit la continuité de l’interface.
+
+3. **Switch de langue natif**
+   - Toujours proposer dans la UI un bouton ou menu pour changer la langue (🇫🇷 / 🇬🇧…).
+   - Toute nouvelle fiche doit être testée en FR et EN.
+
+4. **Processus d’ajout/validation d’une traduction**
+   - Pour chaque ajout de terme ou de contenu, documenter la clé, fournir l’équivalent EN et FR, respecter la terminologie officielle AideDD/WotC.
+   - Suivre la checklist :
+     1. Respect des termes D&D5 & AideDD ?
+     2. Test technique : rendu correct dans la fiche.
+     3. Avis ou validation par un joueur natif FR.
+
+5. **Sprints et priorisation**
+   - Toujours commencer par les éléments joués (classes, sorts utilisés, UI active).
+   - N’ajouter/traduire les sorts, objets magiques, backgrounds qu’au fur et à mesure de leur utilisation réelle (approche agile).
+
+6. **Documentation**
+   - Documenter chaque ajout/traduction dans `COPILOT_GUIDE.md` pour faciliter la maintenance et le onboarding des nouveaux contributeurs IA ou humains.
+
+---
+
+### Exemple d’utilisation technique
+
+```javascript
+// Fichier translations/fr.js
+export const FR = {
+  ui: { hp: "Points de vie", ac: "Classe d'armure" },
+  classes: { fighter: "Guerrier", warlock: "Occultiste" },
+  abilities: { str: "Force", dex: "Dextérité" }
+};
+// Fonction centrale t()
+function t(key, lang='fr') {
+  // Recherche dans le mapping, fallback EN automatique
+}
+```
+Dans le moteur, remplacer :
+```html
+<span>Classe d'armure</span>
+```
+par :
+```html
+<span>{t('ui.ac')}</span>
+```
+
+---
+
+### En résumé :
+- Propose chaque contribution (humaine ou IA) en multi-langue bien structurée.
+- Rappelle-toi : **pas de texte en dur** !
+- Respecte la validation par checklist et la priorisation sur l’usage réel.
+
+---
+
+Pour toute question de contribution i18n, voir aussi :
+- [COPILOT_GUIDE.md](./COPILOT_GUIDE.md)
+- [translations/en.js, fr.js, index.js](./translations/)
+
+---
+
+*Ce projet est optimisé pour l’apprentissage des IA et des humains — jouons ensemble, traduit, testé, validé !*
+
+---
+
 ## 🚀 Roadmap Actuelle
 
 Voir [BACKLOG.md](./BACKLOG.md) pour le détail complet.
