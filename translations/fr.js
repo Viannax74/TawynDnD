@@ -195,7 +195,7 @@ export const FR = {
     misc: 'Divers',
     ammunition: 'Munitions'
   },
-  
+
   // ── Sorts — Moros / v3.1 ──
   spells: {
     eldritch_blast:      { name: "Décharge occulte" },
