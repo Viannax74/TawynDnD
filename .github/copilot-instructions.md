@@ -158,6 +158,11 @@ cp COPILOT_GUIDE.md .github/copilot-instructions.md
 6. Les traductions, validations et conventions sont centralisées dans TECHNICAL_SPEC.md.
 
 Pour tout ajout complexe : documenter dans le commit le lien vers la fiche, la clé concernée et la méthode de fallback utilisée.
+
+“Exemple : migration de steiner-ferum-v3.1 — remplacer chaque label UI par appel à t() en respectant conventions.”
+“Procéder par test sur fiche complète pour validation, avant généralisation.”
+“Conventions de switch langue, fallback, et mapping centralisé.”
+
 ---
 
 ```
