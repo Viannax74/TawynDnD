@@ -3,6 +3,15 @@ Toutes les modifications notables de ce projet sont documentées ici.
 Format : [Semantic Versioning](https://semver.org/) | [Keep a Changelog](https://keepachangelog.com/)
 
 ---
+## [3.1.0] — 2026-02-18
+
+### Internationalisation (i18n)
+- Migration de la fiche steiner-ferum-v3.1 avec t(), switch FR/EN, et fallback EN.
+- Première fiche v3.1 conforme i18n validée en production, tests UI concluants.
+- Dossier /translations et conventions synchronisées dans la documentation.
+- Prochaine étape : migration UI sur autres fiches et extension du dataset.
+---
+  
 ## [3.1.0] — 2026-02-17
 
 ### Internationalisation (i18n)
