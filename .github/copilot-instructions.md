@@ -1,4 +1,5 @@
 # 🤖 Guide GitHub Copilot — TawynDnD
+
 **Audience :** GitHub Copilot GPT-4.1, Claude, ou tout LLM assistant sur ce repo  
 **Objectif :** Éviter les modifications destructrices sur les fiches de personnage
 
@@ -145,10 +146,11 @@ Pour que Copilot lise automatiquement ces instructions, créer :
 ```bash
 mkdir -p .github
 cp COPILOT_GUIDE.md .github/copilot-instructions.md
-
 ```
+
 ---
-### 🌍 Internationalisation : Ajouter/modifier une traduction
+
+## 🌍 Internationalisation : Ajouter/modifier une traduction
 
 1. Repérer la clé à traduire ou ajouter (ex : `ui.hp`, `skills.perception`, `spells.shield.name`)
 2. Compléter ou ajouter la clé dans `/translations/en.js` et `/translations/fr.js`.
@@ -156,16 +158,12 @@ cp COPILOT_GUIDE.md .github/copilot-instructions.md
 4. Tester le rendu sur la fiche, UI ou composant.
 5. Réaliser une review joueur FR.
 6. Les traductions, validations et conventions sont centralisées dans TECHNICAL_SPEC.md.
+7. Pour tout ajout complexe : documenter dans le commit le lien vers la fiche, la clé concernée et la méthode de fallback utilisée.
 
-Pour tout ajout complexe : documenter dans le commit le lien vers la fiche, la clé concernée et la méthode de fallback utilisée.
-
-“Exemple : migration de steiner-ferum-v3.1 — remplacer chaque label UI par appel à t() en respectant conventions.”
-“Procéder par test sur fiche complète pour validation, avant généralisation.”
-“Conventions de switch langue, fallback, et mapping centralisé.”
+**Exemple** : migration de steiner-ferum-v3.1 — remplacer chaque label UI par appel à t() en respectant conventions.  
+Procéder par test sur fiche complète pour validation, avant généralisation.  
+Conventions de switch langue, fallback, et mapping centralisé.
 
 ---
 
-```
-Copilot lit `.github/copilot-instructions.md` automatiquement sur chaque prompt.
-
-
+> Copilot lit `.github/copilot-instructions.md` automatiquement sur chaque prompt pour appliquer ces règles et process.
