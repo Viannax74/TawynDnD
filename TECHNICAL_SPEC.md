@@ -264,4 +264,7 @@ Toute modification de cette spécification doit être accompagnée d'une mise à
 - Fallback automatique EN si FR manquant, jamais de clé "undefined".
 - Extension facile par ajout dans `/translations/`, review joueur systématique.
 - Voir COPILOT_GUIDE.md pour procédure d'ajout, validation, et onboarding IA.
+- “Exemple d’implémentation réelle : steiner-ferum-v3.1 i18n, mapping FR/EN pour toutes clés majeures, conformité process.”
+“Switch langue et fallback EN documentés sous /translations/index.js.”
+“La structure est validée pour extension sur autres fiches/classes.”
 ---
