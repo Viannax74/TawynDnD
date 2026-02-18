@@ -194,7 +194,8 @@ export const FR = {
     magic_item: 'Objet magique',
     misc: 'Divers',
     ammunition: 'Munitions'
-  }
+  },
+  
   // ── Sorts — Moros / v3.1 ──
   spells: {
     eldritch_blast:      { name: "Décharge occulte" },
@@ -207,5 +208,5 @@ export const FR = {
     invisibility:        { name: "Invisibilité" },
     thunder_step:        { name: "Foulée tonitruante" },
     counterspell:        { name: "Contresort" }
-  },
+  }
 };
