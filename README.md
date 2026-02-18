@@ -127,6 +127,12 @@ NE PAS MODIFIER    : le CSS dans <style>, le HTML du body, le moteur JS après c
 Le projet TawynDnD est conçu pour être jouable et extensible en français/anglais (voire plus).  
 Toute nouvelle fiche, fonctionnalité ou contribution doit être prête à accepter plusieurs langues pour maximiser l’utilité et faciliter l’évolution.
 
+18/02/2026
+“La fiche steiner-ferum v3.1 est la première version compatible i18n (FR/EN) avec switch de langue natif.”
+“Voir /translations pour mapping, conventions.”
+“Le moteur t() est désormais utilisé sur tous les labels/éléments principaux.”
+“Tests technique et UI validés — voir CHANGELOG pour l’état complet.”
+
 ---
 
 ### Principes clés pour contributeurs (humains et IA/Copilot)
