@@ -195,4 +195,17 @@ export const FR = {
     misc: 'Divers',
     ammunition: 'Munitions'
   }
+  // ── Sorts — Moros / v3.1 ──
+  spells: {
+    eldritch_blast:      { name: "Décharge occulte" },
+    mind_spike:          { name: "Piqûre mentale" },
+    booming_blade:       { name: "Lame retentissante" },
+    armor_of_agathys:    { name: "Armure d'Agathys" },
+    hex:                 { name: "Maléfice" },
+    darkness:            { name: "Ténèbres" },
+    suggestion:          { name: "Suggestion" },
+    invisibility:        { name: "Invisibilité" },
+    thunder_step:        { name: "Foulée tonitruante" },
+    counterspell:        { name: "Contresort" }
+  },
 };
