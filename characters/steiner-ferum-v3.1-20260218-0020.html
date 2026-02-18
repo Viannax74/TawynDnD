@@ -357,11 +357,16 @@ body.mode-combat .combat-highlight { border-color: var(--accent) !important; box
 <div id="app"></div>
 <div id="toast-container"></div>
 
-<script type="module">
-// ═══════════════════════════════════════════════════════════════════
-// ░░ IMPORT i18n
-// ═══════════════════════════════════════════════════════════════════
-import { t, setLanguage, getCurrentLanguage } from '../translations/index.js';
+<script>
+// ═══ i18n INLINE ═══
+const TRANSLATIONS = {
+  fr: { ui: { hp_short: 'PV', ac_short: 'CA', init: 'Init', mode_social: 'Social', mode_exploration: 'Exploration', mode_combat: 'Combat' } },
+  en: { ui: { hp_short: 'HP', ac_short: 'AC', init: 'Init', mode_social: 'Social', mode_exploration: 'Exploration', mode_combat: 'Combat' } }
+};
+let currentLanguage = localStorage.getItem('tawyndnd-language') || 'fr';
+function t(key) { const keys = key.split('.'); let v = TRANSLATIONS[currentLanguage]; for (const k of keys) { v = v?.[k]; if (!v) break; } return v || key; }
+function getCurrentLanguage() { return currentLanguage; }
+function setLanguage(lang) { currentLanguage = lang; localStorage.setItem('tawyndnd-language', lang); }
 
 // ═══════════════════════════════════════════════════════════════════
 // ░░ CHARACTER DATA — STEINER FERUM v3.1
