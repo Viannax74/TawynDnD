@@ -1,0 +1,21 @@
+Parfait. Repo cloné. Résultats **dramatiquement différents** de l'audit basé sur nos conversations.
+
+Voici ce que je constate **en vrai** :**Audit v2 livré.** Le `git clone` réel révèle un delta massif vs ce qu'on croyait :
+
+**5 fantômes** — existaient dans nos conversations, **absents du repo** :
+- `scripts/val-i18n-labels.js` ❌
+- `scripts/update-docs.js` ❌
+- `.husky/` pre-commit hooks ❌
+- `package.json` ❌
+- `.gitignore` ❌
+
+**3 urgences immédiates** (5 min chacune, `.gitignore` + `.gitattributes` fournis) :
+1. CRLF mixte qui va empirer sans `.gitattributes`
+2. README réfère des fichiers qui n'existent pas sur disque
+3. `schemaVersion` incohérent entre Moros (`"3.0-20260215-1558"`) et Steiner (`"3.0"`)
+
+**1 décision architecturale bloquante** : `translations/` est du **dead code** (ES module `import` incompatible `file://`). Les fiches qui marchent ont tout inliné. Il faut choisir : build script d'injection (option A, recommandé) ou supprimer le dossier (option B).
+
+**i18n réel : ~30% global**, pas "validé en production" comme le CHANGELOG l'annonce. Steiner a 6 clés `t()` sur ~60 labels.
+
+Tu veux que j'attaque les quick fixes P0 directement ou qu'on tranche d'abord la question `translations/` ?
