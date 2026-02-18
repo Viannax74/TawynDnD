@@ -195,5 +195,19 @@ export const EN = {
     magic_item: 'Magic Item',
     misc: 'Miscellaneous',
     ammunition: 'Ammunition'
-  }
+  },
+
+ // ── Spells — Moros / v3.1 ──
+spells: {
+  eldritch_blast:      { name: "Eldritch Blast" },
+  mind_spike:          { name: "Mind Spike" },
+  booming_blade:       { name: "Booming Blade" },
+  armor_of_agathys:    { name: "Armor of Agathys" },
+  hex:                 { name: "Hex" },
+  darkness:            { name: "Darkness" },
+  suggestion:          { name: "Suggestion" },
+  invisibility:        { name: "Invisibility" },
+  thunder_step:        { name: "Thunder Step" },
+  counterspell:        { name: "Counterspell" }
+}
 };
