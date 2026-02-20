@@ -21,16 +21,44 @@
 
 ```
 TawynDnD/
-├── characters/
-│   ├── moros-v3.1-20260218-0330-i18n.html       ← Fiche Moros (référence stable)
-│   └── steiner-ferum-v3.1-20260218-0020.html ← Fiche Steiner (template martial)
-├── archive/
-│   └── moros-v3.0-20260215-1558.html       ← Archivé (remplacé)
-├── README.md
-├── BACKLOG.md
-├── CHANGELOG.md
-├── TECHNICAL_SPEC.md
-└── DND_VOCABULARY.md
+|-- Audit
+|   |-- AUDIT_TawynDnD_v2.md
+|   |-- Opus4.6_20260218
+|   |-- gitattributes
+|   `-- gitignore
+|-- BACKLOG.md
+|-- CHANGELOG.md
+|-- DND_VOCABULARY.md
+|-- INTEGRATION_i18n.md
+|-- README.md
+|-- README.sauvegarde-2026-02-20_021829
+|-- TECHNICAL_SPEC.md
+|-- VISION.md
+|-- archive
+|   `-- moros-v3.0-20260215-1558.html
+|-- characters
+|   |-- moros-v3.0-20260217-1200.html
+|   |-- moros-v3.1-20260218-0330-i18n.html
+|   |-- moros-v3.1-20260218-0330.html
+|   |-- steiner-ferum-v3.0-20260217-1500.html
+|   `-- steiner-ferum-v3.1-20260218-0020.html
+|-- data
+|   `-- aidedd
+|-- p0_sync.sh
+|-- structure_readme.txt
+|-- structure_repo.txt
+|-- translations
+|   |-- en.js
+|   |-- fr.js
+|   `-- index.js
+|-- tree-1.5.2.1-bin
+|   |-- bin
+|   |-- contrib
+|   |-- man
+|   `-- manifest
+|-- tree.exe
+`-- validate-character.html
+
 ```
 
 ---
