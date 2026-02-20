@@ -1,0 +1,13 @@
+# Force LF line endings everywhere
+* text=auto eol=lf
+
+# Explicit text files (optionnel pour garantir certains dossiers)
+*.html text eol=lf
+*.md text eol=lf
+*.js text eol=lf
+
+# Binary files
+*.pdf binary
+*.png binary
+*.jpg binary
+*.gif binary
