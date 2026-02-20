@@ -22,8 +22,8 @@
 ```
 TawynDnD/
 ├── characters/
-│   ├── moros-v3.0-20260217-1200.html       ← Fiche Moros (référence stable)
-│   └── steiner-ferum-v3.0-20260216-1630.html ← Fiche Steiner (template martial)
+│   ├── moros-v3.1-20260218-0330-i18n.html       ← Fiche Moros (référence stable)
+│   └── steiner-ferum-v3.1-20260218-0020.html ← Fiche Steiner (template martial)
 ├── archive/
 │   └── moros-v3.0-20260215-1558.html       ← Archivé (remplacé)
 ├── README.md
@@ -38,13 +38,13 @@ TawynDnD/
 ## 🗂️ Fiches Actives
 
 ### Moros Gravewalker — Occultiste Lame Maudite (Référence)
-- **Fichier :** `characters/moros-v3.0-20260217-1200.html`
+- **Fichier :** `characters/moros-v3.1-20260218-0330-i18n.html`
 - **Statut :** ✅ Version stable de référence — moteur complet avec gestion des sorts, invocations, points de sorcellerie
 - **Accentuation CSS :** Violet (`--accent: #a855f7`)
 - **Spécificités moteur :** Sections Sorts, Invocations, Malédiction
 
 ### Steiner Ferum — Guerrier Maître de Guerre (Template Martial)
-- **Fichier :** `characters/steiner-ferum-v3.0-20260216-1630.html`
+- **Fichier :** `characters/steiner-ferum-v3.1-20260218-0020.html`
 - **Statut :** ✅ Version stable — moteur complet, ready pour usage & extension
 - **Accentuation CSS :** Rouge (`--accent: #ef4444`)
 - **Spécificités moteur :** Manœuvres de combat, Dés de supériorité (5d8), Action Surge, Serment du dernier rempart

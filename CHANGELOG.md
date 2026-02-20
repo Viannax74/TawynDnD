@@ -73,3 +73,4 @@ Format : [Semantic Versioning](https://semver.org/) | [Keep a Changelog](https:/
 ## [2.x] — Versions Antérieures
 
 Voir `/archive` pour les fichiers v2. Non documentées dans ce changelog (format non standardisé).
+
