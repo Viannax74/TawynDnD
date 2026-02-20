@@ -3,6 +3,17 @@ Toutes les modifications notables de ce projet sont documentées ici.
 Format : [Semantic Versioning](https://semver.org/) | [Keep a Changelog](https://keepachangelog.com/)
 
 ---
+## [3.1.1] — 2026-02-20
+### Ajouté
+- .gitignore pour exclusion fichiers OS/IDE/backups
+- .gitattributes : normalisation LF (fin de ligne universelle)
+
+### Modifié
+- README.md synchronisé (structure réelle du repo)
+- Fusion des entrées doublons dans CHANGELOG.md
+- 'schemaVersion' uniformisé dans toutes les fiches HTML
+---
+
 ## [3.1.0] — 2026-02-18
 
 ### Internationalisation (i18n)
