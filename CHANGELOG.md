@@ -3,6 +3,12 @@ Toutes les modifications notables de ce projet sont documentées ici.
 Format : [Semantic Versioning](https://semver.org/) | [Keep a Changelog](https://keepachangelog.com/)
 
 ---
+## [3.1.2] — 2026-02-22
+### Modifié
+- Archivage : déplacement des anciennes fiches non migrées i18n (moros-v3.0-20260217-1200.html, steiner-ferum-v3.0-20260217-1500.html) vers le dossier archive/
+- Le dossier characters/ ne contient plus que les fiches i18n (v3.1 et supérieur)
+
+---
 ## [3.1.1] — 2026-02-20
 ### Ajouté
 - .gitignore pour exclusion fichiers OS/IDE/backups
