@@ -60,7 +60,28 @@ TawynDnD/
 `-- validate-character.html
 
 ```
+```
+archive/
+  moros-v3.0-20260217-1200.html
+  steiner-ferum-v3.0-20260217-1500.html
+characters/
+  moros-v3.1-20260218-0330-i18n.html
+  moros-v3.1-20260218-0330.html
+  steiner-ferum-v3.1-20260218-0020.html
+data/
+  ...
+README.md
+CHANGELOG.md
+...
+```
 
+### 🗄️ Fiches archivées
+
+- **moros-v3.0-20260217-1200.html**
+- **steiner-ferum-v3.0-20260217-1500.html**
+
+ℹ️ Le dossier `/archive` contient toutes les anciennes versions de fiches non migrées i18n, gardées pour l’historique ou le debug.  
+Seul le dossier `/characters` contient les fiches actives, complètement migrées (i18n, UI à jour).
 ---
 
 ## 🗂️ Fiches Actives
