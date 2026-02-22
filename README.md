@@ -74,7 +74,6 @@ README.md
 CHANGELOG.md
 ...
 ```
-
 ### 🗄️ Fiches archivées
 
 - **moros-v3.0-20260217-1200.html**
@@ -82,6 +81,8 @@ CHANGELOG.md
 
 ℹ️ Le dossier `/archive` contient toutes les anciennes versions de fiches non migrées i18n, gardées pour l’historique ou le debug.  
 Seul le dossier `/characters` contient les fiches actives, complètement migrées (i18n, UI à jour).
+
+
 ---
 
 ## 🗂️ Fiches Actives
