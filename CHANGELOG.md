@@ -3,6 +3,27 @@ Toutes les modifications notables de ce projet sont documentées ici.
 Format : [Semantic Versioning](https://semver.org/) | [Keep a Changelog](https://keepachangelog.com/)
 
 ---
+## [Unreleased] – migration i18n Moros v3.1 (2026-02-24)
+
+### Added
+- Bloc TRANSLATIONS enrichi, structure multi-niveaux (ui, spells, meta, bio, combat, features).
+- Préparation des clés i18n (FR/EN) pour tous labels et sections de la fiche Moros v3.1 :
+  - UI générique (PV, CA, tabs, modes)
+  - Sorts utilisés (eldritch_blast, mind_spike, etc.)
+  - Chaînes roleplay (persona, atouts, approche, autorité, combo social, notes)
+  - Aide labels, tooltips, hints
+- Documentation ready pour migration/extension à d’autres fiches (Steiner, nouveaux persos)
+
+### Changed
+- Plan de migration : issue #37 [Phase 3][i18n] Migration complète UI/roleplay Moros v3.1 — checklist et plan de migration
+- Migration effective bloquée par quotas Copilot Cloud Agent (commit/PR à venir dès reset).
+
+### Todo / Next
+- Application du mapping TRANSLATIONS dans le HTML/JS pour remplacer tous les labels “en dur” par t('clé').
+- Validation UI/bio/roleplay, switch langue, fallback.
+
+---
+
 ## [3.1.2] — 2026-02-22
 ### Modifié
 - Archivage : déplacement des anciennes fiches non migrées i18n (moros-v3.0-20260217-1200.html, steiner-ferum-v3.0-20260217-1500.html) vers le dossier archive/
