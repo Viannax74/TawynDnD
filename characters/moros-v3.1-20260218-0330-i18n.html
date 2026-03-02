@@ -348,12 +348,17 @@ button { cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
 .inv-qty-controls { display: flex; align-items: center; gap: 4px; }
 .inv-qty { font-family: var(--font-mono); font-weight: 600; min-width: 24px; text-align: center; color: var(--text-2); font-size: 0.82rem; }
 .inv-btn {
-  width: 20px; height: 20px; border-radius: 4px;
-  border: 1px solid var(--border-1); background: transparent;
-  color: var(--text-3); font-size: 0.75rem; cursor: pointer;
+  width: 28px; height: 28px; border-radius: 6px;
+  border: 1px solid var(--border-accent);
+  background: rgba(168,85,247,0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--accent-light); font-size: 0.9rem; font-weight: 700; cursor: pointer;
   display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  min-width: 28px; touch-action: manipulation;
 }
-.inv-btn:hover { border-color: var(--accent); color: var(--accent-light); }
+.inv-btn:hover { background: rgba(168,85,247,0.28); border-color: var(--accent); box-shadow: 0 0 8px rgba(168,85,247,0.3); }
+.inv-btn:active { background: rgba(168,85,247,0.45); transform: scale(0.93); }
 
 /* ── Resource tracker (hex_curse / specter) ── */
 .resource-row {
@@ -813,6 +818,11 @@ function matchesFilters(spell) {
 function getInvQty(name) {
   if (state.inv_qty[name] !== undefined) return state.inv_qty[name];
   return C.equipment.find(e => e.name === name)?.qty ?? 0;
+}
+
+function updateInvQty(name, delta) {
+  state.inv_qty[name] = Math.max(0, getInvQty(name) + delta);
+  saveState(); render();
 }
 
 // ── HP logic ──
@@ -1574,10 +1584,7 @@ function attachEvents() {
   // Inventaire +/-
   document.querySelectorAll("[data-inv]").forEach(btn => {
     btn.addEventListener("click", () => {
-      const name  = btn.dataset.inv;
-      const delta = parseInt(btn.dataset.invD);
-      state.inv_qty[name] = Math.max(0, getInvQty(name) + delta);
-      saveState(); render();
+      updateInvQty(btn.dataset.inv, parseInt(btn.dataset.invD));
     });
   });
 
