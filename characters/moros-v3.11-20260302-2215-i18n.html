@@ -773,6 +773,41 @@ function saveState() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
 }
 
+function exportJSON() {
+  const date = new Date().toISOString().slice(0, 10);
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href     = url;
+  a.download = `${C.id}-backup-${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(null, "📥 Sauvegarde JSON téléchargée !");
+}
+
+function importJSON() {
+  const input = document.createElement("input");
+  input.type  = "file";
+  input.accept = ".json,application/json";
+  input.addEventListener("change", () => {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        state = { ...DEFAULT_STATE, ...data };
+        saveState(); render();
+        showToast(null, "📤 État restauré depuis le fichier JSON !");
+      } catch(err) {
+        showToast(null, "❌ Fichier JSON invalide.");
+      }
+    };
+    reader.readAsText(file);
+  });
+  input.click();
+}
+
 let state = loadState();
 
 // ── UI state ──
@@ -1424,7 +1459,7 @@ function renderBio() {
       <div class="section-title" style="margin-bottom:8px;">Histoire & Contexte</div>
       <div style="font-size:0.82rem;color:var(--text-2);line-height:1.7;">${C.backstory}</div>
     </div>
-    <div class="glass" style="padding:16px;">
+    <div class="glass" style="padding:16px;margin-bottom:14px;">
       <div class="section-title" style="margin-bottom:8px;">Identité</div>
       <div style="font-size:0.8rem;color:var(--text-2);line-height:1.8;">
         <div><span class="prof-label">Classe : </span>${C.class_fr} (${C.subclass_fr}) Nv. ${C.level}</div>
@@ -1433,6 +1468,13 @@ function renderBio() {
         <div><span class="prof-label">Alignement : </span>${C.alignment}</div>
         <div><span class="prof-label">Bonus de maîtrise : </span>+${C.stats.prof}</div>
         <div><span class="prof-label">Dés de vie : </span>${C.stats.hit_dice}</div>
+      </div>
+    </div>
+    <div class="glass" style="padding:16px;">
+      <div class="section-title" style="margin-bottom:10px;">⚙️ Gestion des données</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="rest-btn" id="btn-export-json">📥 Sauvegarder (JSON)</button>
+        <button class="rest-btn" id="btn-import-json">📤 Restaurer (JSON)</button>
       </div>
     </div>
   </div>`;
@@ -1587,6 +1629,12 @@ function attachEvents() {
       updateInvQty(btn.dataset.inv, parseInt(btn.dataset.invD));
     });
   });
+
+  // Export / Import JSON
+  const btnExport = document.getElementById("btn-export-json");
+  if (btnExport) btnExport.addEventListener("click", exportJSON);
+  const btnImport = document.getElementById("btn-import-json");
+  if (btnImport) btnImport.addEventListener("click", importJSON);
 
   // Switch langue
 document.querySelectorAll("[data-lang]").forEach(btn =>
