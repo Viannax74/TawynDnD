@@ -360,8 +360,130 @@ body.mode-combat .combat-highlight { border-color: var(--accent) !important; box
 <script>
 // ═══ i18n INLINE ═══
 const TRANSLATIONS = {
-  fr: { ui: { hp_short: 'PV', ac_short: 'CA', init: 'Init', mode_social: 'Social', mode_exploration: 'Exploration', mode_combat: 'Combat' } },
-  en: { ui: { hp_short: 'HP', ac_short: 'AC', init: 'Init', mode_social: 'Social', mode_exploration: 'Exploration', mode_combat: 'Combat' } }
+  fr: {
+    ui: {
+      hp: 'Points de vie', hp_short: 'PV',
+      ac: "Classe d'armure", ac_short: 'CA',
+      init: 'Initiative', speed: 'Vitesse', prof: 'Maîtrise', dc: 'DD',
+      death_saves: 'Jets contre la mort', hit_dice: 'Dés de vie',
+      successes: 'Succès', failures: 'Échecs',
+      tab_combat: 'Combat', tab_maneuvers: 'Manœuvres', tab_abilities: 'Capacités',
+      tab_tactics: 'Tactique', tab_sheet: 'Fiche', tab_bio: 'Biographie',
+      mode_social: 'Social', mode_exploration: 'Exploration', mode_combat: 'Combat',
+      resources: 'Ressources limitées',
+      attacks: 'Attaques', attacks_hint: '(clic sur le bonus = jet complet)',
+      martial_dice: 'Dés de supériorité', martial_dice_hint: 'Repos court',
+      available_dice: 'Dés disponibles', bonus_damage: 'Dégâts bonus',
+      added_to_attack_dmg: 'Ajouté aux dégâts de l\'attaque déclenchante',
+      short_rest: 'Repos court', long_rest: 'Repos long',
+      action: 'Action', bonus_action: 'Action Bonus', reaction: 'Réaction',
+      second_wind: 'Second souffle',
+      second_wind_hint: '(Action bonus · 1d10+8 PV · 1×/repos court)',
+      action_surge: 'Fougue (Action Surge)',
+      action_surge_hint: '(+1 action · 1×/repos court)',
+      dc_maneuvers: 'DD Manœuvres',
+      maneuvers_section: 'Manœuvres de combat', maneuver_rules: 'Règles générales',
+      class_features: 'Capacités de classe', feats: 'Dons',
+      racial_traits: 'Traits raciaux',
+      proficiencies_languages: 'Maîtrises & Langues',
+      abilities_skills: 'Caractéristiques & Compétences',
+      saving_throws: 'Jets de sauvegarde',
+      passive_perception: 'Perception passive',
+      inventory: 'Inventaire',
+      personality: 'Personnalité', personality_trait: 'Trait de caractère',
+      ideal: 'Idéal', bond: 'Lien', flaw: 'Défaut',
+      story: 'Histoire', identity: 'Identité',
+      confirm_rest: 'Confirmer le',
+      resources_recharged: 'ressources rechargées !',
+      roll_attack: 'Jet d\'attaque',
+      maneuver_rule_1: '• Un seul dé de supériorité par manœuvre (sauf précision).',
+      maneuver_rule_2: '• Les dés dépensés se récupèrent au repos court ou long.',
+      maneuver_rule_3: '• Le dé de supériorité est un d8 au niveau 8 (devient d10 au niveau 10).',
+      maneuver_rule_4_prefix: '• DD de sauvegarde = 8 + bonus de maîtrise (+3) + mod. FOR (+4) =',
+      prof_armor: 'Armures', prof_weapons: 'Armes', prof_tools: 'Outils', prof_languages: 'Langues',
+      identity_class: 'Classe', identity_race: 'Race', identity_background: 'Historique',
+      identity_alignment: 'Alignement', identity_prof_bonus: 'Bonus de maîtrise',
+      identity_hit_dice: 'Dés de vie', identity_darkvision: 'Vision dans le noir',
+      dc_formula: '(8 + maîtrise + FOR)',
+      darkvision_range: '18 mètres',
+      cat_weapons: '⚔️ Armes', cat_armor: '🛡️ Armure', cat_ammo: '🏹 Munitions',
+      cat_consumable: '🧪 Consommables', cat_equipment: '🎒 Équipement'
+    },
+    maneuvers: {
+      riposte:          { name: 'Riposte',             type: 'Réaction',
+        desc: 'Quand une créature vous rate au CàC → Réaction : attaque CàC + dé de supériorité aux dégâts.' },
+      sweep:            { name: 'Balayage',             type: 'Action',
+        desc: 'Touche au CàC → dépense 1 dé sup → frappe une 2e créature à 1,5m. Dégâts = résultat du dé (pas de mod FOR).' },
+      menacing_attack:  { name: 'Attaque menaçante',   type: 'Action',
+        desc: 'Touche → dé sup en bonus dégâts. JdS SAG DD 15 ou la cible est Effrayée jusqu\'à la fin de son prochain tour.' },
+      pushing_attack:   { name: 'Repousser',            type: 'Action',
+        desc: 'Touche → dé sup en bonus dégâts. JdS FOR DD 15 ou la cible est repoussée de 4,5m (Taille Grande max).' },
+      parry:            { name: 'Parade',               type: 'Réaction',
+        desc: 'Vous êtes touché au CàC → Réaction : réduisez les dégâts de (dé sup + mod DEX (+1)).' }
+    }
+  },
+  en: {
+    ui: {
+      hp: 'Hit Points', hp_short: 'HP',
+      ac: 'Armor Class', ac_short: 'AC',
+      init: 'Initiative', speed: 'Speed', prof: 'Proficiency', dc: 'Save DC',
+      death_saves: 'Death Saves', hit_dice: 'Hit Dice',
+      successes: 'Successes', failures: 'Failures',
+      tab_combat: 'Combat', tab_maneuvers: 'Maneuvers', tab_abilities: 'Abilities',
+      tab_tactics: 'Tactics', tab_sheet: 'Character Sheet', tab_bio: 'Biography',
+      mode_social: 'Social', mode_exploration: 'Exploration', mode_combat: 'Combat',
+      resources: 'Limited Resources',
+      attacks: 'Attacks', attacks_hint: '(click bonus = full roll)',
+      martial_dice: 'Superiority Dice', martial_dice_hint: 'Short Rest',
+      available_dice: 'Available Dice', bonus_damage: 'Bonus Damage',
+      added_to_attack_dmg: 'Added to triggering attack\'s damage',
+      short_rest: 'Short Rest', long_rest: 'Long Rest',
+      action: 'Action', bonus_action: 'Bonus Action', reaction: 'Reaction',
+      second_wind: 'Second Wind',
+      second_wind_hint: '(Bonus Action · 1d10+8 HP · 1×/short rest)',
+      action_surge: 'Action Surge',
+      action_surge_hint: '(+1 action · 1×/short rest)',
+      dc_maneuvers: 'Maneuver DC',
+      maneuvers_section: 'Battle Maneuvers', maneuver_rules: 'General Rules',
+      class_features: 'Class Features', feats: 'Feats',
+      racial_traits: 'Racial Traits',
+      proficiencies_languages: 'Proficiencies & Languages',
+      abilities_skills: 'Abilities & Skills',
+      saving_throws: 'Saving Throws',
+      passive_perception: 'Passive Perception',
+      inventory: 'Inventory',
+      personality: 'Personality', personality_trait: 'Personality Trait',
+      ideal: 'Ideal', bond: 'Bond', flaw: 'Flaw',
+      story: 'Story', identity: 'Identity',
+      confirm_rest: 'Confirm',
+      resources_recharged: 'resources restored!',
+      roll_attack: 'Attack roll',
+      maneuver_rule_1: '• One superiority die per maneuver (unless stated otherwise).',
+      maneuver_rule_2: '• Spent dice are recovered on a short or long rest.',
+      maneuver_rule_3: '• The superiority die is a d8 at level 8 (becomes d10 at level 10).',
+      maneuver_rule_4_prefix: '• Save DC = 8 + proficiency bonus (+3) + STR mod (+4) =',
+      prof_armor: 'Armor', prof_weapons: 'Weapons', prof_tools: 'Tools', prof_languages: 'Languages',
+      identity_class: 'Class', identity_race: 'Race', identity_background: 'Background',
+      identity_alignment: 'Alignment', identity_prof_bonus: 'Proficiency bonus',
+      identity_hit_dice: 'Hit dice', identity_darkvision: 'Darkvision',
+      dc_formula: '(8 + proficiency + STR)',
+      darkvision_range: '60 ft.',
+      cat_weapons: '⚔️ Weapons', cat_armor: '🛡️ Armor', cat_ammo: '🏹 Ammunition',
+      cat_consumable: '🧪 Consumables', cat_equipment: '🎒 Equipment'
+    },
+    maneuvers: {
+      riposte:          { name: 'Riposte',            type: 'Reaction',
+        desc: 'A creature misses you with a melee attack → Reaction: melee attack + superiority die to damage.' },
+      sweep:            { name: 'Sweeping Attack',    type: 'Action',
+        desc: 'Hit with melee → spend 1 superiority die → strike a 2nd creature within 1.5m. Damage = die result (no STR mod).' },
+      menacing_attack:  { name: 'Menacing Attack',   type: 'Action',
+        desc: 'Hit → superiority die bonus damage. WIS DC 15 or target is Frightened until end of its next turn.' },
+      pushing_attack:   { name: 'Pushing Attack',    type: 'Action',
+        desc: 'Hit → superiority die bonus damage. STR DC 15 or push target 4.5m (max Large size).' },
+      parry:            { name: 'Parry',              type: 'Reaction',
+        desc: 'You are hit by a melee attack → Reaction: reduce incoming damage by (superiority die + DEX mod (+1)).' }
+    }
+  }
 };
 let currentLanguage = localStorage.getItem('tawyndnd-language') || 'fr';
 function t(key) { const keys = key.split('.'); let v = TRANSLATIONS[currentLanguage]; for (const k of keys) { v = v?.[k]; if (!v) break; } return v || key; }
@@ -460,30 +582,35 @@ const C = {
 
   "maneuvers": [
     {
+      "key": "riposte",
       "name": "Riposte",
       "type": "reaction", "type_fr": "Réaction",
       "dc_ability": "FOR",
       "desc": "Quand une créature vous rate au CàC → Réaction : attaque CàC + dé de supériorité aux dégâts."
     },
     {
+      "key": "sweep",
       "name": "Balayage",
       "type": "action", "type_fr": "Action",
       "dc_ability": "—",
       "desc": "Touche au CàC → dépense 1 dé sup → frappe une 2e créature à 1,5m. Dégâts = résultat du dé (pas de mod FOR)."
     },
     {
+      "key": "menacing_attack",
       "name": "Attaque menaçante",
       "type": "action", "type_fr": "Action",
       "dc_ability": "SAG",
       "desc": "Touche → dé sup en bonus dégâts. JdS SAG DD 15 ou la cible est Effrayée jusqu'à la fin de son prochain tour."
     },
     {
+      "key": "pushing_attack",
       "name": "Repousser",
       "type": "action", "type_fr": "Action",
       "dc_ability": "FOR",
       "desc": "Touche → dé sup en bonus dégâts. JdS FOR DD 15 ou la cible est repoussée de 4,5m (Taille Grande max)."
     },
     {
+      "key": "parry",
       "name": "Parade",
       "type": "reaction", "type_fr": "Réaction",
       "dc_ability": "—",
@@ -641,15 +768,15 @@ function modHP(delta) {
 
 // ── Rests ──
 function rest(type) {
-  const label = type === "long" ? "repos long" : "repos court";
-  if (!confirm(`Confirmer le ${label} ?`)) return;
+  const label = type === "long" ? t('ui.long_rest') : t('ui.short_rest');
+  if (!confirm(`${t('ui.confirm_rest')} ${label} ?`)) return;
   state.action_surge = true;
   state.second_wind  = true;
   state.martial_dice = C.stats.martial_dice;
   state.death_saves  = { successes: 0, failures: 0 };
   if (type === "long") { state.hp = C.stats.hp_max; state.hp_temp = 0; }
   saveState(); render();
-  showToast(`✅ ${type === "long" ? "Repos long" : "Repos court"} — ressources rechargées !`);
+  showToast(`✅ ${label} — ${t('ui.resources_recharged')}`);
 }
 
 // ── Toast ──
@@ -734,9 +861,9 @@ const modes = [
       <div class="header-stats">
 <div class="glass stat-pill"><div class="stat-pill-lbl">${t('ui.hp_short')}</div><div class="stat-pill-val" style="color:${hpCol}">${state.hp}</div></div>
 <div class="glass stat-pill"><div class="stat-pill-lbl">${t('ui.ac_short')}</div><div class="stat-pill-val">${C.stats.ac}</div></div>
-        <div class="glass stat-pill"><div class="stat-pill-lbl">Init</div><div class="stat-pill-val">${fmtMod(C.stats.init)}</div></div>
-        <div class="glass stat-pill"><div class="stat-pill-lbl">DD</div><div class="stat-pill-val">${C.stats.dc}</div></div>
-        <div class="glass stat-pill"><div class="stat-pill-lbl">Dés Sup</div><div class="stat-pill-val" style="color:var(--accent-light)">${state.martial_dice}</div></div>
+        <div class="glass stat-pill"><div class="stat-pill-lbl">${t('ui.init')}</div><div class="stat-pill-val">${fmtMod(C.stats.init)}</div></div>
+        <div class="glass stat-pill"><div class="stat-pill-lbl">${t('ui.dc')}</div><div class="stat-pill-val">${C.stats.dc}</div></div>
+        <div class="glass stat-pill"><div class="stat-pill-lbl">${t('ui.martial_dice')}</div><div class="stat-pill-val" style="color:var(--accent-light)">${state.martial_dice}</div></div>
       </div>
     </div>
   </div></div>`;
@@ -745,12 +872,12 @@ const modes = [
 // ── Tabs ──
 function renderTabs() {
   const tabs = [
-    { id: "combat",    label: "⚔️ Combat" },
-    { id: "maneuvers", label: "🎯 Manœuvres" },
-    { id: "capacites", label: "⚡ Capacités" },
-    { id: "tactique",  label: "🗺️ Tactique" },
-    { id: "fiche",     label: "📋 Fiche" },
-    { id: "bio",       label: "📖 Bio" }
+    { id: "combat",    label: `⚔️ ${t('ui.tab_combat')}` },
+    { id: "maneuvers", label: `🎯 ${t('ui.tab_maneuvers')}` },
+    { id: "capacites", label: `⚡ ${t('ui.tab_abilities')}` },
+    { id: "tactique",  label: `🗺️ ${t('ui.tab_tactics')}` },
+    { id: "fiche",     label: `📋 ${t('ui.tab_sheet')}` },
+    { id: "bio",       label: `📖 ${t('ui.tab_bio')}` }
   ];
   return `<div class="tab-bar">
     ${tabs.map(t => `<button class="tab-btn ${activeTab === t.id ? "active" : ""}" data-tab="${t.id}">${t.label}</button>`).join("")}
@@ -770,23 +897,23 @@ function renderCombat() {
   if (isCombat) {
     html += `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;">
       <div class="glass stat-box combat-highlight"><div class="stat-box-value" style="font-size:2rem;color:${color}">${state.hp}</div><div class="stat-box-label">PV / ${C.stats.hp_max}</div></div>
-      <div class="glass stat-box combat-highlight"><div class="stat-box-value">${C.stats.ac}</div><div class="stat-box-label">CA</div></div>
-      <div class="glass stat-box combat-highlight"><div class="stat-box-value">${C.stats.dc}</div><div class="stat-box-label">DD Manœuvres</div></div>
-      <div class="glass stat-box combat-highlight"><div class="stat-box-value" style="color:var(--accent-light)">${state.martial_dice}</div><div class="stat-box-label">Dés Sup. (${C.stats.martial_dice_type})</div></div>
+      <div class="glass stat-box combat-highlight"><div class="stat-box-value">${C.stats.ac}</div><div class="stat-box-label">${t('ui.ac_short')}</div></div>
+      <div class="glass stat-box combat-highlight"><div class="stat-box-value">${C.stats.dc}</div><div class="stat-box-label">${t('ui.dc_maneuvers')}</div></div>
+      <div class="glass stat-box combat-highlight"><div class="stat-box-value" style="color:var(--accent-light)">${state.martial_dice}</div><div class="stat-box-label">${t('ui.martial_dice')} (${C.stats.martial_dice_type})</div></div>
     </div>`;
   } else {
     html += `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;">
-      <div class="glass stat-box"><div class="stat-box-value">${C.stats.ac}</div><div class="stat-box-label">CA</div></div>
-      <div class="glass stat-box"><div class="stat-box-value">${fmtMod(C.stats.init)}</div><div class="stat-box-label">Initiative</div></div>
-      <div class="glass stat-box"><div class="stat-box-value">${C.stats.speed}m</div><div class="stat-box-label">Vitesse</div></div>
-      <div class="glass stat-box"><div class="stat-box-value">${fmtMod(C.stats.prof)}</div><div class="stat-box-label">Maîtrise</div></div>
+      <div class="glass stat-box"><div class="stat-box-value">${C.stats.ac}</div><div class="stat-box-label">${t('ui.ac_short')}</div></div>
+      <div class="glass stat-box"><div class="stat-box-value">${fmtMod(C.stats.init)}</div><div class="stat-box-label">${t('ui.init')}</div></div>
+      <div class="glass stat-box"><div class="stat-box-value">${C.stats.speed}m</div><div class="stat-box-label">${t('ui.speed')}</div></div>
+      <div class="glass stat-box"><div class="stat-box-value">${fmtMod(C.stats.prof)}</div><div class="stat-box-label">${t('ui.prof')}</div></div>
     </div>`;
   }
 
   // HP block
   html += `<div class="glass combat-highlight" style="padding:14px;margin-bottom:12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-      <div class="section-title" style="margin:0;border:0;padding:0;">Points de vie</div>
+      <div class="section-title" style="margin:0;border:0;padding:0;">${t('ui.hp')}</div>
       <div style="display:flex;gap:5px;align-items:center;">
         <button class="hp-btn" data-hp-delta="-5" style="font-size:0.7rem;width:34px;">-5</button>
         <button class="hp-btn" data-hp-delta="-1">−</button>
@@ -807,7 +934,7 @@ function renderCombat() {
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
       <div>
         <div style="font-size:0.6rem;color:var(--text-3);text-transform:uppercase;margin-bottom:8px;">
-          Dés de supériorité · ${C.stats.martial_dice_type} · DD ${C.stats.dc} · Repos court
+          ${t('ui.martial_dice')} · ${C.stats.martial_dice_type} · ${t('ui.dc_maneuvers')} ${C.stats.dc} · ${t('ui.martial_dice_hint')}
         </div>
         <div style="display:flex;gap:6px;" id="martial-dots">
           ${Array.from({length: C.stats.martial_dice}, (_, i) => {
@@ -817,34 +944,35 @@ function renderCombat() {
         </div>
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;">
-        <button class="rest-btn" data-rest="short">🌙 Repos court</button>
-        <button class="rest-btn" style="border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.08);color:var(--hp-green);" data-rest="long">☀️ Repos long</button>
+        <button class="rest-btn" data-rest="short">🌙 ${t('ui.short_rest')}</button>
+        <button class="rest-btn" style="border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.08);color:var(--hp-green);" data-rest="long">☀️ ${t('ui.long_rest')}</button>
       </div>
     </div>
   </div>`;
 
   // Ressources de classe
   html += `<div class="glass" style="padding:12px;margin-bottom:12px;">
-    <div class="section-title" style="margin-bottom:6px;">Ressources limitées</div>
+    <div class="section-title" style="margin-bottom:6px;">${t('ui.resources')}</div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;font-size:0.8rem;border-bottom:1px solid var(--border-1);">
-      <span>Second souffle <span style="color:var(--text-3);font-size:0.68rem;">(Action bonus · 1d10+8 PV · 1×/repos court)</span></span>
+      <span>${t('ui.second_wind')} <span style="color:var(--text-3);font-size:0.68rem;">${t('ui.second_wind_hint')}</span></span>
       <div style="width:12px;height:12px;border-radius:50%;border:2px solid var(--accent);cursor:pointer;transition:all 0.2s;${state.second_wind ? "background:var(--accent);box-shadow:0 0 6px rgba(239,68,68,0.5);" : ""}" data-toggle="second_wind"></div>
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;font-size:0.8rem;">
-      <span>Fougue (Action Surge) <span style="color:var(--text-3);font-size:0.68rem;">(+1 action · 1×/repos court)</span></span>
+      <span>${t('ui.action_surge')} <span style="color:var(--text-3);font-size:0.68rem;">${t('ui.action_surge_hint')}</span></span>
       <div style="width:12px;height:12px;border-radius:50%;border:2px solid var(--accent);cursor:pointer;transition:all 0.2s;${state.action_surge ? "background:var(--accent);box-shadow:0 0 6px rgba(239,68,68,0.5);" : ""}" data-toggle="action_surge"></div>
     </div>
   </div>`;
 
   // Attaques
-  html += `<div class="section-title">Attaques <span style="font-size:0.58rem;color:var(--text-3);font-weight:400;">(clic sur le bonus = jet complet)</span></div>`;
+  html += `<div class="section-title">${t('ui.attacks')} <span style="font-size:0.58rem;color:var(--text-3);font-weight:400;">${t('ui.attacks_hint')}</span></div>`;
   for (let i = 0; i < C.attacks.length; i++) {
     const atk = C.attacks[i];
     const typeColor = atk.type === "action" ? "var(--act-a)" : atk.type === "bonus" ? "var(--act-b)" : "var(--act-r)";
+    const typeLabel = atk.type === "action" ? t('ui.action') : atk.type === "bonus" ? t('ui.bonus_action') : t('ui.reaction');
     html += `<div class="glass attack-card">
-      <div class="attack-bonus" data-roll-atk="${i}" style="cursor:pointer;" title="Jet d'attaque">${fmtMod(atk.bonus)}</div>
+      <div class="attack-bonus" data-roll-atk="${i}" style="cursor:pointer;" title="${t('ui.roll_attack')}">${fmtMod(atk.bonus)}</div>
       <div style="flex:1;min-width:0;">
-        <div class="attack-name">${atk.name} <span style="font-size:0.65rem;color:${typeColor};font-weight:700;margin-left:4px;">${atk.type === "action" ? "Action" : atk.type === "bonus" ? "Action Bonus" : "Réaction"}</span></div>
+        <div class="attack-name">${atk.name} <span style="font-size:0.65rem;color:${typeColor};font-weight:700;margin-left:4px;">${typeLabel}</span></div>
         <div style="font-size:0.68rem;color:var(--text-3);">${atk.range} · ${atk.tags.join(" · ")}</div>
         <div style="font-size:0.72rem;color:var(--text-3);margin-top:2px;font-style:italic;">${atk.desc}</div>
       </div>
@@ -854,22 +982,22 @@ function renderCombat() {
 
   // Jets contre la mort
   html += `<div class="glass" style="padding:12px;margin-top:10px;">
-    <div class="section-title" style="margin-bottom:8px;">Jets contre la mort</div>
+    <div class="section-title" style="margin-bottom:8px;">${t('ui.death_saves')}</div>
     <div style="display:flex;justify-content:space-between;align-items:center;">
       <div>
-        <div style="font-size:0.68rem;color:var(--text-3);margin-bottom:4px;">Succès</div>
+        <div style="font-size:0.68rem;color:var(--text-3);margin-bottom:4px;">${t('ui.successes')}</div>
         <div style="display:flex;gap:6px;">
           ${[0,1,2].map(i => `<div class="death-dot success ${i < state.death_saves.successes ? "filled" : ""}" data-death="successes" data-idx="${i}"></div>`).join("")}
         </div>
       </div>
       <div>
-        <div style="font-size:0.68rem;color:var(--text-3);margin-bottom:4px;">Échecs</div>
+        <div style="font-size:0.68rem;color:var(--text-3);margin-bottom:4px;">${t('ui.failures')}</div>
         <div style="display:flex;gap:6px;">
           ${[0,1,2].map(i => `<div class="death-dot failure ${i < state.death_saves.failures ? "filled" : ""}" data-death="failures" data-idx="${i}"></div>`).join("")}
         </div>
       </div>
       <div>
-        <div style="font-size:0.68rem;color:var(--text-3);">Dés de vie</div>
+        <div style="font-size:0.68rem;color:var(--text-3);">${t('ui.hit_dice')}</div>
         <div style="font-family:var(--font-mono);font-size:0.85rem;">${C.stats.hit_dice}</div>
       </div>
     </div>
@@ -888,7 +1016,7 @@ function renderManeuvers() {
 
   html += `<div class="glass" style="padding:12px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
     <div>
-      <div style="font-size:0.6rem;color:var(--text-3);text-transform:uppercase;margin-bottom:4px;">Dés disponibles · ${C.stats.martial_dice_type} · DD ${C.stats.dc} (8 + maîtrise + FOR)</div>
+      <div style="font-size:0.6rem;color:var(--text-3);text-transform:uppercase;margin-bottom:4px;">${t('ui.available_dice')} · ${C.stats.martial_dice_type} · ${t('ui.dc_maneuvers')} ${C.stats.dc} ${t('ui.dc_formula')}</div>
       <div style="display:flex;gap:6px;" id="martial-dots-m">
         ${Array.from({length: C.stats.martial_dice}, (_, i) => {
           const filled = i < state.martial_dice;
@@ -897,30 +1025,34 @@ function renderManeuvers() {
       </div>
     </div>
     <div style="font-size:0.75rem;color:var(--text-2);text-align:right;">
-      <div>Dégâts bonus : <strong style="color:var(--accent-light);">+1${C.stats.martial_dice_type}</strong></div>
-      <div style="font-size:0.65rem;color:var(--text-3);">Ajouté aux dégâts de l'attaque déclenchante</div>
+      <div>${t('ui.bonus_damage')} : <strong style="color:var(--accent-light);">+1${C.stats.martial_dice_type}</strong></div>
+      <div style="font-size:0.65rem;color:var(--text-3);">${t('ui.added_to_attack_dmg')}</div>
     </div>
   </div>`;
 
-  html += `<div class="section-title">Manœuvres de combat (${C.maneuvers.length}/5)</div>`;
+  html += `<div class="section-title">${t('ui.maneuvers_section')} (${C.maneuvers.length}/5)</div>`;
 
   for (const m of C.maneuvers) {
+    const tr = m.key ? TRANSLATIONS[currentLanguage]?.maneuvers?.[m.key] : null;
+    const mName = tr?.name || m.name;
+    const mType = tr?.type || m.type_fr;
+    const mDesc = tr?.desc || m.desc;
     html += `<div class="maneuver-card">
       <div class="maneuver-header">
-        <span class="maneuver-name">${m.name}</span>
-        <span class="maneuver-type ${m.type}">${m.type_fr}</span>
-        ${m.dc_ability !== "—" ? `<span style="font-size:0.65rem;color:var(--text-3);">JdS ${m.dc_ability} DD ${C.stats.dc}</span>` : ""}
+        <span class="maneuver-name">${mName}</span>
+        <span class="maneuver-type ${m.type}">${mType}</span>
+        ${m.dc_ability !== "—" ? `<span style="font-size:0.65rem;color:var(--text-3);">JdS ${m.dc_ability} ${t('ui.dc')} ${C.stats.dc}</span>` : ""}
       </div>
-      <div class="maneuver-desc">${m.desc}</div>
+      <div class="maneuver-desc">${mDesc}</div>
     </div>`;
   }
 
   html += `<div class="glass" style="padding:12px;margin-top:14px;font-size:0.78rem;color:var(--text-2);line-height:1.8;">
-    <div class="section-title" style="margin-bottom:6px;">Règles générales</div>
-    <div>• Un seul dé de supériorité par manœuvre (sauf précision).</div>
-    <div>• Les dés dépensés se récupèrent au repos court ou long.</div>
-    <div>• Le dé de supériorité est un d8 au niveau 8 (devient d10 au niveau 10).</div>
-    <div>• DD de sauvegarde = 8 + bonus de maîtrise (+3) + mod. FOR (+4) = <strong>DD ${C.stats.dc}</strong>.</div>
+    <div class="section-title" style="margin-bottom:6px;">${t('ui.maneuver_rules')}</div>
+    <div>${t('ui.maneuver_rule_1')}</div>
+    <div>${t('ui.maneuver_rule_2')}</div>
+    <div>${t('ui.maneuver_rule_3')}</div>
+    <div>${t('ui.maneuver_rule_4_prefix')} <strong>${t('ui.dc')} ${C.stats.dc}</strong>.</div>
   </div>`;
 
   html += `</div>`;
@@ -933,7 +1065,7 @@ function renderManeuvers() {
 function renderCapacites() {
   let html = "";
 
-  html += `<div class="section-title">Capacités de classe</div>`;
+  html += `<div class="section-title">` + t('ui.class_features') + `</div>`;
   for (const feat of C.class_features) {
     const id   = `cf-${feat.name}`;
     const open = expandedCards.has(id);
@@ -943,7 +1075,7 @@ function renderCapacites() {
     </div>`;
   }
 
-  html += `<div class="section-title" style="margin-top:14px;">Dons</div>`;
+  html += `<div class="section-title" style="margin-top:14px;">` + t('ui.feats') + `</div>`;
   for (const feat of C.feats) {
     const id   = `ft-${feat.name}`;
     const open = expandedCards.has(id);
@@ -953,7 +1085,7 @@ function renderCapacites() {
     </div>`;
   }
 
-  html += `<div class="section-title" style="margin-top:14px;">Traits raciaux — ${C.race_fr}</div>`;
+  html += `<div class="section-title" style="margin-top:14px;">${t('ui.racial_traits')} — ${C.race_fr}</div>`;
   for (const trait of C.racial_traits) {
     const id   = `rt-${trait.name}`;
     const open = expandedCards.has(id);
@@ -964,12 +1096,12 @@ function renderCapacites() {
   }
 
   html += `<div class="glass" style="padding:12px;margin-top:14px;">
-    <div class="section-title" style="margin-bottom:6px;">Maîtrises & Langues</div>
+    <div class="section-title" style="margin-bottom:6px;">${t('ui.proficiencies_languages')}</div>
     <div class="prof-list">
-      <div><span class="prof-label">Armures : </span>${C.proficiencies.armor}</div>
-      <div><span class="prof-label">Armes : </span>${C.proficiencies.weapons}</div>
-      <div><span class="prof-label">Outils : </span>${C.proficiencies.tools}</div>
-      <div><span class="prof-label">Langues : </span>${C.proficiencies.languages}</div>
+      <div><span class="prof-label">${t('ui.prof_armor')} : </span>${C.proficiencies.armor}</div>
+      <div><span class="prof-label">${t('ui.prof_weapons')} : </span>${C.proficiencies.weapons}</div>
+      <div><span class="prof-label">${t('ui.prof_tools')} : </span>${C.proficiencies.tools}</div>
+      <div><span class="prof-label">${t('ui.prof_languages')} : </span>${C.proficiencies.languages}</div>
     </div>
   </div>`;
 
@@ -1035,7 +1167,7 @@ function renderFiche() {
   let html = "";
   const saves_order = ["str","dex","con","int","wis","cha"];
 
-  html += `<div class="section-title">Caractéristiques & Compétences</div>
+  html += `<div class="section-title">` + t('ui.abilities_skills') + `</div>
   <div class="grid-3" style="margin-bottom:16px;">`;
 
   const skillsByAbility = {};
@@ -1066,7 +1198,7 @@ function renderFiche() {
 
   html += `<div class="grid-2" style="margin-bottom:16px;">
     <div class="glass" style="padding:12px;">
-      <div class="section-title" style="margin-bottom:6px;">Jets de sauvegarde</div>`;
+      <div class="section-title" style="margin-bottom:6px;">${t('ui.saving_throws')}</div>`;
   for (const key of saves_order) {
     const s = C.saving_throws[key];
     html += `<div class="save-row">
@@ -1077,20 +1209,20 @@ function renderFiche() {
   }
   html += `</div>
     <div class="glass" style="padding:8px;text-align:center;display:flex;flex-direction:column;justify-content:center;">
-      <div style="font-size:0.6rem;color:var(--text-3);text-transform:uppercase;">Perception passive</div>
+      <div style="font-size:0.6rem;color:var(--text-3);text-transform:uppercase;">${t('ui.passive_perception')}</div>
       <div style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;">${C.passive_perception}</div>
     </div>
   </div>`;
 
   // Inventaire
   html += `<div class="glass" style="padding:12px;">
-    <div class="section-title" style="margin-bottom:6px;">🎒 Inventaire</div>`;
+    <div class="section-title" style="margin-bottom:6px;">🎒 ${t('ui.inventory')}</div>`;
   const catMeta = {
-    arme:    { label: "⚔️ Armes",      cls: "weapon"  },
-    armure:  { label: "🛡️ Armure",     cls: ""        },
-    munition:{ label: "🏹 Munitions",   cls: ""        },
-    consom:  { label: "🧪 Consommables",cls: ""        },
-    equip:   { label: "🎒 Équipement",  cls: ""        }
+    arme:    { label: t('ui.cat_weapons'), cls: "weapon"  },
+    armure:  { label: t('ui.cat_armor'),   cls: ""        },
+    munition:{ label: t('ui.cat_ammo'),    cls: ""        },
+    consom:  { label: t('ui.cat_consumable'), cls: ""     },
+    equip:   { label: t('ui.cat_equipment'),  cls: ""     }
   };
   for (const [cat, meta] of Object.entries(catMeta)) {
     const items = C.equipment.filter(e => e.cat === cat);
@@ -1119,32 +1251,32 @@ function renderFiche() {
 function renderBio() {
   return `<div style="max-width:700px;margin:0 auto;">
     <div class="glass" style="padding:16px;margin-bottom:14px;">
-      <div class="section-title" style="margin-bottom:10px;">Personnalité</div>
-      <div class="personality-label">Trait de caractère</div>
+      <div class="section-title" style="margin-bottom:10px;">${t('ui.personality')}</div>
+      <div class="personality-label">${t('ui.personality_trait')}</div>
       <div class="personality-text">${C.personality.trait}</div>
-      <div class="personality-label">Idéal</div>
+      <div class="personality-label">${t('ui.ideal')}</div>
       <div class="personality-text">${C.personality.ideal}</div>
-      <div class="personality-label">Lien</div>
+      <div class="personality-label">${t('ui.bond')}</div>
       <div class="personality-text">${C.personality.bond}</div>
-      <div class="personality-label">Défaut</div>
+      <div class="personality-label">${t('ui.flaw')}</div>
       <div class="personality-text">${C.personality.flaw}</div>
     </div>
 
     <div class="glass" style="padding:16px;margin-bottom:14px;">
-      <div class="section-title" style="margin-bottom:8px;">Histoire</div>
+      <div class="section-title" style="margin-bottom:8px;">${t('ui.story')}</div>
       <div style="font-size:0.82rem;color:var(--text-2);line-height:1.7;">${C.backstory}</div>
     </div>
 
     <div class="glass" style="padding:16px;margin-bottom:14px;">
-      <div class="section-title" style="margin-bottom:8px;">Identité</div>
+      <div class="section-title" style="margin-bottom:8px;">${t('ui.identity')}</div>
       <div style="font-size:0.8rem;color:var(--text-2);line-height:1.8;">
-        <div><span class="prof-label">Classe : </span>${C.class_fr} (${C.subclass_fr}) Nv. ${C.level}</div>
-        <div><span class="prof-label">Race : </span>${C.race_fr}</div>
-        <div><span class="prof-label">Historique : </span>${C.background}</div>
-        <div><span class="prof-label">Alignement : </span>${C.alignment}</div>
-        <div><span class="prof-label">Bonus de maîtrise : </span>${fmtMod(C.stats.prof)}</div>
-        <div><span class="prof-label">Dés de vie : </span>${C.stats.hit_dice}</div>
-        <div><span class="prof-label">Vision dans le noir : </span>18 mètres</div>
+        <div><span class="prof-label">${t('ui.identity_class')} : </span>${C.class_fr} (${C.subclass_fr}) Nv. ${C.level}</div>
+        <div><span class="prof-label">${t('ui.identity_race')} : </span>${C.race_fr}</div>
+        <div><span class="prof-label">${t('ui.identity_background')} : </span>${C.background}</div>
+        <div><span class="prof-label">${t('ui.identity_alignment')} : </span>${C.alignment}</div>
+        <div><span class="prof-label">${t('ui.identity_prof_bonus')} : </span>${fmtMod(C.stats.prof)}</div>
+        <div><span class="prof-label">${t('ui.identity_hit_dice')} : </span>${C.stats.hit_dice}</div>
+        <div><span class="prof-label">${t('ui.identity_darkvision')} : </span>${t('ui.darkvision_range')}</div>
       </div>
     </div>
 

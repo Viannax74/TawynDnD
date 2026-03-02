@@ -24,6 +24,24 @@ Format : [Semantic Versioning](https://semver.org/) | [Keep a Changelog](https:/
 
 ---
 
+## [3.1.3] — 2026-03-02
+
+### Ajouté — Steiner Ferum v3.1 i18n complète (issue [Phase 3][i18n])
+- TRANSLATIONS étendu à ~70 clés FR/EN (UI, onglets, combat, manœuvres, bio, personnalité)
+- Section `maneuvers` dans TRANSLATIONS : nom, type et description traduits pour chaque manœuvre (riposte, sweep, menacing_attack, pushing_attack, parry)
+- Champ `key` ajouté à chaque manœuvre dans `const C` pour la résolution i18n
+
+### Modifié — Steiner Ferum v3.1
+- `renderTabs()` : tous les libellés d'onglets utilisent `t('ui.tab_*')`
+- `renderCombat()` : stat boxes, HP, dés de supériorité, ressources, attaques et jets de mort utilisent `t()`
+- `renderManeuvers()` : noms, types et descriptions des manœuvres résolus via TRANSLATIONS
+- `renderCapacites()` : titres de sections (capacités, dons, traits raciaux, maîtrises) via `t()`
+- `renderFiche()` : caractéristiques, jets de sauvegarde, perception passive, inventaire via `t()`
+- `renderBio()` : personnalité, histoire, identité via `t()`
+- `rest()` : messages de confirmation et toast via `t()`
+
+---
+
 ## [3.1.2] — 2026-02-22
 ### Modifié
 - Archivage : déplacement des anciennes fiches non migrées i18n (moros-v3.0-20260217-1200.html, steiner-ferum-v3.0-20260217-1500.html) vers le dossier archive/
