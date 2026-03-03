@@ -5,10 +5,6 @@ TawynDnD/
 ├── character-builder.html          ← Outil principal : génère les fiches single-file
 ├── characters/
 │   └── moros-v3.12-20260303-1200-i18n.html  ← Fiche active (Moros Gravewalker)
-├── archive/
-│   ├── moros-v3_1-template.html    ← Template de référence
-│   ├── moros-v*.html               ← Anciennes versions de Moros
-│   └── steiner-ferum-v*.html       ← Autres personnages archivés
 ├── .github/
 │   └── copilot-instructions.md     ← Ce fichier — source de vérité pour l'IA
 └── README.md
@@ -19,8 +15,6 @@ TawynDnD/
 |-----------|-------------|
 | Outil de création | `character-builder.html` (racine) |
 | Fiche active | `characters/moros-v3.12-20260303-1200-i18n.html` |
-| Template de référence | `archive/moros-v3_1-template.html` |
-| Archives | `archive/` |
 | Schéma `const C` | Section ci-dessous + fiche active |
 | Exports XML AideDD | À importer dans `character-builder.html` |
 
