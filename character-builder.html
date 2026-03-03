@@ -121,7 +121,7 @@ button{cursor:pointer;transition:all .2s;font-family:var(--font-body)}
 
 <div class="header">
   <div class="header-title">&#x2694;&#xFE0F; TawynD&amp;D — Character Builder</div>
-  <div class="header-sub">Cr&eacute;e ta fiche de personnage D&amp;D 5e &middot; Single-file HTML &middot; v1.0</div>
+  <div class="header-sub" id="header-preview">Cr&eacute;e ta fiche de personnage D&amp;D 5e &middot; Single-file HTML &middot; v1.0</div>
 </div>
 
 <div class="main">
@@ -976,11 +976,35 @@ function importXML() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
+// ░░ HEADER PREVIEW
+// ═══════════════════════════════════════════════════════════════════
+const HEADER_DEFAULT = document.getElementById("header-preview").textContent;
+function refreshHeader() {
+  const name  = document.getElementById("f-name").value.trim();
+  const cls   = document.getElementById("f-class-fr").value.trim();
+  const level = document.getElementById("f-level").value.trim();
+  const preview = document.getElementById("header-preview");
+  if (!preview) return;
+  if (name) {
+    const parts = [name];
+    if (cls)   parts.push(cls);
+    if (level) parts.push("Niv.\u00a0" + level);
+    preview.textContent = parts.join(" \u00b7 ");
+  } else {
+    preview.textContent = HEADER_DEFAULT;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // ░░ AUTO-SLUG from name
 // ═══════════════════════════════════════════════════════════════════
 document.getElementById("f-name").addEventListener("input", () => {
   const idField = document.getElementById("f-id");
   if (!idField._userEdited) idField.value = slugify(document.getElementById("f-name").value);
+  refreshHeader();
+});
+["f-class-fr", "f-level"].forEach(id => {
+  document.getElementById(id).addEventListener("input", refreshHeader);
 });
 document.getElementById("f-id").addEventListener("input", function() {
   this._userEdited = !!this.value.trim();
@@ -999,6 +1023,7 @@ initAbilityGrid();
 initSavesGrid();
 initSkillsGrid();
 refreshCheckBonuses();
+refreshHeader();
 DEFAULT_EQUIP.forEach(addEquipRow);
 </script>
 </body>
