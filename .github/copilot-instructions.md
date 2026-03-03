@@ -4,7 +4,7 @@
 TawynDnD/
 ├── character-builder.html          ← Outil principal : génère les fiches single-file
 ├── characters/
-│   └── moros-v3.12-20260303-0210-i18n.html  ← Fiche active (Moros Gravewalker)
+│   └── moros-v3.12-20260303-1200-i18n.html  ← Fiche active (Moros Gravewalker)
 ├── archive/
 │   ├── moros-v3_1-template.html    ← Template de référence
 │   ├── moros-v*.html               ← Anciennes versions de Moros
@@ -18,7 +18,7 @@ TawynDnD/
 | Ressource | Emplacement |
 |-----------|-------------|
 | Outil de création | `character-builder.html` (racine) |
-| Fiche active | `characters/moros-v3.12-20260303-0210-i18n.html` |
+| Fiche active | `characters/moros-v3.12-20260303-1200-i18n.html` |
 | Template de référence | `archive/moros-v3_1-template.html` |
 | Archives | `archive/` |
 | Schéma `const C` | Section ci-dessous + fiche active |
@@ -53,9 +53,9 @@ const C = {
   subclass: "hexblade",
   stats: { ac: 17, hp_max: 47, prof: 3, dc: 15, spell_atk: 7, slots_total: 2 },
   abilities: { cha: { score: 18, mod: 4 }, dex: { score: 14, mod: 2 }, /* ... */ },
-  defenses: { resistances: [], immunities: [], vulnerabilities: [] },
+  defenses: { resistances: ["Nécrotique"], immunities: [], vulnerabilities: [] },
   equipment: [ { name: string, cat: string, qty: number, editable: boolean } ],
-  // ... (Schéma complet visible dans characters/moros-v3.12-20260303-0210-i18n.html)
+  // ... (Schéma complet visible dans characters/moros-v3.12-20260303-1200-i18n.html)
 };
 ```
 
