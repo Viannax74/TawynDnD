@@ -3,7 +3,7 @@
 Fiches de personnage D&D 5e interactives. Single-file HTML, offline, mobile-first.
 
 ## Fiche Active
-- `characters/moros-v3.1-20260218-0330-i18n.html` — Moros, Occultiste Lame Maudite
+- `characters/moros-v3.11-20260302-2215-i18n.html` — Moros, Occultiste Lame Maudite
 
 ## Règles pour l'IA
 Voir `.github/copilot-instructions.md`
