@@ -83,6 +83,20 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .btn-icon{width:32px;height:32px;border-radius:6px;border:1px solid rgba(239,68,68,.4);background:rgba(239,68,68,.1);color:#ef4444;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:var(--font-body)}
 .btn-icon:hover{background:rgba(239,68,68,.25);border-color:#ef4444}
 
+/* Spells list */
+.spell-list-header{display:grid;grid-template-columns:1fr 60px 1fr 36px;gap:8px;margin-bottom:4px}
+.spell-list-header span{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);padding:0 4px}
+.spell-list{display:flex;flex-direction:column;gap:6px}
+.spell-row{display:grid;grid-template-columns:1fr 60px 1fr 36px;gap:8px;align-items:center}
+.spell-row input{font-size:.82rem;padding:7px 9px}
+
+/* Features list */
+.feat-list{display:flex;flex-direction:column;gap:6px}
+.feat-list-header{display:grid;grid-template-columns:160px 1fr 36px;gap:8px;margin-bottom:4px}
+.feat-list-header span{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);padding:0 4px}
+.feat-row{display:grid;grid-template-columns:160px 1fr 36px;gap:8px;align-items:center}
+.feat-row input{font-size:.82rem;padding:7px 9px}
+
 /* Buttons */
 button{cursor:pointer;transition:all .2s;font-family:var(--font-body)}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;border:1px solid var(--border-1);background:rgba(255,255,255,.05);color:var(--text-2);font-size:.85rem;font-weight:600}
@@ -114,6 +128,8 @@ button{cursor:pointer;transition:all .2s;font-family:var(--font-body)}
   .skills-grid{grid-template-columns:1fr}
   .span-2{grid-column:span 1}
   .equip-header,.equip-row{grid-template-columns:1fr 90px 60px 70px 36px}
+  .spell-list-header,.spell-row{grid-template-columns:1fr 50px 1fr 36px}
+  .feat-list-header,.feat-row{grid-template-columns:120px 1fr 36px}
 }
 </style>
 </head>
@@ -281,10 +297,30 @@ button{cursor:pointer;transition:all .2s;font-family:var(--font-body)}
         <button class="btn btn-add" id="btn-add-equip">&#xFF0B; Ajouter un objet</button>
       </div>
     </div>
+    <div class="glass" style="padding:20px 24px;margin-top:14px">
+      <div class="section-title">Sorts connus</div>
+      <div class="spell-list-header">
+        <span>Nom</span><span>Niv.</span><span>Note (DD, dur&eacute;e&hellip;)</span><span></span>
+      </div>
+      <div class="spell-list" id="spell-list"></div>
+      <div style="margin-top:12px">
+        <button class="btn btn-add" id="btn-add-spell">&#xFF0B; Ajouter un sort</button>
+      </div>
+    </div>
   </div>
 
   <!-- TAB 6 — Personnalité -->
   <div class="tab-panel" id="panel-personnalite">
+    <div class="glass" style="padding:20px 24px;margin-bottom:14px">
+      <div class="section-title">Capacit&eacute;s de classe</div>
+      <div class="feat-list-header">
+        <span>Nom</span><span>Description</span><span></span>
+      </div>
+      <div class="feat-list" id="feat-list"></div>
+      <div style="margin-top:12px">
+        <button class="btn btn-add" id="btn-add-feat">&#xFF0B; Ajouter une capacit&eacute;</button>
+      </div>
+    </div>
     <div class="glass" style="padding:20px 24px;margin-bottom:14px">
       <div class="section-title">Personnalit&eacute;</div>
       <div class="form-grid">
@@ -551,6 +587,62 @@ function getEquipment() {
 document.getElementById("btn-add-equip").addEventListener("click", () => addEquipRow(null));
 
 // ═══════════════════════════════════════════════════════════════════
+// ░░ SPELLS
+// ═══════════════════════════════════════════════════════════════════
+function addSpellRow(spell) {
+  const list = document.getElementById("spell-list");
+  const row  = document.createElement("div");
+  row.className = "spell-row";
+  const sp = spell || { name: "", level: 0, note: "" };
+  const safeN = (sp.name || "").replace(/"/g, "&quot;");
+  const safeNote = (sp.note || "").replace(/"/g, "&quot;");
+  row.innerHTML =
+    '<input type="text" class="sp-name" placeholder="Nom du sort" value="' + safeN + '">' +
+    '<input type="number" class="sp-level" min="0" max="9" value="' + (sp.level || 0) + '" title="Niveau (0=tour de magie)">' +
+    '<input type="text" class="sp-note" placeholder="Note (DD, dur\u00e9e\u2026)" value="' + safeNote + '">' +
+    '<button class="btn-icon" title="Supprimer" aria-label="Supprimer ce sort">\u2715</button>';
+  row.querySelector(".btn-icon").addEventListener("click", () => row.remove());
+  list.appendChild(row);
+}
+
+function getSpells() {
+  return [...document.querySelectorAll(".spell-row")].map(row => ({
+    name:  row.querySelector(".sp-name").value.trim(),
+    level: parseInt(row.querySelector(".sp-level").value) || 0,
+    note:  row.querySelector(".sp-note").value.trim()
+  })).filter(s => s.name);
+}
+
+document.getElementById("btn-add-spell").addEventListener("click", () => addSpellRow(null));
+
+// ═══════════════════════════════════════════════════════════════════
+// ░░ CLASS FEATURES
+// ═══════════════════════════════════════════════════════════════════
+function addFeatRow(feat) {
+  const list = document.getElementById("feat-list");
+  const row  = document.createElement("div");
+  row.className = "feat-row";
+  const ft = feat || { name: "", desc: "" };
+  const safeN = (ft.name || "").replace(/"/g, "&quot;");
+  const safeD = (ft.desc || "").replace(/"/g, "&quot;");
+  row.innerHTML =
+    '<input type="text" class="ft-name" placeholder="Nom" value="' + safeN + '">' +
+    '<input type="text" class="ft-desc" placeholder="Description" value="' + safeD + '">' +
+    '<button class="btn-icon" title="Supprimer" aria-label="Supprimer cette capacit\u00e9">\u2715</button>';
+  row.querySelector(".btn-icon").addEventListener("click", () => row.remove());
+  list.appendChild(row);
+}
+
+function getFeatures() {
+  return [...document.querySelectorAll(".feat-row")].map(row => ({
+    name: row.querySelector(".ft-name").value.trim(),
+    desc: row.querySelector(".ft-desc").value.trim()
+  })).filter(f => f.name);
+}
+
+document.getElementById("btn-add-feat").addEventListener("click", () => addFeatRow(null));
+
+// ═══════════════════════════════════════════════════════════════════
 // ░░ TABS
 // ═══════════════════════════════════════════════════════════════════
 document.querySelectorAll(".tab-btn").forEach(btn => {
@@ -637,8 +729,9 @@ function buildCharacterData() {
     skills,
     attacks: [],
     invocations: [],
-    class_features: [],
+    class_features: getFeatures(),
     background_features: [],
+    spells: getSpells(),
     personality: {
       trait: document.getElementById("f-trait").value.trim()    || "",
       ideal: document.getElementById("f-ideal").value.trim()    || "",
@@ -714,6 +807,67 @@ const AIDEDC_PARSER = {
     "R\u00f4deur":"ranger",    "Roublard":"rogue",        "Ensorceleur":"sorcerer"
   },
 
+  // Sous-classe FR → slug EN
+  SUBCLASS_FR_TO_SLUG: {
+    // Occultiste (Warlock)
+    "Lame maudite":"hexblade",          "L'Ancien":"the-great-old-one",
+    "L'Archif\u00e9e":"the-archfey",    "Le Fi\u00e9lon":"the-fiend",
+    "Le C\u00e9leste":"the-celestial",  "G\u00e9nie":"the-genie",
+    // Guerrier (Fighter)
+    "Champion":"champion",              "Chevalier eldritch":"eldritch-knight",
+    "Ma\u00eetre des batailles":"battle-master",
+    // Barbare (Barbarian)
+    "Berserker":"berserker",            "Guerrier totem":"totem-warrior",
+    "H\u00e9raut de la mort":"zealot",  "Tempête sauvage":"storm-herald",
+    // Barde (Bard)
+    "Coll\u00e8ge de la connaissance":"lore",
+    "Coll\u00e8ge des \u00e9p\u00e9es":"swords",
+    "Coll\u00e8ge de la vaillance":"valor",
+    "Coll\u00e8ge de la gl\u00f4ire":"glamour",
+    // Clerc (Cleric)
+    "Vie":"life",              "Lumi\u00e8re":"light",
+    "Tromperie":"trickery",    "Guerre":"war",
+    "Savoir":"knowledge",      "Nature":"nature",
+    "Temp\u00eate":"tempest",  "Mort":"death",
+    "Tombe":"grave",           "Forge":"forge",
+    "Ordre":"order",           "Paix":"peace",
+    "Cr\u00e9puscule":"twilight",
+    // Druide (Druid)
+    "Cercle de la lune":"moon", "Cercle de la terre":"land",
+    "Cercle des spores":"spores", "Cercle des \u00e9toiles":"stars",
+    // Mage (Wizard)
+    "\u00c9vocation":"evocation",     "Abjuration":"abjuration",
+    "Enchantement":"enchantment",      "Divination":"divination",
+    "Illusion":"illusion",             "Invocation":"conjuration",
+    "N\u00e9cromancie":"necromancy",   "Transmutation":"transmutation",
+    "Chronomagie":"chronurgy",         "Graviturgie":"graviturgy",
+    // Moine (Monk)
+    "Voie de la paume ouverte":"open-hand",
+    "Voie de l'ombre":"shadow",
+    "Voie des quatre \u00e9l\u00e9ments":"four-elements",
+    "Voie du soleil":"sun-soul",
+    // Paladin (Paladin)
+    "Serment de d\u00e9votion":"devotion",
+    "Serment des anciens":"the-ancients",
+    "Serment de vengeance":"vengeance",
+    "Serment de conqu\u00eate":"conquest",
+    "Serment de r\u00e9demption":"redemption",
+    // R\u00f4deur (Ranger)
+    "Chasseur":"hunter",               "Seigneur des b\u00eates":"beast-master",
+    "Chasseur de monstres":"monster-slayer",
+    "Rôdeur des horizons":"horizon-walker",
+    // Roublard (Rogue)
+    "Assassin":"assassin",             "Voleur":"thief",
+    "Trickster arcanique":"arcane-trickster",
+    "\u00c2me de sc\u00e9l\u00e9rat":"swashbuckler",
+    "Inquisiteur":"inquisitive",        "Fantôme":"phantom",
+    // Ensorceleur (Sorcerer)
+    "Magie sauvage":"wild-magic",       "Anc\u00eatre draconique":"draconic",
+    "\u00c2me divine":"divine-soul",    "Origine de temp\u00eate":"storm-sorcery",
+    "Magie des ombres":"shadow-magic",  "Magie aberrante":"aberrant-mind",
+    "Astre de cr\u00e9puscule":"clockwork-soul"
+  },
+
   RACE_FR_TO_SLUG: {
     "Humain":"human",          "Elfe":"elf",              "Nain":"dwarf",
     "Halfelin":"halfling",     "Gnome":"gnome",           "Demi-Elfe":"half-elf",
@@ -726,6 +880,18 @@ const AIDEDC_PARSER = {
     4:"hide-armor",            5:"chain-shirt",           6:"scale-mail",
     7:"breastplate",           8:"half-plate-armor",      9:"ring-mail",
     10:"chain-mail",           11:"splint-armor",         12:"plate-armor"
+  },
+
+  // AideDD item type ID / name → EQUIP_CATS slug
+  ITEM_TYPE_MAP: {
+    "arme":"arme",       "weapon":"arme",      "1":"arme",
+    "armure":"armure",   "armor":"armure",     "2":"armure",
+    "magique":"magique", "magic":"magique",    "3":"magique",
+    "objet":"objet",     "item":"objet",       "4":"objet",
+    "munition":"munition","ammo":"munition",   "5":"munition",
+    "consom":"consom",   "consumable":"consom","6":"consom",
+    "monnaie":"monnaie", "currency":"monnaie", "7":"monnaie",
+    "equip":"equip",     "gear":"equip",       "8":"equip"
   },
 
   // AideDD skillsProf ID → nom FR exact (= SKILLS_DEF[].name)
@@ -895,6 +1061,8 @@ const AIDEDC_PARSER = {
     this.setVal("f-class-fr",    className);
     if (classSlug) this.setVal("f-class", classSlug);
     this.setVal("f-subclass-fr", subclassName);
+    const subclassSlug = this.SUBCLASS_FR_TO_SLUG[subclassName] || "";
+    if (subclassSlug) this.setVal("f-subclass", subclassSlug);
     this.setVal("f-level",       level);
     this.setVal("f-race",        raceName);
     this.setVal("f-background",  get("background"));
@@ -933,6 +1101,50 @@ const AIDEDC_PARSER = {
     this.setTextarea("f-bond",      get("bonds"));
     this.setTextarea("f-flaw",      get("flaws"));
     this.setTextarea("f-backstory", get("backstory"));
+
+    // \u00c9quipement — vide la liste existante puis importe les <item>
+    const equipListEl = document.getElementById("equip-list");
+    const itemNodes = char.querySelectorAll("items > item, item");
+    if (itemNodes.length) {
+      equipListEl.innerHTML = "";
+      itemNodes.forEach(item => {
+        const iName = item.querySelector("name")?.textContent?.trim() || "";
+        if (!iName) return;
+        const typeRaw = (item.querySelector("type")?.textContent || "").trim().toLowerCase();
+        const cat  = this.ITEM_TYPE_MAP[typeRaw] || "equip";
+        const qty  = parseInt(item.querySelector("qty, quantity")?.textContent || "1") || 1;
+        const edRaw = (item.querySelector("editable")?.textContent || "").trim();
+        const editable = edRaw === "1" || edRaw === "true" || qty > 1;
+        addEquipRow({ name: iName, cat, qty, editable });
+      });
+    }
+
+    // Sorts — vide la liste existante puis importe les <spell>
+    const spellListEl = document.getElementById("spell-list");
+    const spellNodes = char.querySelectorAll("spells > spell, spellsKnown > spell, spellsPrepared > spell");
+    if (spellNodes.length) {
+      spellListEl.innerHTML = "";
+      spellNodes.forEach(spell => {
+        const sName = spell.querySelector("name")?.textContent?.trim() || "";
+        if (!sName) return;
+        const sLevel = parseInt(spell.querySelector("niv, level, niveau")?.textContent || "0") || 0;
+        const sNote  = (spell.querySelector("note, school, ecole")?.textContent || "").trim();
+        addSpellRow({ name: sName, level: sLevel, note: sNote });
+      });
+    }
+
+    // Capacit\u00e9s de classe — vide la liste puis importe les <feature>
+    const featListEl = document.getElementById("feat-list");
+    const featNodes = char.querySelectorAll("classFeatures > feature, features > feature, classAbilities > ability");
+    if (featNodes.length) {
+      featListEl.innerHTML = "";
+      featNodes.forEach(feat => {
+        const fName = feat.querySelector("name")?.textContent?.trim() || "";
+        if (!fName) return;
+        const fDesc = (feat.querySelector("desc, description")?.textContent || "").trim();
+        addFeatRow({ name: fName, desc: fDesc });
+      });
+    }
 
     // Recalcul global
     if (typeof refreshCheckBonuses === "function") refreshCheckBonuses();
