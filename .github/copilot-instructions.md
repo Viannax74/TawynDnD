@@ -71,6 +71,25 @@ const C = {
 
 **Toute fiche est un fichier HTML autonome.** Aucune dépendance externe, aucun framework, aucun build. CSS et JS sont entièrement embarqués dans le fichier. La fiche fonctionne hors-ligne, directement dans le navigateur.
 
+### 🔤 Polices : 100% offline, zéro ressource externe
+
+**Aucune balise `<link>` vers Google Fonts (ou toute autre CDN de polices) n'est autorisée** dans les fiches ni dans le builder.
+
+Les variables CSS de police utilisent exclusivement des polices système :
+
+```css
+--font-body:    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+--font-display: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+--font-mono:    ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+```
+
+Ces valeurs sont présentes dans :
+- `character-builder.html` (UI du builder)
+- `TEMPLATE_B64` dans `character-builder.html` (template encodé en base64 utilisé pour générer les fiches)
+- Toute fiche générée dans `characters/`
+
+> **Note IA :** Si tu modifies le `TEMPLATE_B64`, tu dois décoder le base64, appliquer tes changements, puis ré-encoder. Ne jamais réintroduire de lien Google Fonts.
+
 ---
 
 ## ⚠️ Note d'alignement IA
