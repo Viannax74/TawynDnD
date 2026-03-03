@@ -554,11 +554,15 @@ const TRANSLATIONS = {
 };
 
 let currentLanguage = localStorage.getItem('tawyndnd-language') || 'fr';
-function t(key) {
-  const keys = key.split('.');
+function t(data) {
+  if (!data) return "";
+  if (typeof data === 'object' && !Array.isArray(data)) {
+    return data[currentLanguage] || data['fr'] || data['en'] || "";
+  }
+  const keys = data.split('.');
   let v = TRANSLATIONS[currentLanguage];
   for (const k of keys) { v = v?.[k]; if (!v) break; }
-  return v?.name || v || key;
+  return v?.name || v || data;
 }
 function getCurrentLanguage() { return currentLanguage; }
 function setLanguage(lang) { currentLanguage = lang; localStorage.setItem('tawyndnd-language', lang); render && render(); }
@@ -1389,7 +1393,7 @@ function renderSpells() {
               <span class="spell-meta-label">Composantes</span><span class="spell-meta-value">${s.comp || "—"}</span>
               <span class="spell-meta-label">Durée</span><span class="spell-meta-value">${s.duration}</span>
             </div>
-            <div>${s.desc}</div>
+            <div>${t(s.desc)}</div>
             <div class="spell-tags" style="margin-top:6px;">${(s.tags || []).map(t => `<span class="spell-tag-mini">${t}</span>`).join("")}</div>
           </div>
         </div>`;
@@ -1427,8 +1431,8 @@ function renderCapacites() {
     const id   = `feat-${feat.name}`;
     const open = expandedCards.has(id);
     html += `<div class="glass expand-card" data-expand="${id}">
-      <div class="expand-header"><span>${feat.name}</span><span class="expand-chevron ${open ? 'open' : ''}">▸</span></div>
-      <div class="expand-body ${open ? 'open' : ''}">${feat.desc}</div>
+      <div class="expand-header"><span>${t(feat.name)}</span><span class="expand-chevron ${open ? 'open' : ''}">▸</span></div>
+      <div class="expand-body ${open ? 'open' : ''}">${t(feat.desc)}</div>
     </div>`;
   }
 
@@ -1438,8 +1442,8 @@ function renderCapacites() {
     const id   = `bg-${feat.name}`;
     const open = expandedCards.has(id);
     html += `<div class="glass expand-card" data-expand="${id}">
-      <div class="expand-header"><span>${feat.name}</span><span class="expand-chevron ${open ? 'open' : ''}">▸</span></div>
-      <div class="expand-body ${open ? 'open' : ''}">${feat.desc}</div>
+      <div class="expand-header"><span>${t(feat.name)}</span><span class="expand-chevron ${open ? 'open' : ''}">▸</span></div>
+      <div class="expand-body ${open ? 'open' : ''}">${t(feat.desc)}</div>
     </div>`;
   }
 
@@ -1603,17 +1607,17 @@ function renderBio() {
     <div class="glass" style="padding:16px;margin-bottom:14px;">
       <div class="section-title" style="margin-bottom:10px;">Personnalité</div>
       <div class="personality-label">Trait de caractère</div>
-      <div class="personality-text">${C.personality.trait}</div>
+      <div class="personality-text">${t(C.personality.trait)}</div>
       <div class="personality-label">Idéal</div>
-      <div class="personality-text">${C.personality.ideal}</div>
+      <div class="personality-text">${t(C.personality.ideal)}</div>
       <div class="personality-label">Lien</div>
-      <div class="personality-text">${C.personality.bond}</div>
+      <div class="personality-text">${t(C.personality.bond)}</div>
       <div class="personality-label">Défaut</div>
-      <div class="personality-text">${C.personality.flaw}</div>
+      <div class="personality-text">${t(C.personality.flaw)}</div>
     </div>
     <div class="glass" style="padding:16px;margin-bottom:14px;">
       <div class="section-title" style="margin-bottom:8px;">Histoire & Contexte</div>
-      <div style="font-size:0.82rem;color:var(--text-2);line-height:1.7;">${C.backstory}</div>
+      <div style="font-size:0.82rem;color:var(--text-2);line-height:1.7;">${t(C.backstory)}</div>
     </div>
     <div class="glass" style="padding:16px;margin-bottom:14px;">
       <div class="section-title" style="margin-bottom:8px;">Identité</div>
