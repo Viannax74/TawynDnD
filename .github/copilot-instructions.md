@@ -53,7 +53,7 @@ const C = {
   subclass: "hexblade",
   stats: { ac: 17, hp_max: 47, prof: 3, dc: 15, spell_atk: 7, slots_total: 2 },
   abilities: { cha: { score: 18, mod: 4 }, dex: { score: 14, mod: 2 }, /* ... */ },
-  defenses: { resistances: ["Nécrotique"], immunities: [], vulnerabilities: [] },
+  defenses: { resistances: [], immunities: [], vulnerabilities: [] },
   equipment: [ { name: string, cat: string, qty: number, editable: boolean } ],
   // ... (Schéma complet visible dans characters/moros-v3.12-20260303-1200-i18n.html)
 };
