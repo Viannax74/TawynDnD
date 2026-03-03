@@ -4,7 +4,7 @@
 TawynDnD/
 ├── character-builder.html          ← Outil principal : génère les fiches single-file
 ├── characters/
-│   └── moros-v3.11-20260302-2215-i18n.html  ← Fiche active (Moros Gravewalker)
+│   └── moros-v3.12-20260303-0210-i18n.html  ← Fiche active (Moros Gravewalker)
 ├── archive/
 │   ├── moros-v3_1-template.html    ← Template de référence
 │   ├── moros-v*.html               ← Anciennes versions de Moros
@@ -18,7 +18,7 @@ TawynDnD/
 | Ressource | Emplacement |
 |-----------|-------------|
 | Outil de création | `character-builder.html` (racine) |
-| Fiche active | `characters/moros-v3.11-20260302-2215-i18n.html` |
+| Fiche active | `characters/moros-v3.12-20260303-0210-i18n.html` |
 | Template de référence | `archive/moros-v3_1-template.html` |
 | Archives | `archive/` |
 | Schéma `const C` | Section ci-dessous + fiche active |
@@ -45,7 +45,7 @@ Chaque fiche contient un objet `const C` qui encode **toutes les données statiq
 
 ```javascript
 const C = {
-  schemaVersion: "3.1",
+  schemaVersion: "3.12",
   id: "moros-gravewalker",
   name: "Moros Gravewalker",
   level: 6,
@@ -53,16 +53,23 @@ const C = {
   subclass: "hexblade",
   stats: { ac: 17, hp_max: 47, prof: 3, dc: 15, spell_atk: 7, slots_total: 2 },
   abilities: { cha: { score: 18, mod: 4 }, dex: { score: 14, mod: 2 }, /* ... */ },
+  defenses: { resistances: [], immunities: [], vulnerabilities: [] },
   equipment: [ { name: string, cat: string, qty: number, editable: boolean } ],
-  // ... (Schéma complet visible dans characters/moros-v3.11-20260302-2215-i18n.html)
+  // ... (Schéma complet visible dans characters/moros-v3.12-20260303-0210-i18n.html)
 };
 ```
 
 ## 💾 localStorage (état volatile — NE PAS mettre dans `const C`)
 | Clé | Type | Description |
 |-----|------|-------------|
-| `tawyndnd-${C.id}-v3` | object | Objet JSON contenant l'état actuel (hp, hp_temp, slots_used, inv_qty, etc.) |
+| `tawyndnd-${C.id}-v3` | object | Objet JSON contenant l'état actuel (hp, hp_temp, slots_used, inv_qty, concentration, conditions, etc.) |
 | `tawyndnd-language` | string | Langue active ("fr" / "en") |
+
+### État volatil — nouvelles clés (v3.12)
+| Clé | Type | Description |
+|-----|------|-------------|
+| `concentration` | `string\|null` | Nom du sort actuellement en concentration, ou `null` |
+| `conditions` | `object` | État des 14 conditions D&D 5e (aveugle, charme, empoisonne, a_terre, entrave, incapacite, invisible, paralyse, petrifie, peur, saisi, sourd, etourdi, inconscient) |
 
 ---
 
