@@ -828,6 +828,19 @@ function importXML() {
           });
         }
 
+        // Update global C object so header and export reflect the imported character
+        if (name) {
+          C.name = name;
+          if (!C.avatar || C.avatar.includes('dicebear')) {
+            C.avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name)}&backgroundColor=1a0a2e`;
+          }
+        }
+        if (level) C.level = level;
+        if (classe) C.class = classSlug || classe;
+        if (race) C.race = race;
+        if (background) C.background = background;
+        try { if (typeof render === 'function') render(); } catch(e) { console.warn('importXML: render() failed', e); }
+
         showToast("\u2705 Import XML AideDD r\u00e9ussi \u2014 " + (name || file.name));
       } catch (err) {
         showToast("\u274C Erreur import XML\u00a0: " + err.message, true);
