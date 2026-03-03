@@ -347,14 +347,7 @@ button{cursor:pointer;transition:all .2s;font-family:var(--font-body)}
 <div id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════════
-// ░░ MAPPING DICTIONARIES — AideDD XML import
-// ═══════════════════════════════════════════════════════════════════
-const CLASS_FR_TO_SLUG = { "Occultiste":"warlock", "Guerrier":"fighter", "Barbare":"barbarian", "Barde":"bard", "Clerc":"cleric", "Druide":"druid", "Mage":"wizard", "Moine":"monk", "Paladin":"paladin", "R\u00f4deur":"ranger", "Roublard":"rogue", "Ensorceleur":"sorcerer" };
-const RACE_FR_TO_SLUG  = { "Humain":"human", "Elfe":"elf", "Nain":"dwarf", "Halfelin":"halfling", "Gnome":"gnome", "Demi-Elfe":"half-elf", "Demi-Orc":"half-orc", "Tieffelin":"tiefling", "Drak\u00e9ide":"dragonborn" };
-const ARMOR_ID_MAP     = { 1:"padded-armor", 2:"leather-armor", 3:"studded-leather-armor", 4:"hide-armor", 5:"chain-shirt", 6:"scale-mail", 7:"breastplate", 8:"half-plate-armor", 9:"ring-mail", 10:"chain-mail", 11:"splint-armor", 12:"plate-armor" }; // TODO: used by future equipment import
-const SKILL_MAP        = { 1:"Acrobaties", 2:"Arcanes", 3:"Athl\u00e9tisme", 4:"Discr\u00e9tion", 5:"Dressage", 6:"Escamotage", 7:"Histoire", 8:"Intimidation", 9:"Intuition", 10:"Investigation", 11:"M\u00e9decine", 12:"Nature", 13:"Perception", 14:"Persuasion", 15:"Religion", 16:"Repr\u00e9sentation", 17:"Survie", 18:"Tromperie" };
-const DND5E_API_BASE   = "https://www.dnd5eapi.co/api/2014/";
+
 
 // ═══════════════════════════════════════════════════════════════════
 // ░░ TEMPLATE (base64 — fiche Moros avec const C = __CHAR_DATA__;)
@@ -708,134 +701,278 @@ function generateSheet() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// ░░ XML IMPORT — AideDD.org
+// ░░ XML IMPORT — AideDD.org + dnd5eapi.co enrichment
 // ═══════════════════════════════════════════════════════════════════
+
+const AIDEDC_PARSER = {
+
+  // ── Dictionnaires de traduction ──────────────────────────────────
+  CLASS_FR_TO_SLUG: {
+    "Occultiste":"warlock",    "Guerrier":"fighter",     "Barbare":"barbarian",
+    "Barde":"bard",            "Clerc":"cleric",          "Druide":"druid",
+    "Mage":"wizard",           "Moine":"monk",            "Paladin":"paladin",
+    "R\u00f4deur":"ranger",    "Roublard":"rogue",        "Ensorceleur":"sorcerer"
+  },
+
+  RACE_FR_TO_SLUG: {
+    "Humain":"human",          "Elfe":"elf",              "Nain":"dwarf",
+    "Halfelin":"halfling",     "Gnome":"gnome",           "Demi-Elfe":"half-elf",
+    "Demi-Orc":"half-orc",     "Tieffelin":"tiefling",   "Dragonborn":"dragonborn"
+  },
+
+  // AideDD armor ID → dnd5eapi slug  (shield g\u00e9r\u00e9 s\u00e9par\u00e9ment)
+  ARMOR_ID_MAP: {
+    1:"padded-armor",          2:"leather-armor",         3:"studded-leather-armor",
+    4:"hide-armor",            5:"chain-shirt",           6:"scale-mail",
+    7:"breastplate",           8:"half-plate-armor",      9:"ring-mail",
+    10:"chain-mail",           11:"splint-armor",         12:"plate-armor"
+  },
+
+  // AideDD skillsProf ID → nom FR exact (= SKILLS_DEF[].name)
+  SKILL_MAP: {
+    1:"Acrobaties",    2:"Arcanes",       3:"Athl\u00e9tisme",    4:"Discr\u00e9tion",
+    5:"Dressage",      6:"Escamotage",    7:"Histoire",      8:"Intimidation",
+    9:"Intuition",     10:"Investigation",11:"M\u00e9decine",     12:"Nature",
+    13:"Perception",   14:"Persuasion",   15:"Religion",     16:"Repr\u00e9sentation",
+    17:"Survie",       18:"Tromperie"
+  },
+
+  // AideDD alignment ID → value du <select>
+  ALIGN_MAP: {
+    "1":"Loyal Bon",       "2":"Neutre Bon",      "3":"Chaotique Bon",
+    "4":"Loyal Neutre",    "5":"Vrai Neutre",      "6":"Chaotique Neutre",
+    "7":"Loyal Mauvais",   "8":"Neutre Mauvais",   "9":"Chaotique Mauvais"
+  },
+
+  // Bonus de ma\u00eetrise par niveau (index 0 = niveau 1)
+  PROF_BY_LEVEL: [2,2,2,2,3,3,3,3,4,4,4,4,4,5,5,5,5,6,6,6],
+
+  ABIL_IDX: ["str","dex","con","int","wis","cha"],
+
+  // ── Helper : injecte + d\u00e9clenche les calculs internes ───────────
+  setVal(id, val) {
+    if (val === null || val === undefined || val === "") return;
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = val;
+    el.dispatchEvent(new Event("input",  { bubbles: true }));
+    el.dispatchEvent(new Event("change", { bubbles: true }));
+  },
+
+  setCheck(id, checked) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.checked = checked;
+    el.dispatchEvent(new Event("change", { bubbles: true }));
+  },
+
+  setTextarea(id, val) {
+    if (!val) return;
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = val;
+    el.dispatchEvent(new Event("input", { bubbles: true }));
+  },
+
+  // ── encodeSkillId : miroir exact de la fonction du builder ───────
+  encodeSkillId(name) {
+    return name.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"-").toLowerCase();
+  },
+
+  // ── importXML(file) : m\u00e9thode principale ─────────────────────────
+  async importXML(file) {
+    // ── 1. Lecture & parsing XML ───────────────────────────────────
+    const text = await file.text();
+    const xmlDoc = new DOMParser().parseFromString(text, "application/xml");
+    const char = xmlDoc.querySelector("builder > character") || xmlDoc.querySelector("character");
+    if (!char) throw new Error("Structure XML invalide \u2014 noeud <character> introuvable");
+
+    const get = tag => { const el = char.querySelector(tag); return el ? el.textContent.trim() : ""; };
+
+    // Identity
+    const className    = get("class");
+    const subclassName = get("classPath");
+    const raceName     = get("race");
+    const level        = parseInt(get("level")) || 1;
+
+    // ── 2. Appels API dnd5eapi (parall\u00e8les) ───────────────────────
+    const BASE      = "https://www.dnd5eapi.co/api/2014/";
+    const classSlug = this.CLASS_FR_TO_SLUG[className] || "";
+    const raceSlug  = this.RACE_FR_TO_SLUG[raceName]   || "";
+    const armorId   = parseInt(get("armorId")) || 0;
+    const armorSlug = this.ARMOR_ID_MAP[armorId] || "";
+
+    const [raceData, classData, armorData] = await Promise.all([
+      raceSlug  ? fetch(BASE + "races/"     + raceSlug ).then(r => r.ok ? r.json() : null).catch(() => null) : null,
+      classSlug ? fetch(BASE + "classes/"   + classSlug).then(r => r.ok ? r.json() : null).catch(() => null) : null,
+      armorSlug ? fetch(BASE + "equipment/" + armorSlug).then(r => r.ok ? r.json() : null).catch(() => null) : null,
+    ]);
+
+    // ── 3. Calculs ────────────────────────────────────────────────
+
+    // Base ability scores
+    const BASE_STATS = {};
+    this.ABIL_IDX.forEach((k, i) => { BASE_STATS[k] = parseInt(get(k)) || 10; });
+
+    // ASI bonuses: aug_carac0=str, aug_carac1=dex, \u2026 aug_carac5=cha
+    const asi = {};
+    this.ABIL_IDX.forEach((k, i) => { asi[k] = parseInt(get("aug_carac" + i)) || 0; });
+
+    // Racial bonuses
+    const racialBonus    = { str:0, dex:0, con:0, int:0, wis:0, cha:0 };
+    const racialBonusLog = [];
+    if (raceData) {
+      (raceData.ability_bonuses || []).forEach(ab => {
+        const k = ab.ability_score.index;
+        if (k in racialBonus) {
+          racialBonus[k] += ab.bonus;
+          racialBonusLog.push("+" + ab.bonus + " " + k.toUpperCase());
+        }
+      });
+    }
+
+    // Final stats
+    const FINAL_STATS = {};
+    this.ABIL_IDX.forEach(k => { FINAL_STATS[k] = BASE_STATS[k] + asi[k] + racialBonus[k]; });
+
+    // Hit die
+    const hit_die = (classData && classData.hit_die) ? classData.hit_die : 8;
+
+    // HP: sum of <hp_brut> across all <lvl> nodes + CON mod \u00d7 level
+    let hpSum = 0;
+    char.querySelectorAll("lvl").forEach(lvl => {
+      const hp = parseInt((lvl.querySelector("hp_brut") || {}).textContent || 0);
+      if (!isNaN(hp)) hpSum += hp;
+    });
+    const conMod = Math.floor((FINAL_STATS.con - 10) / 2);
+    const hpMax  = Math.max(1, hpSum + conMod * level);
+
+    // Armor Class
+    const dexMod = Math.floor((FINAL_STATS.dex - 10) / 2);
+    let ca = 10 + dexMod; // fallback: unarmored
+    if (armorData && armorData.armor_class) {
+      const base      = armorData.armor_class.base || 10;
+      const addDex    = armorData.armor_class.dex_bonus !== false;
+      const maxDexBon = armorData.armor_class.max_bonus != null ? armorData.armor_class.max_bonus : null;
+      const effectiveDex = maxDexBon !== null ? Math.min(dexMod, maxDexBon) : dexMod;
+      ca = base + (addDex ? effectiveDex : 0);
+      if (parseInt(get("shieldEquipped")) === 1) ca += 2;
+    } else if (armorId > 0) {
+      ca = 12 + dexMod; // rough fallback
+    }
+
+    // Prof bonus
+    const profBonus = this.PROF_BY_LEVEL[Math.min(level - 1, 19)];
+
+    // Spell stats (CHA-based default)
+    const chaMod   = Math.floor((FINAL_STATS.cha - 10) / 2);
+    const spellDC  = 8 + profBonus + chaMod;
+    const spellAtk = profBonus + chaMod;
+
+    // Hit dice string
+    const hitDiceStr = level + "d" + hit_die;
+
+    // Speed
+    let speedStr = "9 m";
+    if (raceData && raceData.speed) speedStr = Math.round(raceData.speed * 0.3) + " m";
+
+    // Skill proficiencies
+    const skillsRaw    = get("skillsProf");
+    const profSkillIds = skillsRaw
+      ? skillsRaw.split(",").map(s => parseInt(s.trim())).filter(n => !isNaN(n))
+      : [];
+
+    // Languages
+    const languages = get("languages");
+
+    // Initiative
+    const initiative = Math.floor((FINAL_STATS.dex - 10) / 2);
+
+    // ── 4. Injection dans le DOM ───────────────────────────────────
+
+    // Identit\u00e9
+    this.setVal("f-name",        get("n"));
+    this.setVal("f-class-fr",    className);
+    if (classSlug) this.setVal("f-class", classSlug);
+    this.setVal("f-subclass-fr", subclassName);
+    this.setVal("f-level",       level);
+    this.setVal("f-race",        raceName);
+    this.setVal("f-background",  get("background"));
+    this.setVal("f-alignment",   this.ALIGN_MAP[get("alignment")] || "");
+
+    // Auto-slug (id)
+    const nameEl = document.getElementById("f-name");
+    if (nameEl) nameEl.dispatchEvent(new Event("input", { bubbles: true }));
+
+    // Caract\u00e9ristiques finales
+    this.ABIL_IDX.forEach(k => this.setVal("abil-" + k, FINAL_STATS[k]));
+
+    // Combat
+    this.setVal("f-hp-max",    hpMax);
+    this.setVal("f-ac",        ca);
+    this.setVal("f-init",      initiative);
+    this.setVal("f-speed",     speedStr);
+    this.setVal("f-prof",      profBonus);
+    this.setVal("f-dc",        spellDC);
+    this.setVal("f-spell-atk", spellAtk);
+    this.setVal("f-hit-dice",  hitDiceStr);
+
+    // Comp\u00e9tences
+    profSkillIds.forEach(id => {
+      const skillName = this.SKILL_MAP[id];
+      if (!skillName) return;
+      this.setCheck("skill-" + this.encodeSkillId(skillName), true);
+    });
+
+    // Langues
+    this.setVal("f-languages", languages);
+
+    // Textes RP
+    this.setTextarea("f-trait",     get("traits"));
+    this.setTextarea("f-ideal",     get("ideals"));
+    this.setTextarea("f-bond",      get("bonds"));
+    this.setTextarea("f-flaw",      get("flaws"));
+    this.setTextarea("f-backstory", get("backstory"));
+
+    // Recalcul global
+    if (typeof refreshCheckBonuses === "function") refreshCheckBonuses();
+
+    // ── 5. Toast de confirmation ───────────────────────────────────
+    const warnings = [];
+    if (!raceData)              warnings.push("bonus raciaux non charg\u00e9s (API indisponible)");
+    if (!classData)             warnings.push("hit dice non charg\u00e9s");
+    if (!armorData && armorId > 0) warnings.push("CA armure approximative");
+    if (armorId > 0)            warnings.push("bonus magique (+X) \u00e0 v\u00e9rifier manuellement");
+
+    const warnStr = warnings.length ? " \u26a0 " + warnings.join(", ") : "";
+    const raceStr = racialBonusLog.length ? " [Raciaux: " + racialBonusLog.join(" ") + "]" : "";
+
+    showToast("\u2705 " + get("n") + " niv." + level + " import\u00e9" + raceStr + warnStr, warnings.length > 1);
+  }
+};
+
+// ── Remplacement de la fonction globale importXML ─────────────────
 function importXML() {
-  const fileInput = document.createElement("input");
-  fileInput.type = "file";
-  fileInput.accept = ".xml";
-  fileInput.addEventListener("change", async e => {
-    const file = e.target.files[0];
+  const input = document.createElement("input");
+  input.type   = "file";
+  input.accept = ".xml";
+  input.style.display = "none";
+  document.body.appendChild(input);
+
+  input.addEventListener("change", async () => {
+    const file = input.files[0];
+    document.body.removeChild(input);
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = async ev => {
-      try {
-        const xmlDoc = new DOMParser().parseFromString(ev.target.result, "application/xml");
-        const char = xmlDoc.querySelector("builder > character") || xmlDoc.querySelector("character");
-        if (!char) { showToast("\u274C Structure XML invalide \u2014 noeud <character> introuvable", true); return; }
-
-        const getText = tag => { const el = char.querySelector(tag); return el ? el.textContent.trim() : ""; };
-
-        // Basic identity
-        const name       = getText("n");
-        const classe     = getText("class");
-        const classPath  = getText("classPath");
-        const level      = parseInt(getText("level")) || 1;
-        const race       = getText("race");
-        const background = getText("background");
-
-        // Base ability scores
-        const abilKeys = ["str", "dex", "con", "int", "wis", "cha"];
-        const baseStats = {};
-        abilKeys.forEach(k => { baseStats[k] = parseInt(getText(k)) || 10; });
-
-        // ASI bonuses: aug_carac0=str, aug_carac1=dex, … aug_carac5=cha
-        const asi = { str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0 };
-        abilKeys.forEach((k, i) => {
-          const v = parseInt(getText("aug_carac" + i));
-          if (!isNaN(v)) asi[k] = v;
-        });
-
-        // Racial ability bonuses from dnd5eapi
-        const racialBonus = { str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0 };
-        let hit_die = 8;
-
-        const raceSlug = RACE_FR_TO_SLUG[race];
-        if (raceSlug) {
-          try {
-            const r = await fetch(DND5E_API_BASE + "races/" + raceSlug);
-            if (r.ok) {
-              const d = await r.json();
-              (d.ability_bonuses || []).forEach(ab => {
-                const k = ab.ability_score.index;
-                if (k in racialBonus) racialBonus[k] += ab.bonus;
-              });
-            }
-          } catch (err) {
-            console.warn("AideDD import: race API fetch failed", err);
-          }
-        }
-
-        // Class hit_die from dnd5eapi
-        const classSlug = CLASS_FR_TO_SLUG[classe];
-        if (classSlug) {
-          try {
-            const r = await fetch(DND5E_API_BASE + "classes/" + classSlug);
-            if (r.ok) {
-              const d = await r.json();
-              hit_die = d.hit_die || 8;
-            }
-          } catch (err) {
-            console.warn("AideDD import: class API fetch failed", err);
-          }
-        }
-
-        // Final ability scores
-        const finalStats = {};
-        abilKeys.forEach(k => { finalStats[k] = baseStats[k] + asi[k] + racialBonus[k]; });
-
-        // Helper: set value and trigger listeners
-        function setVal(id, value) {
-          const el = document.getElementById(id);
-          if (!el) return;
-          el.value = value;
-          el.dispatchEvent(new Event("input", { bubbles: true }));
-        }
-
-        // Inject identity fields
-        setVal("f-name", name);
-        setVal("f-class-fr", classe);
-        if (classSlug) setVal("f-class", classSlug);
-        setVal("f-subclass-fr", classPath);
-        setVal("f-level", level);
-        setVal("f-race", race);
-        setVal("f-background", background);
-
-        // Inject ability scores
-        abilKeys.forEach(k => setVal("abil-" + k, finalStats[k]));
-
-        // Max HP: sum of <hp_brut> across all <lvl> nodes + CON modifier × level
-        let hpSum = 0;
-        char.querySelectorAll("lvl").forEach(lvl => {
-          const hp = parseInt(lvl.querySelector("hp_brut")?.textContent || 0);
-          if (!isNaN(hp)) hpSum += hp;
-        });
-        const conMod = Math.floor((finalStats.con - 10) / 2);
-        setVal("f-hp-max", Math.max(1, hpSum + conMod * level));
-
-        // Hit dice
-        setVal("f-hit-dice", level + "d" + hit_die);
-
-        // Skill proficiencies
-        const skillsRaw = getText("skillsProf");
-        if (skillsRaw) {
-          skillsRaw.split(",").map(s => s.trim()).filter(Boolean).forEach(idxStr => {
-            const skillName = SKILL_MAP[parseInt(idxStr)];
-            if (skillName) {
-              const cb = document.getElementById("skill-" + encodeSkillId(skillName));
-              if (cb) { cb.checked = true; cb.dispatchEvent(new Event("change", { bubbles: true })); }
-            }
-          });
-        }
-
-        showToast("\u2705 Import XML AideDD r\u00e9ussi \u2014 " + (name || file.name));
-      } catch (err) {
-        showToast("\u274C Erreur import XML\u00a0: " + err.message, true);
-      }
-    };
-    reader.readAsText(file);
+    showToast("\u23f3 Import en cours\u2026");
+    try {
+      await AIDEDC_PARSER.importXML(file);
+    } catch (err) {
+      console.error("[AideDDParser]", err);
+      showToast("\u274c " + err.message, true);
+    }
   });
-  fileInput.click();
+
+  input.click();
 }
 
 // ═══════════════════════════════════════════════════════════════════
