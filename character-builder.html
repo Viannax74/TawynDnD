@@ -2241,6 +2241,22 @@ function buildCharacterData() {
   const avatar = avatarVal ||
     "https://api.dicebear.com/7.x/bottts/svg?seed=" + encodeURIComponent(name) + "&backgroundColor=1a0a2e";
 
+  // Robust fallback: always ensure minimal structure for C
+  const safeStats = typeof prof === "number" ? {
+    ac:          parseInt(document.getElementById("f-ac").value)         || 10,
+    init:        parseInt(document.getElementById("f-init").value)       || 0,
+    speed:       document.getElementById("f-speed").value.trim()         || "9 m",
+    prof,
+    dc:          parseInt(document.getElementById("f-dc").value)         || 10,
+    spell_atk:   parseInt(document.getElementById("f-spell-atk").value)  || 0,
+    hp_max:      parseInt(document.getElementById("f-hp-max").value)     || 10,
+    hit_dice:    document.getElementById("f-hit-dice").value.trim()      || (level + "d8"),
+    slots_level: parseInt(document.getElementById("f-slots-level").value) || 1,
+    slots_total: parseInt(document.getElementById("f-slots-total").value) || 0
+  } : { ac: 10, prof: 2, hp_max: 10 };
+  const safeAbilities = (typeof abilities === "object" && abilities !== null) ? abilities : { str:{}, dex:{}, con:{}, int:{}, wis:{}, cha:{} };
+  const safeEquipment = Array.isArray(getEquipment()) ? getEquipment() : [];
+
   return {
     schemaVersion: "3.12",
     id, name, level,
@@ -2252,19 +2268,8 @@ function buildCharacterData() {
     race:          document.getElementById("f-race").value.trim()        || "",
     alignment:     document.getElementById("f-alignment").value,
     avatar,
-    stats: {
-      ac:          parseInt(document.getElementById("f-ac").value)         || 10,
-      init:        parseInt(document.getElementById("f-init").value)       || 0,
-      speed:       document.getElementById("f-speed").value.trim()         || "9 m",
-      prof,
-      dc:          parseInt(document.getElementById("f-dc").value)         || 10,
-      spell_atk:   parseInt(document.getElementById("f-spell-atk").value)  || 0,
-      hp_max:      parseInt(document.getElementById("f-hp-max").value)     || 10,
-      hit_dice:    document.getElementById("f-hit-dice").value.trim()      || (level + "d8"),
-      slots_level: parseInt(document.getElementById("f-slots-level").value) || 1,
-      slots_total: parseInt(document.getElementById("f-slots-total").value) || 0
-    },
-    abilities,
+    stats: safeStats,
+    abilities: safeAbilities,
     abilities_order: ["cha","dex","con","int","wis","str"],
     passive_perception: 10 + abilityMod(scores.wis),
     saving_throws,
@@ -2294,7 +2299,7 @@ function buildCharacterData() {
     },
     resources: getResources(),
     tactics:   getTactics(),
-    equipment: getEquipment()
+    equipment: safeEquipment
   };
 }
 
