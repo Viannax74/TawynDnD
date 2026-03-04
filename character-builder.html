@@ -2346,19 +2346,6 @@ function validateSchema(c_object) {
     }
   });
 
-  if (typeof c_object.id === "string" && !c_object.id.trim()) {
-    errors.push("Valeur invalide: id ne peut pas être vide.");
-  }
-  if (typeof c_object.name === "string" && !c_object.name.trim()) {
-    errors.push("Valeur invalide: name ne peut pas être vide.");
-  }
-  if (typeof c_object.level === "number" && (!Number.isFinite(c_object.level) || c_object.level < 1)) {
-    errors.push("Valeur invalide: level doit être un nombre >= 1.");
-  }
-  if (typeof c_object.stats?.hp_max === "number" && (!Number.isFinite(c_object.stats.hp_max) || c_object.stats.hp_max < 1)) {
-    errors.push("Valeur invalide: stats.hp_max doit être un nombre >= 1.");
-  }
-
   return {
     isValid: errors.length === 0,
     errors
