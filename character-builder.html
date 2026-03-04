@@ -1698,7 +1698,15 @@ render();
 `;
 
 function buildSheetScript(cJSON) {
-  return SHEET_JS_PRE + "const C = " + cJSON + ";" + SHEET_JS_POST;
+  // Utilise un template string (backticks) pour tout le JS généré (const C + Boot Check)
+  return `${SHEET_JS_PRE}
+const C = ${cJSON};
+// BOOT CHECK: Sanity check for const C
+if (typeof C !== "object" || !C || typeof C.id !== "string" || !C.id.trim()) {
+  document.body.innerHTML = '<div style="background:#181028;color:#fff;font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center"><div style="font-size:2.2rem;margin-bottom:18px">❌ Erreur : fiche invalide</div><div style="font-size:1.1rem;max-width:420px;margin-bottom:10px">Impossible de charger la fiche :<br><b>const C</b> est absent ou corrompu.<br>Vérifiez la génération ou contactez le créateur.</div></div>';
+  throw new Error("Fatal: Invalid Character Data");
+}
+${SHEET_JS_POST}`;
 }
 
 function escapeHtml(text) {
@@ -2291,6 +2299,73 @@ function buildCharacterData() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
+// ░░ SCHEMA MINIMAL const C (documentation interne + validation)
+// ═══════════════════════════════════════════════════════════════════
+const C_SCHEMA_REQUIRED = {
+  id: "string",
+  name: "string",
+  level: "number",
+  class: "string",
+  stats: "object",
+  "stats.hp_max": "number",
+  "stats.ac": "number",
+  "stats.prof": "number",
+  abilities: "object",
+  equipment: "array"
+};
+
+function getPathValue(obj, path) {
+  return path.split(".").reduce((acc, key) => (acc != null ? acc[key] : undefined), obj);
+}
+
+function getValueType(value) {
+  if (Array.isArray(value)) return "array";
+  if (value === null) return "null";
+  return typeof value;
+}
+
+function validateSchema(c_object) {
+  const errors = [];
+
+  if (!c_object || typeof c_object !== "object" || Array.isArray(c_object)) {
+    return {
+      isValid: false,
+      errors: ["Objet C invalide (attendu: objet JavaScript)."]
+    };
+  }
+
+  Object.entries(C_SCHEMA_REQUIRED).forEach(([path, expectedType]) => {
+    const value = getPathValue(c_object, path);
+    if (value === undefined) {
+      errors.push("Champ manquant: " + path + " (attendu: " + expectedType + ").");
+      return;
+    }
+    const actualType = getValueType(value);
+    if (actualType !== expectedType) {
+      errors.push("Type invalide pour " + path + " (attendu: " + expectedType + ", reçu: " + actualType + ").");
+    }
+  });
+
+  if (typeof c_object.id === "string" && !c_object.id.trim()) {
+    errors.push("Valeur invalide: id ne peut pas être vide.");
+  }
+  if (typeof c_object.name === "string" && !c_object.name.trim()) {
+    errors.push("Valeur invalide: name ne peut pas être vide.");
+  }
+  if (typeof c_object.level === "number" && (!Number.isFinite(c_object.level) || c_object.level < 1)) {
+    errors.push("Valeur invalide: level doit être un nombre >= 1.");
+  }
+  if (typeof c_object.stats?.hp_max === "number" && (!Number.isFinite(c_object.stats.hp_max) || c_object.stats.hp_max < 1)) {
+    errors.push("Valeur invalide: stats.hp_max doit être un nombre >= 1.");
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // ░░ GENERATE SHEET
 // ═══════════════════════════════════════════════════════════════════
 function generateSheet() {
@@ -2303,6 +2378,12 @@ function generateSheet() {
   }
 
   const C       = buildCharacterData();
+  const schemaValidation = validateSchema(C);
+  if (!schemaValidation.isValid) {
+    alert("Génération bloquée: schéma const C invalide.\n\n- " + schemaValidation.errors.join("\n- "));
+    showToast("❌ Génération bloquée: schéma const C invalide.", true);
+    return;
+  }
   const cJSON   = JSON.stringify(C, null, 2);
 
   const output = generateSheetDocument(C, cJSON);
