@@ -150,6 +150,55 @@ button{cursor:pointer;transition:all .2s;font-family:var(--font-body)}
   .feat-list-header,.feat-row{grid-template-columns:120px 80px 1fr 36px}
   .resource-list-header,.resource-row-form{grid-template-columns:1fr 50px 90px 36px}
 }
+
+/* Styles pour le bandeau Tour de Jeu */
+.turnbar-glass {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 120;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  background: linear-gradient(0deg, rgba(26,10,46,0.97), rgba(10,0,20,0.97));
+  border-top: 2px solid var(--border-accent);
+  box-shadow: 0 -2px 16px 0 rgba(168,85,247,0.08);
+  padding: 18px 0 12px 0;
+  backdrop-filter: blur(16px);
+}
+.turnbar-section {
+  min-width: 120px;
+  background: var(--bg-glass);
+  border: 1.5px solid var(--border-accent);
+  border-radius: 10px;
+  padding: 10px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px 0 rgba(168,85,247,0.06);
+}
+.turnbar-label {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--accent-light);
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 2px rgba(10,0,20,0.12);
+}
+@media(max-width:700px){
+  .turnbar-glass {
+    gap: 8px;
+    padding: 10px 0 8px 0;
+  }
+  .turnbar-section {
+    min-width: 80px;
+    padding: 7px 8px;
+  }
+  .turnbar-label {
+    font-size: 0.98rem;
+  }
+}
 </style>
 </head>
 <body>
@@ -742,6 +791,7 @@ let expandedSpells = new Set();
 
 // ── Helpers ──
 const fmtMod = n => n >= 0 ? \`+\${n}\` : \`\${n}\`;
+const abilityMod = score => Math.floor((score - 10) / 2);
 
 function hpColor(pct) {
   if (pct > 0.6)  return "var(--hp-green)";
@@ -1950,7 +2000,7 @@ function initSkillsGrid() {
 }
 
 function encodeSkillId(name) {
-  return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-").toLowerCase();
+  return name.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"-").toLowerCase();
 }
 
 function refreshCheckBonuses() {
@@ -2514,12 +2564,12 @@ const AIDEDC_PARSER = {
     "7":"Loyal Mauvais",   "8":"Neutre Mauvais",   "9":"Chaotique Mauvais"
   },
 
-  // Bonus de ma\u00eetrise par niveau (index 0 = niveau 1)
+  // Bonus de maîtrise par niveau (index 0 = niveau 1)
   PROF_BY_LEVEL: [2,2,2,2,3,3,3,3,4,4,4,4,4,5,5,5,5,6,6,6],
 
   ABIL_IDX: ["str","dex","con","int","wis","cha"],
 
-  // ── Helper : injecte + d\u00e9clenche les calculs internes ───────────
+  // ── Helper : injecte + d\u00eclenche les calculs internes ───────────
   setVal(id, val) {
     if (val === null || val === undefined || val === "") return;
     const el = document.getElementById(id);
@@ -2842,5 +2892,18 @@ refreshCheckBonuses();
 refreshHeader();
 DEFAULT_EQUIP.forEach(addEquipRow);
 </script>
+
+<!-- Bandeau Tour de Jeu (Action / Bonus / Réaction) -->
+<div class="turnbar-glass" id="turnbar-static">
+  <div class="turnbar-section">
+    <span class="turnbar-label">Action</span>
+  </div>
+  <div class="turnbar-section">
+    <span class="turnbar-label">Bonus</span>
+  </div>
+  <div class="turnbar-section">
+    <span class="turnbar-label">Réaction</span>
+  </div>
+</div>
 </body>
 </html>
